@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intact UK&amp;I — Finance &amp; Claims Data Flow Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Intact palette */
+  --cyan:#01B3BD;          /* main cyan  */
+  --deep:#365655;          /* dark cyan  — section bands, structure */
+  --red:#DF0030;           /* main red   — RISK FIGURES ONLY */
+  --sand:#E8DDC8;          /* light brown */
+  --met:#9FD6B4; --part:#F2CE8A; --notmet:#FF8CA5;
+
+  --ink:#000000; --ink-2:#2B3634; --ink-3:#6B7A78;
+  --paper:#F4F2ED; --card:#FFFFFF; --rule:#D6D2C8; --rule-2:#E7E3DA;
+  --wire:#8CA3A1;
+  --sans:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);
+  display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+header{flex:0 0 auto;background:var(--deep);color:#fff;padding:12px 20px 11px;
+  display:flex;align-items:baseline;gap:18px;border-bottom:3px solid var(--cyan)}
+header h1{font-size:15px;font-weight:600;margin:0;white-space:nowrap}
+header h1 em{font-style:normal;color:var(--cyan)}
+header .sub{font-family:var(--mono);font-size:10.5px;color:#9FB4B2;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+header .spacer{flex:1}
+header .stat{font-family:var(--mono);font-size:10.5px;color:#9FB4B2;white-space:nowrap}
+header .stat b{color:#fff;font-weight:600}
+header .stat b.risk{color:#FF8CA5}
+
+.toolbar{flex:0 0 auto;background:var(--card);border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:8px;padding:7px 14px;flex-wrap:wrap}
+.seg{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.seg button{font-family:var(--sans);font-size:11.5px;font-weight:500;padding:5px 11px;
+  border:0;background:#fff;color:var(--ink-2);cursor:pointer;border-right:1px solid var(--rule-2)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--deep);color:#fff}
+.seg button:hover:not([aria-pressed="true"]){background:#F1EFE9}
+.tbtn{font-family:var(--sans);font-size:11.5px;font-weight:500;padding:5px 11px;
+  border:1px solid var(--rule);border-radius:5px;background:#fff;color:var(--ink-2);cursor:pointer}
+.tbtn:hover{background:#F1EFE9;border-color:#BFB9AC}
+.tbtn.on{background:var(--deep);color:#fff;border-color:var(--deep)}
+.tlabel{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+#search{font-family:var(--sans);font-size:11.5px;padding:5px 9px;width:180px;
+  border:1px solid var(--rule);border-radius:5px;background:#fff;color:var(--ink)}
+#search:focus{outline:2px solid var(--cyan);outline-offset:-1px}
+.divider{width:1px;height:20px;background:var(--rule)}
+
+main{flex:1;display:flex;min-height:0}
+#viewport{flex:1;position:relative;overflow:hidden;cursor:grab;background:var(--paper)}
+#viewport.grabbing{cursor:grabbing}
+#world{position:absolute;top:0;left:0;transform-origin:0 0}
+#wires{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+#wires .hit{pointer-events:stroke;stroke-width:12;stroke:transparent;fill:none;cursor:pointer}
+
+.node{position:absolute;background:var(--card);border:1px solid var(--rule);
+  border-left:3px solid var(--cyan);border-radius:3px;padding:6px 8px 7px;
+  cursor:grab;user-select:none;box-shadow:0 1px 2px rgba(54,86,85,.10);
+  transition:box-shadow .12s,opacity .12s}
+.node:hover{box-shadow:0 3px 10px rgba(54,86,85,.20);z-index:5}
+.node.dragging{cursor:grabbing;box-shadow:0 8px 20px rgba(54,86,85,.28);z-index:20}
+.node .lbl{font-size:11.5px;font-weight:600;line-height:1.2;color:var(--ink)}
+.node .sub{font-size:9.5px;color:var(--ink-3);line-height:1.25;margin-top:2px}
+.node.legacy{border-left-color:#C7B38A}
+.node.legacy.flag{background:var(--sand);border-left-color:var(--deep)}
+.node.tgt{background:#fff;border-style:dashed;border-left:3px solid var(--deep);border-left-style:solid}
+.node.sel{border-color:var(--deep);box-shadow:0 0 0 2px var(--deep),0 6px 16px rgba(54,86,85,.25);z-index:15}
+.node.dim{opacity:.14}
+.node.hit{box-shadow:0 0 0 2px var(--cyan)}
+.node.up{box-shadow:0 0 0 2px var(--cyan)}
+.node.down{box-shadow:0 0 0 2px var(--deep)}
+.chip{position:absolute;top:-7px;right:-4px;font-family:var(--mono);font-size:7.5px;font-weight:700;
+  letter-spacing:.06em;padding:1px 4px;border-radius:2px;line-height:1.5}
+.chip.t{background:var(--deep);color:#fff}
+.chip.d{background:#fff;color:var(--red);border:1px solid var(--red)}
+.node .cbar{display:flex;gap:2px;margin-top:4px;flex-wrap:wrap}
+.node .cbar span{font-family:var(--mono);font-size:7.5px;font-weight:600;color:var(--deep);
+  border:1px solid var(--rule);border-radius:2px;padding:0 2px;line-height:1.5;background:#fff}
+
+.bandlabel{font-family:var(--sans);font-weight:700;font-size:15px;fill:var(--deep)}
+.bandnum{font-family:var(--mono);font-weight:600;font-size:26px;fill:var(--deep);opacity:.22}
+.bandsub{font-family:var(--sans);font-size:10.5px;fill:var(--ink-3)}
+.clabel{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--deep)}
+.elabel{font-family:var(--sans);font-size:9.5px;fill:var(--ink-2)}
+.cdia{cursor:pointer}
+.cdia text{font-family:var(--mono);font-size:7.5px;font-weight:700;fill:#fff}
+
+#panel{flex:0 0 340px;background:var(--card);border-left:1px solid var(--rule);overflow-y:auto;padding-bottom:40px}
+#panel .phead{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--rule);padding:13px 16px 11px;z-index:2}
+#panel .kicker{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+#panel h2{font-size:16px;font-weight:600;margin:4px 0 0;line-height:1.25}
+#panel .meta{font-size:10.5px;color:var(--ink-3);margin-top:3px}
+#panel .body{padding:14px 16px}
+.field{margin-bottom:15px}
+.field h3{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 4px;display:flex;align-items:center;gap:6px}
+.field h3::after{content:"";flex:1;height:1px;background:var(--rule-2)}
+.field p{margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+.flowlist{list-style:none;margin:0;padding:0}
+.flowlist li{font-size:11.5px;line-height:1.4;padding:6px 0 6px 14px;border-bottom:1px solid var(--rule-2);
+  position:relative;cursor:pointer;color:var(--ink-2)}
+.flowlist li:hover{color:var(--ink)}
+.flowlist li::before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;border-radius:50%;background:var(--cyan)}
+.flowlist li b{font-weight:600;color:var(--ink)}
+.flowlist li span{display:block;color:var(--ink-3);font-size:10.5px;margin-top:1px}
+.ctl{border-bottom:1px solid var(--rule-2);padding:9px 0;cursor:pointer}
+.ctl-h{display:flex;gap:8px;align-items:baseline}
+.ctl-id{font-family:var(--mono);font-size:9.5px;font-weight:700;color:#fff;background:var(--deep);padding:1px 4px;border-radius:2px}
+.ctl-t{font-size:12px;font-weight:600;flex:1}
+.ctl-m{font-family:var(--mono);font-size:8px;font-weight:600;padding:1px 5px;border-radius:8px;color:#1E2A29}
+.ctl-d{font-size:11px;line-height:1.45;color:var(--ink-3);margin-top:4px;display:none}
+.ctl.open .ctl-d{display:block}
+.legend{display:flex;flex-direction:column;gap:5px}
+.legend div{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-2)}
+.swatch{width:12px;height:12px;border-radius:2px;flex:0 0 auto;border:1px solid var(--rule)}
+.note{font-size:11px;line-height:1.5;color:var(--ink-3);background:#F7F5F0;border-left:2px solid var(--cyan);padding:9px 11px;border-radius:0 3px 3px 0}
+.riskfig{font-family:var(--mono);font-weight:700;color:var(--red)}
+kbd{font-family:var(--mono);font-size:10px;background:#F1EFE9;border:1px solid var(--rule);border-bottom-width:2px;border-radius:3px;padding:0 4px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--deep);
+  color:#fff;font-size:12px;padding:8px 16px;border-radius:5px;opacity:0;pointer-events:none;transition:.2s;z-index:99}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media print{header,.toolbar,#panel{display:none!important}body{overflow:visible;height:auto}
+  #viewport{overflow:visible;background:#fff}@page{size:A2 landscape;margin:8mm}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Intact UK&amp;I <em>/</em> Finance &amp; Claims Data Flow Map</h1>
+  <span class="sub">Source &rarr; Ledger &rarr; Reporting</span>
+  <span class="spacer"></span>
+  <span class="stat"><b id="s-nodes">0</b> systems &nbsp;·&nbsp; <b id="s-edges">0</b> flows &nbsp;·&nbsp;
+  <b id="s-ctl">0</b> controls &nbsp;·&nbsp; <b class="risk" id="s-risk">0</b> exit candidates</span>
+</header>
+
+<div class="toolbar">
+  <span class="tlabel">View</span>
+  <div class="seg" id="seg-view">
+    <button data-v="cur" aria-pressed="true">Current</button>
+    <button data-v="tgt" aria-pressed="false">Target</button>
+    <button data-v="both" aria-pressed="false">Both</button>
+  </div>
+  <div class="divider"></div>
+  <button class="tbtn" id="t-labels">Flow labels</button>
+  <button class="tbtn on" id="t-ctl">Control points</button>
+  <button class="tbtn" id="t-decom">Highlight exits</button>
+  <div class="divider"></div>
+  <input id="search" type="search" placeholder="Find a system…" autocomplete="off">
+  <div class="divider"></div>
+  <button class="tbtn" id="t-fit">Fit</button>
+  <button class="tbtn" id="t-reset">Reset layout</button>
+  <span class="spacer" style="flex:1"></span>
+  <button class="tbtn" id="t-save">Save layout</button>
+  <button class="tbtn" id="t-load">Load layout</button>
+  <button class="tbtn" id="t-print">Print / PDF</button>
+  <input type="file" id="file" accept="application/json" hidden>
+</div>
+
+<main>
+  <div id="viewport"><div id="world"><svg id="wires"></svg></div></div>
+  <aside id="panel"></aside>
+</main>
+<div id="toast"></div>
+
+<script>/* ============================================================
+   Intact (formerly RSA) UK&I — Finance & Claims Data Flow Map
+   Data model: bands -> clusters -> nodes, plus edges & controls
+   ============================================================ */
+
+const BANDS = [
+  { id:'b1', n:'1', label:'Origination',            sub:'Where data is first created — policy & claims administration', color:'#2E5E8C' },
+  { id:'b2', n:'2', label:'Claims Platform & Azure Data Platform', sub:'Guidewire core, policy/claims ODS, lake, marts', color:'#157F76' },
+  { id:'b3', n:'3', label:'Transport',              sub:'Managed file transfer, gateways and landing areas', color:'#8A6A2F' },
+  { id:'b4', n:'4', label:'Integration',            sub:'Single Integration Layer — enrich, map, reconcile, split', color:'#9B3350' },
+  { id:'b5', n:'5', label:'Finance Data Store',     sub:'TDS / ADS / CDS / RDS — the finance data warehouse', color:'#4C4A9E' },
+  { id:'b6', n:'6', label:'General Ledger & Cash',  sub:'SAP ECC, subledgers, payments, treasury & banking', color:'#A8791A' },
+  { id:'b7', n:'7', label:'Calculation Engines',    sub:'Actuarial reserving and IFRS 17 measurement', color:'#7A4A8C' },
+  { id:'b8', n:'8', label:'Reporting & Control',    sub:'Management, statutory, regulatory reporting and reconciliation', color:'#2F6B57' },
+];
+
+const CLUSTERS = [
+  // Band 1
+  { id:'c-pas-core',  band:'b1', label:'Personal & commercial policy admin', cols:5 },
+  { id:'c-pas-spec',  band:'b1', label:'Specialty, international & Ireland', cols:5 },
+  { id:'c-claims',    band:'b1', label:'Claims administration', cols:4 },
+  { id:'c-pas-tgt',   band:'b1', label:'Target policy platforms', cols:3 },
+  // Band 2
+  { id:'c-gw',        band:'b2', label:'Core claims platform (AWS)', cols:4 },
+  { id:'c-az-in',     band:'b2', label:'Azure — ingest, ODS & migration', cols:4 },
+  { id:'c-az-lake',   band:'b2', label:'Azure — data lake & curated marts', cols:4 },
+  { id:'c-az-svc',    band:'b2', label:'Azure — services, analytics & governance', cols:4 },
+  // Band 3
+  { id:'c-mft',       band:'b3', label:'Managed file transfer & gateways', cols:4 },
+  { id:'c-land',      band:'b3', label:'Landing areas', cols:3 },
+  { id:'c-msg',       band:'b3', label:'Messaging & document capture', cols:3 },
+  // Band 4
+  { id:'c-sil',       band:'b4', label:'Single Integration Layer (IBM DataStage)', cols:3 },
+  { id:'c-ref',       band:'b4', label:'Reference & master data', cols:2 },
+  // Band 5
+  { id:'c-fds',       band:'b5', label:'Finance Data Store (SQL Server / DataStage)', cols:4 },
+  { id:'c-fdsout',    band:'b5', label:'FDS distribution', cols:3 },
+  // Band 6
+  { id:'c-sap',       band:'b6', label:'SAP ECC — ledger & subledgers', cols:3 },
+  { id:'c-feeders',   band:'b6', label:'Ledger feeders & manual input', cols:3 },
+  { id:'c-pay',       band:'b6', label:'Payments, collections & cash', cols:4 },
+  { id:'c-treas',     band:'b6', label:'Treasury & banking', cols:4 },
+  { id:'c-hr',        band:'b6', label:'HR, payroll & people costs', cols:3 },
+  // Band 7
+  { id:'c-act',       band:'b7', label:'Actuarial reserving', cols:3 },
+  { id:'c-calc',      band:'b7', label:'IFRS 17 & measurement engines', cols:3 },
+  // Band 8
+  { id:'c-mi',        band:'b8', label:'Management & regulatory reporting', cols:4 },
+  { id:'c-group',     band:'b8', label:'Group consolidation & disclosure', cols:3 },
+  { id:'c-plan',      band:'b8', label:'Planning, allocation & reconciliation control', cols:3 },
+  { id:'c-tgt-fin',   band:'b8', label:'Target finance platform (Intact / Oracle)', cols:5 },
+];
+
+/* state: 'cur' = current only | 'tgt' = target only | 'both'
+   flag : 'decom' = decommission / exit target                       */
+const N = (id,label,sub,cluster,state,flag,d) =>
+  ({id,label,sub,cluster,state:state||'cur',flag:flag||null,d:d||{}});
+
+const NODES = [
+/* ---------------- BAND 1 — ORIGINATION ---------------- */
+N('ais','AIS','Personal lines PAS (mainframe)','c-pas-core','cur','decom',{
+  in:'Policy quote, issue, MTA, renewal and cancellation events captured by personal lines operations and aggregator/PCW channels.',
+  proc:'Nightly batch builds a combined AISnnnnn extract carrying both premium transactions and a small number of reinsurance claim transactions. A separate AIB file carries balance-sheet-only movements.',
+  out:'AIPnnnnn (revenue) and AIBnnnnn (balance sheet) direct-FTP to the SIL landing area; policy data also replicated to the Azure Policy ODS.',
+  freq:'Daily', own:'ADM', ctl:['C1','C2']}),
+N('ukris','UKRIS','Commercial & broker PAS (mainframe)','c-pas-core','cur','decom',{
+  in:'Commercial and broker-placed policy transactions across multiple lines, plus reinsurance cessions.',
+  proc:'Separate extracts for gross premium (NHP/NOR), reinsurance premium, gross claims, reinsurance claims paid and reinsurance OCR.',
+  out:'CPF premium files daily and reinsurance files monthly, direct-FTP to SIL. Also feeds the Azure Policy ODS and hosts the SICS Profin file handoff.',
+  freq:'Daily / monthly', own:'ADM', ctl:['C1']}),
+N('stage2','Stage 2 / SAUNA','Personal & household PAS (mainframe)','c-pas-core','cur','decom',{
+  in:'Household and personal policy transactions, including legacy books.',
+  proc:'Single daily STAGE2_TDS_ALL extract of gross premium movements; SAUNA claims are carried through CCS.',
+  out:'Direct-FTP CPF to SIL; coverage-level rows are later aggregated to policy-version level for SAP.',
+  freq:'Daily', own:'ADM', ctl:['C1']}),
+N('duckcreek','Duck Creek / Unity','Personal lines PAS','c-pas-core','cur','decom',{
+  in:'Personal motor, home and pet policy transactions written on the Unity platform, plus Duck Creek Billing cash.',
+  proc:'ADM writes the extract to a staging share; GlobalScape collects it with no LoB involvement.',
+  out:'DCT premium CPF daily via GlobalScape; billing and cash flow separately into SAP AP/AR.',
+  freq:'Daily', own:'ADM', ctl:['C1']}),
+N('transactor','Transactor','MT Smart Wheels telematics PAS','c-pas-core','cur','decom',{
+  in:'Telematics-rated motor policy transactions administered by Traks Global.',
+  proc:'Third-party hosted extract collected from an external SFTP endpoint. VAT adjustments are posted by FDS WD1 automation rather than by the source.',
+  out:'TRN premium CPF daily via GlobalScape.',
+  freq:'Daily', own:'Traks Global', ctl:['C1','C11']}),
+N('ice','ICE / IBSuite','Personal replatform PAS','c-pas-core','cur',null,{
+  in:'Policy transactions on the ICE and IB Suite platforms introduced by the personal lines replatforming programme.',
+  proc:'Vendor-hosted extract with premium and balance-sheet transactions in a single file.',
+  out:'ICE_TDS_PREM and IBS_TDS_PREM CPF daily via GlobalScape; related claims arrive through CCS.',
+  freq:'Daily', own:'ICE / IBA', ctl:['C1']}),
+N('hood','Hood','Pet / affinity PAS','c-pas-core','cur',null,{
+  in:'Affinity book policy transactions administered by Hood on the ICE platform.',
+  proc:'Vendor extract of premium and balance-sheet movements.',
+  out:'HOD_TDS_PREM CPF daily via GlobalScape; claims via CCS.',
+  freq:'Daily', own:'Hood', ctl:['C1']}),
+N('mthome','MT Home / Home TPA / Pet','Outsourced personal books','c-pas-core','cur',null,{
+  in:'Policy and claim activity for outsourced personal lines books administered by third-party administrators.',
+  proc:'Files originate outside the Intact network and must pass through the DMZ SFTP landing area before reaching SIL.',
+  out:'CPF / CCF files daily via the DMZ landing area.',
+  freq:'Daily', own:'TPA', ctl:['C1']}),
+
+N('atlas','Atlas','Global Europe & Risk Solutions PAS','c-pas-spec','cur','decom',{
+  in:'Global Europe and Risk Solutions commercial policy transactions, including UK, Continental Europe and Ireland ledger sites.',
+  proc:'Confirmed premium extracted daily; pipeline premium and OCR monthly. Atlas Ireland and Ministry of Defence rows are filtered out of both the SAP and TDS feeds by SIL.',
+  out:'ATLAS_TDS_COPRM / PPRM / CLMS / OCR direct-FTP to SIL; eight separate SAP interface files by entity.',
+  freq:'Daily / monthly', own:'ADM', ctl:['C1','C2']}),
+N('synergy','Synergy','Marine PAS','c-pas-spec','cur','decom',{
+  in:'Marine premium, claims and outstanding claims reserves, including Xchanging LIMNET market bordereaux pulled in via GlobalScape.',
+  proc:'Monthly extract cycle. Market files from Xchanging are collected from a third-party SFTP server and uploaded to Synergy first.',
+  out:'SYN premium, claims and OCR files monthly to SIL; SYNPRM / SYNCLMS / SYNOCR to SAP.',
+  freq:'Monthly', own:'ADM', ctl:['C1']}),
+N('ip','IP Global Network','Multi-territory network PAS','c-pas-spec','cur','decom',{
+  in:'International programme business written across the global network, including inward and outward network arrangements.',
+  proc:'SIL generates additional balancing transactions to move money between legal entities for IP, and applies Global Network office overrides.',
+  out:'IP premium (Mon–Fri), claims daily and OCR monthly to SIL; IPGPREM / IPGCLMS / IPGOCR to SAP.',
+  freq:'Daily / monthly', own:'ADM', ctl:['C1','C2']}),
+N('eclipse','Eclipse','London market & DIFC PAS (Sequel)','c-pas-spec','cur','decom',{
+  in:'London market and DIFC work-in-progress premium and claims written on the Sequel Eclipse platform.',
+  proc:'Vendor-hosted files collected from Sequel managed SFTP and relayed by GlobalScape.',
+  out:'ECLIPSE and ECLDIFC premium and claims files daily; ECPREM / ECCLMS to SAP.',
+  freq:'Daily', own:'Sequel', ctl:['C1']}),
+N('profin','SICS Profin','Professional & financial lines PAS','c-pas-spec','cur','decom',{
+  in:'Professional and financial products policy, claims and OCR transactions administered by DXC.',
+  proc:'Monthly vendor extract routed from the UKRIS host through GlobalScape into the SIL DMZ landing area.',
+  out:'SPR premium, claims and OCR monthly; SPRPREM / SPRCLMS / SPROCR to SAP.',
+  freq:'Monthly', own:'DXC', ctl:['C1']}),
+N('dxc','DXC Assure C&S','Commercial & Specialty PAS','c-pas-spec','both',null,{
+  in:'Commercial and Specialty policy transactions on the DXC Assure platform, introduced to the finance estate in late 2024.',
+  proc:'DXC generates a nightly CPF containing the previous day\'s financial movements plus any records rejected and since corrected. Distribution and risk-class rules use Geo_Code rather than the AIS-specific geography key.',
+  out:'DXC_TDS_PREM CPF daily via GlobalScape and the DMZ; SIL_SAP_DXC outgoing file to SAP. Claims on DXC policies arrive through the Guidewire CCF.',
+  freq:'Daily', own:'DXC', ctl:['C1','C2']}),
+N('genius','Ireland Genius','Ireland PAS','c-pas-spec','cur',null,{
+  in:'Republic of Ireland policy and claims transactions consolidated on the Genius iSeries.',
+  proc:'Ireland-specific GPC mapping including non-refundable premium treatment; company code overrides applied in SIL.',
+  out:'GEN_TDS_PREM and GEN_TDS_CLM daily, pushed by Irish GlobalScape; GENPREM / GENCLMS to SAP.',
+  freq:'Daily', own:'ADM Ireland', ctl:['C1','C11']}),
+N('sapiens','Sapiens RI','Reinsurance treaty administration','c-pas-spec','cur',null,{
+  in:'Outward reinsurance treaty structures, cessions and reinsurer panel data.',
+  proc:'Treaty results are enriched by the reinsurance team and reconciled in the Counterparty Data Store.',
+  out:'Reinsurance transactions to CDS and to SAP for settlement.',
+  freq:'Monthly / quarterly', own:'Finance', ctl:['C16']}),
+N('pivot','Pivot Point','Specialty PAS','c-pas-spec','cur',null,{
+  in:'Specialty lines policy administration.',
+  proc:'Feeds the finance estate as a source data system within the policy and claims administration group.',
+  out:'Premium transactions into the finance source data layer.',
+  freq:'Periodic', own:'Business', ctl:[]}),
+
+N('ccs','CCS','Claims administration (multi-source)','c-claims','cur','decom',{
+  in:'Claims recorded against policies originating in AIS, SAUNA, EPOQ, UKRIS, Bradford & Pennine, Duck Creek, ICE and Hood — CCS is the common claims record for the legacy estate.',
+  proc:'A single daily CCS_TDS_CLAIM extract is produced and then split by source system inside SIL into six or more separate SAP interface files.',
+  out:'CCF daily to SIL; CCSCLAIM, SAUCLAIM, EPQCLAIM, UKRCLAIM, BNPCLAIM, CCSICE and CCSHOD files to SAP.',
+  freq:'Daily', own:'ADM', ctl:['C1','C2']}),
+N('gwcc','Guidewire ClaimCenter','Strategic claims platform','c-claims','both',null,{
+  in:'First notification of loss, reserve movements, payments and recoveries for motor, home and other lines, taken through digital channels, the contact centre and brokers.',
+  proc:'Handles claims on policies administered in AIS, Stage 2, UKRIS, Duck Creek, B&P, ICE and DXC. A daily extract batch runs from 04:00, reading claim events with financial movement from the Azure Data Mart and enriching them with policy and agency data.',
+  out:'One combined GWC_TDS_CLAIM CCF file before 06:00 carrying all LoBs, with the originating PAS identified by POLICY_SOURCE_SYSTEM on the 60 record. Produces a single combined SAP claims file.',
+  freq:'Daily', own:'Capgemini', ctl:['C1','C2']}),
+N('paws','PAWS','Pet claims administration (Valexa)','c-claims','cur','decom',{
+  in:'Pet claims assessed and paid by the third-party administrator.',
+  proc:'Externally hosted, so the file passes through the DMZ SFTP landing area rather than landing directly on the DataStage server.',
+  out:'PAWS_TDS_CLMS CCF daily; PAWSPET file to SAP.',
+  freq:'Daily', own:'Valexa', ctl:['C1']}),
+N('respond','Aptean Respond','Complaints management','c-claims','cur',null,{
+  in:'Customer and claimant complaints raised through the contact centre and digital channels.',
+  proc:'Complaint status and redress decisions are managed alongside the claim record.',
+  out:'Redress payments flow into the claims payment stream; complaint MI to the reporting estate.',
+  freq:'Continuous', own:'Operations', ctl:[]}),
+N('visualfiles','VisualFiles / DWF','Recoveries & legal case management','c-claims','cur',null,{
+  in:'Litigated claims, third-party recoveries and legal panel activity.',
+  proc:'Recovery activity is tracked outside the core claims platform and reconciled back through a manually prepared recoveries sheet.',
+  out:'Recovery receipts to the cash management estate and to SAP.',
+  freq:'Periodic', own:'Operations', ctl:['C18']}),
+
+N('acturis','Acturis','Target commercial PAS + Q&B workbench','c-pas-tgt','tgt',null,{
+  in:'Commercial and SME new business, renewals and mid-term adjustments captured through broker portals, software houses and the e-trade workbench.',
+  proc:'Strategic commercial policy administration replacing UKRIS, AIS, Atlas, Synergy and Eclipse over the CL/SL roadmap.',
+  out:'Policy transactions to the Enterprise Data Platform and, through the accounting hub, to the Oracle ledger.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('asima','Asima','Target specialty PAS','c-pas-tgt','tgt',null,{
+  in:'Specialty lines policy administration in the target architecture.',
+  proc:'New policy administration platform in the source data layer of the to-be finance architecture.',
+  out:'Policy transactions to the Enterprise Data Platform.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('newpas','Other new PAS','Strategic PAS releases','c-pas-tgt','tgt',null,{
+  in:'Remaining strategic policy administration platforms delivered by the PL exit and CL/SL roadmap.',
+  proc:'New line-of-business systems connect directly to the Enterprise Data Platform rather than through the legacy integration layer.',
+  out:'Policy and premium transactions to EDP and the accounting hub.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+
+/* ---------------- BAND 2 — CLAIMS PLATFORM & AZURE ---------------- */
+N('gw-api','Guidewire API layer','Integration surface','c-gw','both',null,{
+  in:'Service calls from digital portals, the contact centre, supplier integrations and the Azure data platform.',
+  proc:'Mediates all read and write access to ClaimCenter, including policy lookup, payment instruction and document requests.',
+  out:'Claim, payment and document events to downstream Azure services and the B2B gateway.',
+  freq:'Real time', own:'Claims IT', ctl:[]}),
+N('gwcm','Guidewire Contact Manager','Party & contact master','c-gw','both',null,{
+  in:'Claimant, supplier, broker and customer party records created during claim handling.',
+  proc:'Maintains a single contact record used for payment instruction and correspondence.',
+  out:'Payee and supplier detail supporting claim payment files.',
+  freq:'Real time', own:'Claims IT', ctl:['C17']}),
+N('gw-edge','Guidewire Edge APIs','Digital channel APIs','c-gw','both',null,{
+  in:'Customer and broker self-service requests from the digital estate.',
+  proc:'Exposes claim registration and tracking to portals and brochure sites.',
+  out:'Claim events into ClaimCenter; status back to digital channels.',
+  freq:'Real time', own:'Claims IT', ctl:[]}),
+N('cda-s3','Archive & CDA S3','Document and archive storage (AWS)','c-gw','both',null,{
+  in:'Claim documents, correspondence, images and archived case material.',
+  proc:'Object storage supporting the claims document lifecycle and retention.',
+  out:'Documents to the Azure document ingress controller and to the outbound comms platform.',
+  freq:'Continuous', own:'Claims IT', ctl:[]}),
+
+N('logic','Azure Logic Apps','Source ingestion orchestration','c-az-in','both',null,{
+  in:'Policy snapshots, payment status updates, agency transfer updates, bank detail updates and intermediary updates from the legacy policy estate.',
+  proc:'Orchestrates scheduled and event-driven ingestion of policy and reference data into the platform.',
+  out:'Files and messages into the Policy ODS and the raw layer of the data lake.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('podsdb','Policy ODS','Operational policy data store','c-az-in','both',null,{
+  in:'Policy, cover and product data replicated from ICE, Hood, Eclipse, Xchanging, Synergy, IP, Atlas, DXC Assure, Caravan Guard, Duck Creek, AIS, UKRIS, Stage 2, Portia, SAUNA and the CCS policy data cache.',
+  proc:'Product database and PODS provide the policy context Guidewire needs at point of claim, and the policy attributes used to enrich the claims extract.',
+  out:'Real-time policy lookup and retrieve to ClaimCenter; policy attributes to the lake and marts.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('cmt','Claims migration (CMT)','Legacy claim migration tooling','c-az-in','cur',null,{
+  in:'Historic claim records and documents from CCS, Eclipse, UKRIS, Atlas, Synergy, DXC Assure and Documentum.',
+  proc:'CMT IN and CMT OUT staging databases control the migration of legacy claims into Guidewire, with migration status and reconciliation data retained.',
+  out:'Migrated claims into ClaimCenter; migration status and reconciliation extracts.',
+  freq:'Programme', own:'Claims IT', ctl:['C7']}),
+N('cda','CDA client tool / ETL ADF','Claims data replication','c-az-in','both',null,{
+  in:'Claim transactions, reserves, payments and recoveries replicated out of ClaimCenter.',
+  proc:'Azure Data Factory pipelines replicate claims data on a scheduled basis into the raw layer of the lake.',
+  out:'Claims data into the Azure Data Lake raw zone.',
+  freq:'Daily', own:'Data Platform', ctl:[]}),
+
+N('raw','Raw layer','Landing zone','c-az-lake','both',null,{
+  in:'Unmodified claims, policy, document and payment data as received from source.',
+  proc:'Immutable landing of source data; ADF and Databricks pipelines read from here.',
+  out:'Data to the staging layer.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('staging','Staging layer','Conformance & cleansing','c-az-lake','both',null,{
+  in:'Raw claims and policy data.',
+  proc:'Type conformance, deduplication and structural standardisation using ADF and Databricks.',
+  out:'Conformed data to the processed layer.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('processed','Processed layer','Curated structured data','c-az-lake','both',null,{
+  in:'Conformed structured and unstructured claims data, including OCR output from scanned documents.',
+  proc:'Business rules applied to produce the curated claims dataset used for operational and financial extraction.',
+  out:'Curated data to the Claims ODS, the Co-Existence store and the payments staging database.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('lake','Azure Data Lake V2','Storage substrate','c-az-lake','both',null,{
+  in:'All raw, staging and processed zone data.',
+  proc:'Provides the storage layer beneath the medallion zones, governed by Microsoft Purview.',
+  out:'Zone data to ETL pipelines, marts and analytics workspaces.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('cods','Claims ODS','Operational claims data store','c-az-lake','both',null,{
+  in:'Curated claims data from the processed layer.',
+  proc:'Operational store supporting claims operational reporting and downstream mart construction.',
+  out:'Claims data to the marts and to operational consumers.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('marts','Data marts','Financial & operational marts','c-az-lake','both',null,{
+  in:'Claims ODS and processed-layer data.',
+  proc:'Dimensional marts holding the claim financial tables from which the daily Guidewire finance extract is built. The GWC extract batch reads financials exclusively from here.',
+  out:'The daily GWC_TDS_CLAIM CCF file to the finance estate; claims MI to analytics and reporting.',
+  freq:'Daily', own:'Data Platform', ctl:['C1']}),
+
+N('ocr','Azure Cognitive Services','Document OCR','c-az-svc','both',null,{
+  in:'Scanned claim documents and inbound correspondence.',
+  proc:'Optical character recognition converting unstructured documents into structured attributes.',
+  out:'Structured attributes into the processed layer.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+N('docing','Document ingress controller','Document routing','c-az-svc','both',null,{
+  in:'Documents uploaded from customer and broker portals, and inbound scanned post.',
+  proc:'Routes documents to the correct claim and to archive storage, invoking Azure Functions.',
+  out:'Documents to Guidewire and to the S3 archive.',
+  freq:'Continuous', own:'Claims IT', ctl:[]}),
+N('paystg','Payments staging DB','Claims payment staging','c-az-svc','both',null,{
+  in:'Approved claim payment instructions and payee detail from ClaimCenter and Contact Manager.',
+  proc:'Stages payment requests for release, holding status until confirmation is returned from the payment estate.',
+  out:'Payment requests through ETL and the B2B gateway to the payment services layer and SAP AR.',
+  freq:'Daily', own:'Claims IT', ctl:['C17']}),
+N('aks','AKS decision engine','Automated decisioning','c-az-svc','both',null,{
+  in:'Claim attributes and analytics model outputs.',
+  proc:'Containerised decision services supporting automated claim handling and triage, fronted by Nginx.',
+  out:'Decision outcomes back into the claims workflow.',
+  freq:'Real time', own:'Claims IT', ctl:[]}),
+N('coexist','Co-Existence store','Legacy / strategic bridge','c-az-svc','cur',null,{
+  in:'Claim records that exist in both the legacy estate and Guidewire during migration.',
+  proc:'Maintains the mapping between legacy and strategic claim identifiers so financial history remains traceable.',
+  out:'Reconciliation data supporting dual-running.',
+  freq:'Continuous', own:'Claims IT', ctl:['C7']}),
+N('purview','Microsoft Purview','Data governance & lineage','c-az-svc','both',null,{
+  in:'Metadata from the lake, ODS and marts.',
+  proc:'Catalogues data assets, classifies sensitive data and records lineage across the platform.',
+  out:'Lineage and classification evidence supporting data governance and audit.',
+  freq:'Continuous', own:'Data Platform', ctl:['C15']}),
+N('analytics','Analytics workspaces','Data science & advanced analytics','c-az-svc','both',null,{
+  in:'Curated lake and mart data, plus temporary legacy data sources.',
+  proc:'Data science workspaces used for pricing, fraud and claims analytics.',
+  out:'Model outputs to the decision engine and to management reporting.',
+  freq:'Continuous', own:'Data Platform', ctl:[]}),
+
+/* ---------------- BAND 3 — TRANSPORT ---------------- */
+N('globalscape','GlobalScape EFT','Managed file transfer + DMZ gateway','c-mft','cur',null,{
+  in:'Scheduled system-to-system file transfers from third parties and externally hosted platforms — Duck Creek, Eclipse, Transactor, Profin, IB Suite, ICE, Hood, DXC Assure, Ataccama, Tagetik, PEX exchange rates and the banks.',
+  proc:'Enhanced File Transfer with a DMZ Gateway acting as a communication proxy, so no inbound connection originates in the DMZ. Users authenticate in EFT; transfers run over SFTP, FTPS or SMB on a ten-minute poller for reference data. Also provides ad-hoc browser-based transfer for internal users authenticated by OPD.',
+  out:'Files delivered into the SIL landing area, the Tagetik cloud tenancy and the banking endpoints. Payment files bound for the SWIFT bureau are PGP-encrypted in transit and pushed to a named bureau account.',
+  freq:'Continuous', own:'Wipro', ctl:['C1']}),
+N('b2b','B2B Gateway','Claims & supplier integration gateway','c-mft','cur',null,{
+  in:'Supplier, third-party and payment traffic for the claims estate, including engineering, repair, credit hire and recovery suppliers.',
+  proc:'Central gateway brokering claims-side integrations and passing financial transactions towards the finance estate.',
+  out:'Claim financial transactions and payment requests to the finance file shares and SAP.',
+  freq:'Continuous', own:'Claims IT', ctl:[]}),
+N('baucal','BAU CAL','Common application layer / middleware','c-mft','cur',null,{
+  in:'Claims and policy messages requiring routing between the strategic and legacy estates.',
+  proc:'Middleware layer carrying claim, policy and payment traffic between platforms and the finance systems.',
+  out:'Messages and files to SAP, SIL and the payment estate.',
+  freq:'Continuous', own:'Claims IT', ctl:[]}),
+N('cd','Connect Direct / SFTS','Legacy scheduled transfer','c-mft','cur','decom',{
+  in:'Files from externally administered books, principally PAWS pet claims.',
+  proc:'Legacy scheduled transfer being progressively replaced by GlobalScape.',
+  out:'Claim files into the SIL landing area.',
+  freq:'Daily', own:'Wipro', ctl:['C1']}),
+N('landing','SIL landing area','/prod/data/FDSProd/Landing/inbound','c-land','cur',null,{
+  in:'All line-of-business premium, claims, OCR, SAP master data and SAP manual files, each in its own inbound folder.',
+  proc:'Files typically land between 22:00 and 03:30. The monitoring process runs 00:00–06:00; anything arriving after 06:00 is held over to the next working day. Processed files are zipped and moved to archive.',
+  out:'Files consumed by the SIL DataStage sequences.',
+  freq:'Nightly', own:'Wipro', ctl:['C1','C8']}),
+N('dmz','DMZ SFTP landing','External-origin file staging','c-land','cur',null,{
+  in:'Files originating outside the Intact infrastructure — PAWS, Profin, Pet, MT Home, Home TPA and DXC Assure C&S.',
+  proc:'Externally sourced files are staged in the demilitarised zone before being relayed inward, keeping external senders off the internal network.',
+  out:'Files relayed to the SIL landing area.',
+  freq:'Daily', own:'Wipro', ctl:['C1']}),
+N('fla','FDS file landing area','Manual upload gateway (LWWIPI20)','c-land','cur',null,{
+  in:'Around forty distinct upload formats, grouped by destination. To TDS: sales agency hierarchies, scheme policy groupings, late and central adjustments via intraday MIFF, plan and forecast, special claims. To RDS: control overlay, commercial and personal SCS apportionment, actual currency mix, commercial overview grids, personal reserve review, specific IBNR allocations, finance manual adjustments, commercial and personal claims roll forward, margin adjustments, central adjustments, actuarial parameters, PPO transactions, commercial and personal payment patterns, UPR run-off patterns, claim and premium ENID, PPO claim cashflows, future gross premium income, reinsurance premiums due, premium cashflow adjustments, premium expense cashflow, future profit commissions, future claim payments, claims expense transfer, premium provision RI recoveries, annual expense provisions and actuarial yield curves. To CDS: the finalised reinsurance result. From SAP: the trial balance. For IFRS 17: cashflows, claim cashflow allocations, internal revenue adjustments, group reinsurance, UPR roll-offs, creditor allocations and unpaid claim adjustments.',
+  proc:'Files placed on a secure share on the Cognos gateway are polled by ETL and read over SAMBA. Each file format has its own validation and mapping ruleset, and triggers the relevant downstream calculation.',
+  out:'Validated records into TDS, RDS, CDS and the SAP schema within FDS.',
+  freq:'Daily to quarterly', own:'Finance Systems', ctl:['C16']}),
+
+/* ---------------- BAND 4 — SIL ---------------- */
+N('sil','Single Integration Layer','IBM DataStage transform & routing','c-sil','cur','decom',{
+  in:'Every LoB premium file (CPF or AIS format), every claims file (CCF), the SAP manual premium file (MPF), and SAP master tables loaded nightly.',
+  proc:'The single most important processing step in the finance estate. SIL validates file integrity and every attribute; replicates the SAP GL account, profit centre and company code (GPC) lookup so it is identical to SAP; allocates a unique Reconciliation ID to every transaction so SAP and TDS can be tied out automatically; filters non-premium, balance-sheet, Atlas Ireland, Ministry of Defence and AIS IPT transactions; aggregates AIS, UKRIS, Stage 2 and UK Atlas coverage-level rows to policy-version level for SAP; generates OCR reversal and inter-entity balancing transactions; and holds error records until master data is corrected.',
+  out:'Two distinct output streams — SIFF (premium), CIFF (claims) and MIFF (manuals) to TDS, and thirty-two separate SAP-format interface files to the general ledger.',
+  freq:'Nightly, 00:00–06:00', own:'Wipro ADM', ctl:['C1','C2','C3','C4','C5']}),
+N('infogix','FRACO / Infogix','Automated reconciliation','c-sil','cur',null,{
+  in:'Posted SAP transactions, TDS transactions and the incoming LoB and MIFF transactions, matched on the Reconciliation ID.',
+  proc:'Provides a daily reconciliation of every claim, premium and manual adjustment transaction posted to SAP against the equivalent transaction in TDS.',
+  out:'Daily reconciliation results and exception reporting to Finance Systems.',
+  freq:'Daily', own:'Finance Systems', ctl:['C5']}),
+N('silrej','SIL reject & recycle','Error hold and reprocessing','c-sil','cur',null,{
+  in:'Records failing file-level integrity or attribute-level validation, and records with unmapped GL account, profit centre or company code.',
+  proc:'Rejected records are held in a resolvable format rather than discarded. Once master data is corrected they are recycled into the next run; error logs older than a year are purged.',
+  out:'Recycled transactions into the normal SIL flow; unresolved items reported through Cognos exception reports.',
+  freq:'Daily', own:'Finance Systems', ctl:['C2','C15']}),
+N('ataccama','Ataccama RDM','Reference data management (AWS SaaS)','c-ref','cur',null,{
+  in:'Business-maintained reference and dimensional data for SIL, TDS, SCS and the Star 3 mapping tables, entered through a browser interface, plus bulk uploads prepared in finance spreadsheets.',
+  proc:'Changes are agreed through a defined business process, then a version is published and CSV files generated. GlobalScape collects them on a ten-minute poller. The ETL load waits if a repeatable rollup, SCS reclassification, intraday MIFF or reinsurance allocation load is in progress.',
+  out:'Versioned CSV reference files loaded into the SIL, TDS, SCS and SAP tables inside FDS.',
+  freq:'Daily 17:00 extract, ad hoc versions', own:'Finance Systems', ctl:['C9']}),
+N('sapmd','SAP master data feed','GPC and mapping tables','c-ref','cur',null,{
+  in:'SAP profit centre, GL account, company code, currency and Star 3 entity mapping tables.',
+  proc:'Copied nightly at 20:00 into SIL and TDS so that the integration layer maps exactly as the ledger does. Profit centre unlocking requires the Solvency II attributes to be assigned before use.',
+  out:'Master tables used by the GPC enrichment in SIL and the dimensional lookups in TDS.',
+  freq:'Nightly', own:'Wipro ADM SAP', ctl:['C3','C9']}),
+
+/* ---------------- BAND 5 — FDS ---------------- */
+N('tds','Transactional Data Store','Cover Snapshot & SCS classification','c-fds','cur','decom',{
+  in:'SIFF premium, CIFF claims and MIFF manual adjustment files from SIL, plus manual uploads from the file landing area.',
+  proc:'Validates incoming files, applies dimensional lookups, then consolidates everything into Cover Snapshot — a single common transactional format. Applies the Single Class Structure classification, calculates development periods and brought-forward / carried-forward rollups for claims, calculates Unearned Premium Reserve and Earned Premium, and apportions centrally posted amounts down to policy level.',
+  out:'Cover Snapshot and Period Measures to ADS; transactions to RDS, the actuarial sandpit and the performance data store.',
+  freq:'Nightly 00:00–06:00', own:'Finance Systems', ctl:['C7','C8','C10']}),
+N('ads','Aggregate Data Store','Monthly & quarterly aggregates','c-fds','cur','decom',{
+  in:'Cover Snapshot data, Period Measures and Reinsurance Period Measures.',
+  proc:'Builds from 06:00 once the TDS CIFF, SIFF and MIFF completion flags are present. Produces six transactional monthly aggregates plus two using apportionment of centrally calculated revenue and expense to policy level, and the quarterly aggregates that support both the Solvency II QRT submission and the IFRS 17 data handoff.',
+  out:'Aggregates to Cognos reporting, to the QRT process and to the IFRS 17 staging area.',
+  freq:'Daily build, monthly & quarterly aggregates', own:'Finance Systems', ctl:['C8','C10']}),
+N('cds','Counterparty Data Store','Reinsurance counterparty results','c-fds','cur','decom',{
+  in:'Incoming reinsurance transactions and the reinsurer panel splits from the reinsurance allocation upload.',
+  proc:'Consolidates reinsurance transactions ready for enrichment by the reinsurance team and automatically spreads reinsurance IBNR alongside calculated actuals.',
+  out:'An agreed finalised reinsurance result, uploaded and reconciled, feeding the reinsurance QRT submission and RDS.',
+  freq:'Quarterly', own:'Reinsurance Finance', ctl:['C16']}),
+N('rds','Results Data Store','IBNR, technical provisions & QRT','c-fds','cur','decom',{
+  in:'Actuarial grids, IBNR adjustments, reserve reviews, payment patterns, yield curves, ENID, PPO cashflows, expense provisions and the SAP trial balance.',
+  proc:'Validates and maps every upload format, then calculates IBNR, technical provisions and cashflows for expense, claim and premium, together with the exchange movements on IBNR. Assembles the IFRS 17 staging area holding everything required by the calculation engine.',
+  out:'SAP upload files for each quarter-end IBNR posting, thirteen Solvency II QRT aggregates for the group TM1 consolidation, and seventeen datasets for the IFRS 17 calculation engine.',
+  freq:'Quarterly, with daily calculation watcher', own:'Finance Systems', ctl:['C10','C16']}),
+N('cognos','Cognos BI','FDS reporting & control layer','c-fdsout','cur','decom',{
+  in:'TDS, ADS, CDS, RDS and the SAP schema within FDS.',
+  proc:'Four reporting areas: ad-hoc query through Query Studio on the framework, system error reports for SIL and TDS monitoring, advanced reports through Report Studio, and vendor-built reports for financial reporting. Reports are withheld until all SIL and TDS processing completes, to prevent reporting on incomplete results.',
+  out:'Control and exception reports, the Star 3 injection pack reports, UPR and switch reports used to post journals, and Excel extracts to end users.',
+  freq:'Daily', own:'Finance Systems', ctl:['C15','C12']}),
+N('pds','Performance Data Store','Business reporting warehouse','c-fdsout','cur',null,{
+  in:'A daily delta feed of transactional and reference data from FDS.',
+  proc:'Holds a copy of FDS on more accessible architecture so business reporting does not run against the regulatory warehouse.',
+  out:'Curated data to Qlik and business MI consumers.',
+  freq:'Daily', own:'Finance Systems', ctl:[]}),
+N('pbmi','PBMI / BPMI','Personal & business MI marts','c-fdsout','cur',null,{
+  in:'Monthly TDS extracts — AIS personal, Stage 2 home earned premium, UKRIS closing UPR, SAP equivalent, cancellations and reinstatements.',
+  proc:'Extracted by scheduled DataStage jobs rather than Cognos reports because of data volume; runs only on the last period cut-off date of the source systems.',
+  out:'Datamarts consumed by the commercial, personal and central MI teams.',
+  freq:'Monthly', own:'Central MI', ctl:[]}),
+
+/* ---------------- BAND 6 — LEDGER & CASH ---------------- */
+N('sapgl','SAP ECC General Ledger','The book of record','c-sap','cur','decom',{
+  in:'Thirty-two LoB interface files from SIL each night; manual journals; Ariba invoices; Concur expenses; Winshuttle uploads; off-system manual feeds; FDS WD1 automated postings; quarter-end IBNR postings from RDS; and IFRS 17 journals returned from Tagetik.',
+  proc:'Posting is monitored through the interface tracking table, with defined error routes for blocked GL accounts, blocked or missing profit centres, invalid profitability analysis characteristics and closed posting periods. Period close is controlled by posting period locks.',
+  out:'Trial balance to FDS on working day 4 and again on working day 6; master tables nightly to SIL; a thirty-minute transaction and trial balance extract to Hydra; balances to Blackline, Anaplan and the Star 3 injection pack.',
+  freq:'Continuous, nightly interfaces', own:'Wipro ADM SAP', ctl:['C6','C10','C12']}),
+N('sapar','SAP AR / AP','Receivables, payables & fixed assets','c-sap','cur','decom',{
+  in:'Premium receivables from the policy estate, claim payment requests, supplier invoices and expense claims.',
+  proc:'Accounts receivable and payable subledgers, credit control and debt management, including VAT preparation.',
+  out:'Payment instructions to Bottomline PTX and the payment services layer; postings to the general ledger.',
+  freq:'Daily', own:'Wipro ADM SAP', ctl:['C17']}),
+N('sappi','SAP PI / XI','Enterprise application integration','c-sap','cur','decom',{
+  in:'Scheduled data transferred in and out of SAP ERP, including HMRC and payment gateway traffic.',
+  proc:'Integration layer providing additional firewall control for external communication.',
+  out:'Files and messages to external parties and internal systems.',
+  freq:'Scheduled', own:'Wipro ADM SAP', ctl:[]}),
+N('ariba','SAP Ariba P2P','Procure to pay','c-feeders','cur',null,{
+  in:'Purchase requisitions, approvals and supplier invoices raised by the business.',
+  proc:'Internet-based purchasing tool; approved invoices are routed to the payables subledger through a staging server.',
+  out:'Approved payables into SAP AP for payment.',
+  freq:'Daily', own:'Procurement', ctl:['C17']}),
+N('concur','Concur','Personal expenses','c-feeders','cur',null,{
+  in:'Employee expense claims and corporate card transactions.',
+  proc:'Expense capture and approval, with a bi-directional interface to SAP for posting and employee master data.',
+  out:'Expense postings to SAP GL and reimbursement through payroll or BACS.',
+  freq:'Daily', own:'Finance', ctl:['C17']}),
+N('winshuttle','Winshuttle','Controlled spreadsheet upload to SAP','c-feeders','cur',null,{
+  in:'Finance-prepared journal and master data spreadsheets.',
+  proc:'Automated upload tool that scripts SAP transactions from spreadsheets. Configuration changes within the Intact estate are made by ADM; the vendor supports the add-on itself.',
+  out:'Journals and master data changes posted into SAP.',
+  freq:'As required', own:'Finance Systems', ctl:['C16']}),
+N('manual','Off-system manual feeds','Writasure, MAQS, EPOQ, ProgInfo FR3','c-feeders','cur',null,{
+  in:'Off-system manual balances — pools, terrorism, deferred acquisition cost, expenses and regional ledgers including the German ProgInfo FR3 feed.',
+  proc:'Manually prepared and loaded, in some cases through Winshuttle, in others by direct journal.',
+  out:'Journals into SAP GL.',
+  freq:'Monthly', own:'Finance', ctl:['C16']}),
+N('intrev','Internal Revenue','Intra-group revenue arrangements','c-feeders','cur',null,{
+  in:'Internal arrangement and intra-group revenue data, previously held in a standalone database now absorbed into FDS.',
+  proc:'Identifies internal arrangements and generates the consolidation bookings and regional bookings needed to eliminate intra-group revenue.',
+  out:'Postings to SAP GL and inputs to the FDS EUC upload set.',
+  freq:'Monthly', own:'Finance', ctl:['C16']}),
+N('groupre','Group Reinsurance','Group RI revenue feed','c-feeders','cur',null,{
+  in:'Group reinsurance revenue amounts agreed with the group reinsurance function.',
+  proc:'Loaded as a business process feed through the FDS file landing area and posted to the ledger.',
+  out:'Postings to SAP GL and records into the FDS EUC upload set.',
+  freq:'Quarterly', own:'Reinsurance Finance', ctl:['C16']}),
+N('sunacct','Sun Accounts','Global Europe regional ledgers','c-feeders','cur','decom',{
+  in:'Regional Global Europe accounting entries held on legacy Sun ledgers.',
+  proc:'Regional ledger balances, with migration to SAP in progress.',
+  out:'Balances into SAP GL.',
+  freq:'Monthly', own:'GE Finance', ctl:['C16']}),
+N('dcbill','Duck Creek Billing','Personal lines billing & cash','c-feeders','cur','decom',{
+  in:'Customer premium collections, instalments and refunds for the Unity book.',
+  proc:'Billing engine matching cash to policy, integrated through BizTalk to the payment estate.',
+  out:'Cash and receivables postings into SAP AR.',
+  freq:'Daily', own:'Operations', ctl:['C18']}),
+
+N('epg','Experian Payment Gateway','Direct debit & card collections','c-pay','cur',null,{
+  in:'Direct debit instructions, card collections and refunds from the policy and billing estate.',
+  proc:'Central collections gateway handling outward direct debit and credit, with returns and rejections fed back to source.',
+  out:'Collection files to the banks; returns and rejections to the LoB and to cash management.',
+  freq:'Daily', own:'Cash Management', ctl:['C17','C18']}),
+N('gps','GPS','Cheque & claims payment system','c-pay','cur','decom',{
+  in:'Claim and other cheque payment requests, including Tower and RBS-sourced claim cheques.',
+  proc:'Generates outward cheque payments and reconciles cashed cheque data returned by the bank.',
+  out:'Cheque files to the print and payment estate; cashed cheque data back to the claims systems.',
+  freq:'Daily', own:'Cash Management', ctl:['C17','C18']}),
+N('ptx','Bottomline PTX','Payment orchestration & release','c-pay','cur',null,{
+  in:'Approved payment instructions from SAP AR and the claims payment estate.',
+  proc:'Consolidates and releases customer and supplier payments to the bank, applying payment authorisation controls.',
+  out:'Payment files to HSBCnet and the banking providers; payment status and confirmations back to SAP.',
+  freq:'Daily', own:'Cash Management', ctl:['C17']}),
+N('bacs','BACS & cheque services','Bulk payment rails','c-pay','cur',null,{
+  in:'Outward BACS payments including payroll, claim settlements and supplier payments, plus cheque production.',
+  proc:'Bulk payment submission with failure and rejection reporting back into the recovery and reconciliation process.',
+  out:'Payments to beneficiaries; BACS failures back to the finance file share.',
+  freq:'Daily', own:'Cash Management', ctl:['C17','C18']}),
+N('echq','eCheques & Premier Cheque','Cheque requisition & payment','c-pay','cur',null,{
+  in:'Approved cheque payment requisitions, typically for claim settlements.',
+  proc:'Cheque requisition, approval and production, with incoming cheque scanning handled by Cognitronics.',
+  out:'Cheques issued to payees; payment records to SAP and the claims systems.',
+  freq:'Daily', own:'Cash Management', ctl:['C17']}),
+N('ebank','e-Banking','Bank statement import','c-pay','cur',null,{
+  in:'Daily bank statements from the banking providers.',
+  proc:'Imports statement data for cash allocation and reconciliation across the ledger and the LoB cash systems.',
+  out:'Statement data into SAP and the LoB cash matching processes.',
+  freq:'Daily', own:'Cash Management', ctl:['C18']}),
+N('prgx','PRGX','Duplicate payment detection','c-pay','cur',null,{
+  in:'Payment history across the payables and claims payment estate.',
+  proc:'Independent duplicate payment identification and recovery service.',
+  out:'Duplicate payment exceptions and recoveries back to finance.',
+  freq:'Periodic', own:'Finance', ctl:['C17']}),
+N('orb','ORB','Debt management & recoveries','c-pay','cur',null,{
+  in:'Overdue premium debt and recovery cases from SAP AR and the broker knowledge database.',
+  proc:'Debt management workflow and collections tracking.',
+  out:'Recovery receipts and write-off decisions back to SAP AR.',
+  freq:'Daily', own:'Credit Control', ctl:['C18']}),
+
+N('hsbc','HSBCnet & banking providers','HSBC, Barclays, Lloyds','c-treas','cur',null,{
+  in:'Payment files, direct debit collections, cheque presentations and statement requests.',
+  proc:'Core banking relationships handling collections, payments and cash positioning. HSBC is the principal bank; without these feeds cash management could not operate.',
+  out:'Cleared payments to payees; statements, cashed cheque data, positive pay files, rejections and BACS failures returned to the estate.',
+  freq:'Daily', own:'Treasury', ctl:['C18']}),
+N('fides','FIDES','SWIFT bureau','c-treas','cur',null,{
+  in:'Foreign payment instructions requiring SWIFT or SEPA settlement.',
+  proc:'SWIFT bureau service converting instructions into network messages.',
+  out:'Foreign payments settled over SWIFT and SEPA.',
+  freq:'Daily', own:'Treasury', ctl:['C17']}),
+N('wallst','Wall Street Suite','Treasury management system','c-treas','cur',null,{
+  in:'Cash positions, investment and debt instruments, FX and money market deals.',
+  proc:'Treasury front-to-back processing for liquidity, funding and FX exposure management. Deal and position data is exchanged with the estate through GlobalScape.',
+  out:'Treasury accounting entries to SAP GL; settlement instructions to the banks and FIDES.',
+  freq:'Daily', own:'Treasury', ctl:['C17']}),
+N('t360','360T & Finastra','FX trading & confirmation','c-treas','cur',null,{
+  in:'FX trade requests and market pricing.',
+  proc:'Electronic FX execution and confirmation, interfaced with the treasury management system.',
+  out:'Executed trades into Wall Street Suite for settlement and accounting.',
+  freq:'Daily', own:'Treasury', ctl:[]}),
+N('pex','PEX exchange rates','FX rate source','c-treas','cur',null,{
+  in:'Published exchange rates sourced from the financial press feed.',
+  proc:'Rates are collected and distributed for use across ledger translation and reporting.',
+  out:'Rate files into SAP and the currency load into TDS at 02:00.',
+  freq:'Daily', own:'Finance Systems', ctl:['C9']}),
+N('hydra','Hydra','SAP reconciliation database','c-treas','cur',null,{
+  in:'SAP transaction extracts (document header and line item) and the trial balance, produced on a thirty-minute cycle and pushed as zipped files through GlobalScape.',
+  proc:'Holds a near-real-time copy of SAP postings for reconciliation and query.',
+  out:'Reconciliation query capability for Finance Systems; trial balance also routed to FDS.',
+  freq:'Every 30 minutes', own:'Finance Systems', ctl:['C12']}),
+
+/* ---------------- BAND 7 — CALCULATION ENGINES ---------------- */
+N('osiris','OSIRIS / Minerva','Actuarial sandpit & reserving store','c-act','cur',null,{
+  in:'A direct database pull of Cover Snapshot transactions from TDS on a monthly basis.',
+  proc:'Provides a business-as-usual analysis area used to prepare data at panel or channel level for actuarial analysis, and an offline area for ad-hoc analysis and prototyping.',
+  out:'Panel and channel level datasets into ResQ; special claims and policy indicator files back into TDS.',
+  freq:'Monthly', own:'Actuarial', ctl:['C16']}),
+N('resq','ResQ','Claims reserving software','c-act','cur',null,{
+  in:'Panel and channel level claims triangles from the actuarial sandpit, plus offline analysis sources.',
+  proc:'Actuarial reserving analysis producing ultimate loss estimates and IBNR by reserving class.',
+  out:'IBNR and reserving results into the FDS EUC upload set and onward into RDS.',
+  freq:'Quarterly', own:'Actuarial', ctl:['C16']}),
+N('igloo','Igloo','Capital & risk modelling','c-act','cur',null,{
+  in:'Reserving results, exposure and premium data from the actuarial estate.',
+  proc:'Stochastic capital and risk modelling supporting the internal model and capital requirement.',
+  out:'Capital and risk model outputs to actuarial reporting and the Solvency II submission.',
+  freq:'Quarterly', own:'Actuarial', ctl:[]}),
+N('actmod','Actuarial modelling & risk tools','Insight, Pfaroe, ESG, Excel/VB','c-act','cur',null,{
+  in:'Reserving outputs, economic assumptions and market data.',
+  proc:'Supporting modelling tools for pricing, economic scenario generation and reserve review, including spreadsheet-based models.',
+  out:'Assumptions, patterns and ratios into the reserving and IFRS 17 processes.',
+  freq:'Quarterly', own:'Actuarial', ctl:['C16']}),
+N('tagetik','Tagetik','IFRS 17 calculation engine (SaaS)','c-calc','cur','decom',{
+  in:'Seventeen structured datasets sent quarterly by SFTP from RDS and ADS — amounts input, allocation amounts and drivers, pattern and ratio headers and percentages, resultant cashflows, unit of account header and mapping, input level header, GBM header, reinsurance links and claim cashflow allocations — plus globally supplied FX rates, entity hierarchy and interest rate curves.',
+  proc:'ETL load populates the Tagetik data layer; the Input Data Model transforms IFRS 4 data into cashflows; the IFRS 17 starter kit generates cashflow accounting entries; then journals are generated. Every stage passes through validations, crosschecks and consistency checks. Amount signage is inverted on extract because the engine holds signage opposite to FDS.',
+  out:'Two return file types, TCEP and TCER, each split into three regional files for UK, Ireland and Group Reinsurance and identified by a header flag. These go by SFTP through GlobalScape directly to SAP — not back to FDS. Also produces the IFRS 17 balance sheet and profit and loss, and a Star 3 extract feeding the group injection pack.',
+  freq:'Quarterly', own:'Group Finance Systems', ctl:['C14']}),
+N('ifrsstage','IFRS 17 staging area','ADS staging for measurement','c-calc','cur','decom',{
+  in:'Quarterly ADS aggregates, the debtor and creditor allocation amounts derived at trial balance load, and manual allocation uploads.',
+  proc:'Assembles and holds everything required to post to the calculation engine, some of it shared with the Solvency II process. Allocation codes are built as IFRS 17 type, group-or-reinsurance indicator and currency.',
+  out:'The seventeen calculation engine datasets, transmitted as a zipped file set to the Tagetik tenancy.',
+  freq:'Quarterly', own:'Finance Systems', ctl:['C14','C16']}),
+N('sas','SAS','Target group IFRS 17 measurement engine','c-calc','tgt',null,{
+  in:'Master data, ledger outputs, unearned premium and actuarial cashflows from the Enterprise Data Platform.',
+  proc:'A single global SAS instance acting as the group IFRS 17 measurement engine, with regional segregation handled by processing entity. Direct-to-IFRS-17 approach for global measurement.',
+  out:'Measurement results into the Oracle accounting hub and the finance data warehouse.',
+  freq:'Periodic', own:'Target state', ctl:[]}),
+
+/* ---------------- BAND 8 — REPORTING & CONTROL ---------------- */
+N('qlik','Qlik','Business visualisation','c-mi','cur',null,{
+  in:'Curated data from the Performance Data Store and the on-premise QVD layer.',
+  proc:'Self-service dashboards and management information for finance and business users.',
+  out:'Dashboards to MI users across finance and the business.',
+  freq:'Daily', own:'Central MI', ctl:[]}),
+N('tm1','TM1','Group reporting & investment repository','c-mi','cur','decom',{
+  in:'Thirteen Solvency II QRT aggregates from RDS and investment data by investment type.',
+  proc:'Group consolidation cube for regulatory returns and the investment repository.',
+  out:'Consolidated regulatory data into the Solvency II return preparation tool.',
+  freq:'Quarterly', own:'Group Finance', ctl:['C12']}),
+N('assist','Assist','Solvency II return submission','c-mi','cur','decom',{
+  in:'Consolidated Solvency II data from TM1 and the QRT aggregates.',
+  proc:'Prepares and validates the regulatory return for submission.',
+  out:'Solvency II returns to the regulator.',
+  freq:'Quarterly', own:'Group Finance', ctl:['C12']}),
+N('euc','Excel EUC','End-user computing layer','c-mi','cur',null,{
+  in:'Data extracts from Cognos, Qlik, SAP and the calculation engines.',
+  proc:'User-developed spreadsheets used for analysis, injection pack assembly and manual adjustment preparation. Extracts are the responsibility of the business user, with no system-level audit and control over the resulting files.',
+  out:'Manual uploads back into FDS and SAP, and inputs to the group injection packs. A recognised control focus area.',
+  freq:'Continuous', own:'Finance', ctl:['C16']}),
+
+N('star3','Star 3','Group consolidation & financial statements','c-group','cur','decom',{
+  in:'An Excel-based injection pack assembled from SAP trial balance data and the Tagetik IFRS 17 extract, plus regional submissions.',
+  proc:'Group results consolidation. Fifteen return forms are populated from Cognos SQL reports driven by Ataccama-managed mapping tables — balance sheet assets and liabilities, goodwill and intangibles, currency analysis, claims reserve and reserve movement analysis, underwriting analysis, profit and loss, taxation, other debtors and creditors.',
+  out:'Consolidated group financial statements and the disclosure data set.',
+  freq:'Quarterly', own:'Group Finance', ctl:['C12','C15']}),
+N('cdm','Disclosure Management','Statutory disclosure production','c-group','cur','decom',{
+  in:'Consolidated results from Star 3.',
+  proc:'Assembles the statutory financial statements and disclosure notes.',
+  out:'Published financial statements and regulatory disclosure.',
+  freq:'Half-yearly / annual', own:'Group Finance', ctl:[]}),
+N('board','Board & management reporting','UK board pack','c-group','cur',null,{
+  in:'Consolidated results, management underwriting analysis and planning data.',
+  proc:'Assembly of the board and executive reporting pack.',
+  out:'Board and executive reporting.',
+  freq:'Monthly / quarterly', own:'Finance', ctl:[]}),
+
+N('blackline','Blackline','Balance sheet reconciliation & certification','c-plan','both',null,{
+  in:'General ledger balances and supporting reconciliation inputs from SAP and the sub-ledgers.',
+  proc:'Web-based reconciliation and matching. Reconciliations are prepared, reviewed and certified in the tool. The vendor supports the add-on; connector changes within the Intact estate are applied by ADM, and issues are routed either to the vendor or through the standard SAP support process depending on where the fault lies.',
+  out:'Certified reconciliations and exception reporting — the primary balance sheet reconciliation control.',
+  freq:'Monthly', own:'Group Finance', ctl:['C13']}),
+N('anaplan','Anaplan','Operational planning & allocation','c-plan','both',null,{
+  in:'Actuals from SAP and FDS, together with drivers and assumptions from the business.',
+  proc:'Operational planning, budgeting and forecasting, plus expense and reinsurance allocation modelling.',
+  out:'Plan and forecast data uploaded into FDS; expense allocation results posted back into SAP through the expense allocation process.',
+  freq:'Monthly / planning cycle', own:'FP&A', ctl:['C16']}),
+N('rosslyn','Rosslyn & procurement MI','Spend analytics','c-plan','cur',null,{
+  in:'Purchase and supplier spend data from the procurement estate.',
+  proc:'Spend analytics and supplier management reporting.',
+  out:'Procurement MI to the business.',
+  freq:'Monthly', own:'Procurement', ctl:[]}),
+
+N('edp','Intact EDP / regional data platforms','Enterprise Data Platform','c-tgt-fin','tgt',null,{
+  in:'New line-of-business systems directly, and legacy systems through the integration layer, avoiding a rebuild of existing logic.',
+  proc:'A decentralised finance data platform with regional platforms and a standardised data model, feeding shared global solutions.',
+  out:'Data to the SAS measurement engine, the accounting hub and the finance data warehouse.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('ahcs','Accounting Hub (AHCS)','Global subledger gateway to the ledger','c-tgt-fin','tgt',null,{
+  in:'Measurement results from SAS and transactional data from the Enterprise Data Platform.',
+  proc:'The single global subledger gateway into the Oracle ledgers, applying the centrally governed global chart of accounts.',
+  out:'Accounting entries into the Oracle general ledger.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('oracle','Oracle ERP','Target general ledger & subledgers','c-tgt-fin','tgt',null,{
+  in:'Accounting entries from the accounting hub, plus payables, receivables, fixed assets, cash management, projects and intercompany subledgers.',
+  proc:'One global ERP instance with multiple ledgers — primary, secondary, reporting and translation — plus revaluations, allocations and balance reporting.',
+  out:'Ledger balances to consolidation, planning, reconciliation and reporting.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('fccs','FCCS','Consolidation','c-tgt-fin','tgt',null,{
+  in:'Ledger balances from the Oracle ERP and regional submissions.',
+  proc:'Sub-consolidation and group consolidation within the Oracle EPM suite.',
+  out:'Consolidated results to statutory reporting and disclosure.',
+  freq:'Monthly / quarterly', own:'Target state', ctl:[]}),
+N('epm','Oracle EPM suite','EPBCS, ARCS, EPCM, EDMCS','c-tgt-fin','tgt',null,{
+  in:'Ledger, plan and reference data.',
+  proc:'Planning and budgeting in EPBCS, reconciliation in ARCS, enterprise expense and IFRS 17 expense allocation in EPCM, and finance master data governance in EDMCS.',
+  out:'Plans, certified reconciliations, allocations and governed master data.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('faw','FAW / FDI & Power BI','Finance analytics warehouse','c-tgt-fin','tgt',null,{
+  in:'Ledger outputs, the finance data domain and the actuarial data warehouse.',
+  proc:'Finance analytics and decision support, with extraction available to support local regulatory reporting needs.',
+  out:'Operational, management and local regulatory reporting.',
+  freq:'Continuous', own:'Target state', ctl:[]}),
+N('workiva','Workiva','Statutory reporting & disclosure','c-tgt-fin','tgt',null,{
+  in:'Consolidated results from FCCS.',
+  proc:'Statutory reporting for financial statements, notes and management discussion and analysis.',
+  out:'Published statutory reporting.',
+  freq:'Half-yearly / annual', own:'Target state', ctl:[]}),
+
+/* ---- messaging, document capture, HR/payroll, allocation ---- */
+N('biztalk','BizTalk estate','DC, CCS, Unity & EDI BizTalk','c-msg','cur','decom',{
+  in:'Policy, billing and cash messages from Duck Creek, CCS and the EDI estate.',
+  proc:'Message brokering between the line-of-business platforms and the payment and integration services. Several separate BizTalk instances exist rather than one.',
+  out:'Messages to the payment gateway, cash management and the ledger feeds.',
+  freq:'Continuous', own:'Wipro', ctl:[]}),
+N('mq','MQ Series','Mainframe message queueing','c-msg','cur','decom',{
+  in:'Policy, claims and payment messages to and from the mainframe estate.',
+  proc:'Queue-based transport between AIS, UKRIS, Stage 2, CCS and the surrounding systems.',
+  out:'Messages to the integration and cash management layers.',
+  freq:'Continuous', own:'Wipro', ctl:[]}),
+N('docscan','Documentum & Cognitronics','Invoice and cheque scanning','c-msg','cur','decom',{
+  in:'Scanned supplier invoices, personal expense forms, manual cheque requests and inbound cheques.',
+  proc:'Invoice images are held for accounts payable and BPO users to key the invoice document into SAP. Ireland invoices posted after 2016 are held in SAP itself rather than migrated. Cognitronics scans incoming cheques for cash allocation.',
+  out:'Invoice images supporting AP posting; scanned cheque data into the cash matching process.',
+  freq:'Daily', own:'Finance Operations', ctl:['C17','C18']}),
+N('saphr','SAP HR & Payroll','Employee data and UK payroll','c-hr','cur','decom',{
+  in:'Hire and recruitment records, employee data changes, absence, disciplinary and termination events, and self-service submissions from the portal.',
+  proc:'Runs UK payroll and employee benefit integration. An internal SAP programme spreads payroll charges across cost centres using employee mapping — this creates a file rather than receiving one from another system.',
+  out:'Payroll journals into the general ledger; BACS payment file for salaries; RTI submissions to HMRC; monthly HR data download to SAP BW.',
+  freq:'Monthly payroll, daily changes', own:'HR Services / Wipro ADM', ctl:['C6','C17']}),
+N('sapportal','SAP Portal (ESS/LSS)','Employee & leader self-service','c-hr','cur','decom',{
+  in:'Leave, sickness and overtime requests, bank detail changes, performance and compensation entries from around 7,000 employees.',
+  proc:'Web front end to SAP HR, reached from the intranet, authenticated against Active Directory. Real-time synchronisation with the ERP.',
+  out:'Approved employee changes into SAP HR; payslips and benefit statements to employees.',
+  freq:'Continuous', own:'HR Services', ctl:[]}),
+N('sapbw','SAP BW','HR management information','c-hr','cur','decom',{
+  in:'Monthly download of HR data from the ERP.',
+  proc:'Business warehouse layer holding the HR management information used by the HR and payroll teams.',
+  out:'HR MI to the people and reward functions and to planning.',
+  freq:'Monthly', own:'HR Services', ctl:[]}),
+N('hmrc','HMRC','Tax codes and statutory returns','c-hr','cur',null,{
+  in:'Tax codes and statutory notices from HMRC.',
+  proc:'Real-time information exchange for payroll — full payment submission, employer payment summary, NINO verification and earlier year updates — routed through SAP PI and the Apache service. VAT preparation runs through PXS under Making Tax Digital.',
+  out:'RTI and VAT submissions to HMRC; tax codes back into payroll.',
+  freq:'Each pay run / quarterly VAT', own:'Payroll & Tax', ctl:['C6']}),
+N('benefits','Benefit & pension providers','Benefex, Aviva, L&G, Fidelity, Achievers','c-hr','cur',null,{
+  in:'Employee benefit elections, pension contributions and recognition awards.',
+  proc:'Deduction and contribution files exchanged with providers through GlobalScape, with pension deductions for UK, Ireland and Isle of Man handled separately.',
+  out:'Deductions into payroll; contribution files to providers; recognition costs into the ledger.',
+  freq:'Monthly', own:'HR Services', ctl:['C16']}),
+N('pcm','PCM expense allocation','Cost allocation engine','c-plan','cur','decom',{
+  in:'Expense collections and driver data from Anaplan, plus actuals from the ledger.',
+  proc:'Allocates central and shared expense across cost centres and lines of business ahead of posting.',
+  out:'Allocation journals back into SAP GL.',
+  freq:'Monthly', own:'FP&A', ctl:['C16']}),
+N('cards','Card payment services','PaySafe, RealEx, Netbanx, Global Pay','c-pay','cur',null,{
+  in:'Customer card payments for premium, excess and instalment collection taken through digital channels and the contact centre.',
+  proc:'Card acquiring and collection services, routed through the integration layer to the banking providers.',
+  out:'Collected funds and settlement files to the banks; transaction records to the billing and cash systems.',
+  freq:'Continuous', own:'Cash Management', ctl:['C17','C18']}),
+N('truecom','True Commerce','External integration services','c-pay','cur',null,{
+  in:'External trading partner traffic supporting the cash and collections estate.',
+  proc:'Third-party integration service sitting outside the core estate.',
+  out:'Files to and from external counterparties.',
+  freq:'Daily', own:'Cash Management', ctl:[]}),
+N('legacyfeeds','Legacy policy feeds','CLMHST, Portia, Issac, Caravan Guard, off-system','c-pas-spec','cur','decom',{
+  in:'Residual policy books held on smaller and off-system platforms, including claims history, Portia, Issac and Caravan Guard.',
+  proc:'Collected through the policy staging area and GlobalScape file transfer rather than a live interface.',
+  out:'Policy and payment data into the Azure Policy ODS and into the finance source layer.',
+  freq:'Daily to monthly', own:'ADM', ctl:['C1']}),
+N('mdm','Talend ETL & Duck Creek MDM','Policy master data tooling','c-pas-core','cur','decom',{
+  in:'Policy, billing and customer master records from the Duck Creek estate.',
+  proc:'Master data management and ETL supporting the personal lines platform, including incremental policy data for reconciliation.',
+  out:'Reconciled policy and billing data to the policy staging area and the ledger feeds.',
+  freq:'Daily', own:'ADM', ctl:[]}),
+N('comms','OnePlatform & outbound comms','Quadient, Rapport, Doc Viewer','c-az-svc','cur',null,{
+  in:'Document composition requests from the claims and policy platforms, and archived documents.',
+  proc:'Produces and distributes customer correspondence by post, email, SMS and fax, with archive and identity services alongside.',
+  out:'Correspondence to customers and claimants; document records back to the claim.',
+  freq:'Continuous', own:'Operations', ctl:[]}),
+N('netreveal','NetReveal & fraud services','Counter-fraud detection','c-az-svc','cur',null,{
+  in:'Policy feeds from the personal lines estate and claim data from the platform.',
+  proc:'Fraud detection scoring on policy and claim activity, with results returned into the handling workflow.',
+  out:'Fraud referrals into claims handling; recoveries feeding the finance estate.',
+  freq:'Daily', own:'Counter Fraud', ctl:[]}),
+];
+
+/* ---------------- CONTROL POINTS (ITGC / SOX overlay) ---------------- */
+const CONTROLS = [
+  {id:'C1', m:'auto', t:'File receipt & integrity', d:'Header and trailer record counts, file sequence numbering, duplicate file detection and missing-file alerting on every inbound LoB feed. AIS additionally checks the serial number increments by one between the revenue and balance sheet files.'},
+  {id:'C2', m:'semi', t:'Attribute validation, reject & recycle', d:'Every field is validated on entry to SIL. Failing records are held rather than dropped, reported through Cognos reject diagnosis reports, and recycled once corrected — so completeness is preserved across days.'},
+  {id:'C3', m:'auto', t:'GPC mapping replicated from SAP', d:'The GL account, profit centre and company code lookup in SIL is a replica of SAP master data refreshed nightly, so the integration layer cannot map differently from the ledger.'},
+  {id:'C4', m:'auto', t:'Reconciliation ID allocation', d:'A unique Reconciliation ID is assigned to every transaction routed to both SAP and TDS. This is the key that makes automated ledger-to-warehouse tie-out possible.'},
+  {id:'C5', m:'auto', t:'SAP to TDS daily reconciliation', d:'FRACO / Infogix reconciles all claim, premium and manual adjustment transactions posted to SAP against the equivalent transactions in TDS every day, on the Reconciliation ID.'},
+  {id:'C6', m:'semi', t:'SAP interface posting error control', d:'Interface progress is tracked in SAP with defined resolution routes for blocked GL accounts, blocked or missing profit centres, invalid profitability characteristics and closed posting periods. Finance decides; ADM executes.'},
+  {id:'C7', m:'semi', t:'TDS validation & dimensional rejects', d:'Incoming SIFF, CIFF and MIFF files are validated and dimensional lookups applied, with rejects held in a resolvable format and reported through the TDS rejected records reports.'},
+  {id:'C8', m:'auto', t:'Batch dependency & completion flags', d:'Fifteen named flags gate the batch — rollups, period measures, SCS reclassification, reference data load, intraday MIFF and reinsurance allocation cannot collide. ADS waits for the TDS completion flags before building.'},
+  {id:'C9', m:'semi', t:'Reference data versioning & publication', d:'Reference and mapping data changes are made in Ataccama, agreed through a defined business process, then published as a version. Nothing reaches SIL or TDS without a published version.'},
+  {id:'C10', m:'semi', t:'Period close & account locking', d:'Posting period locks in SAP and account locking in TDS control what can be posted to a closed period, with a defined reversal process for locked accounts.'},
+  {id:'C11', m:'auto', t:'WD1 automated posting', d:'Working-day-one automation posts unearned premium reserve, Ireland non-refundable premium, Transactor VAT and Global Network entries back to the ledger from FDS, replacing manual journals.'},
+  {id:'C12', m:'semi', t:'Trial balance upload & validation', d:'The finalised SAP trial balance is provided to FDS on working day 4 and again on working day 6 once IFRS 17 adjustments return, and is validated to Star 3 before consolidation.'},
+  {id:'C13', m:'manual', t:'Balance sheet reconciliation', d:'Blackline holds the preparation, review and certification of balance sheet reconciliations against the general ledger — the principal account reconciliation control.'},
+  {id:'C14', m:'auto', t:'Calculation engine validation', d:'Tagetik applies validations, then crosschecks, then consistency checks across the ETL load, input data model, starter kit and journal generation stages before any journal reaches the ledger.'},
+  {id:'C15', m:'auto', t:'Monitoring, alerting & incident automation', d:'Log monitoring raises tickets automatically on severe errors and missing input files, and FDS aborts raise priority-2 tickets automatically. Cognos reporting is withheld until all processing completes, so nobody reports on a partial night.'},
+  {id:'C16', m:'manual', t:'Manual upload validation', d:'Every manual and end-user computing upload entering FDS through the file landing area is validated against a defined format, mapped, and triggers its downstream calculation — the control boundary around a large EUC population.'},
+  {id:'C17', m:'semi', t:'Payment authorisation & duplicate control', d:'Payment release through Bottomline PTX and the payment gateways, supported by positive pay files to the bank and independent duplicate payment detection.'},
+  {id:'C18', m:'semi', t:'Bank reconciliation', d:'Daily bank statement import, cashed cheque data and BACS failure reporting drive cash allocation and reconciliation back to the ledger and the line-of-business cash systems.'},
+  {id:'C19', m:'auto', t:'Encryption of payment files in transit', d:'Payment instruction files leaving SAP for the SWIFT bureau are PGP-encrypted by GlobalScape before release, and delivered to a named account on the bureau endpoint rather than an open drop.'},
+];
+
+/* ---------------- EDGES ---------------- */
+const E = (f,t,label,kind,ctl) => ({f,t,label:label||'',kind:kind||'cur',ctl:ctl||null});
+
+const EDGES = [
+// ---- Sources to transport
+E('ais','landing','Premium + RI claims (AISnnnnn) + balance sheet, daily','cur','C1'),
+E('ukris','landing','Gross & RI premium, claims, OCR','cur','C1'),
+E('stage2','landing','Gross premium CPF, daily','cur','C1'),
+E('atlas','landing','Confirmed & pipeline premium, claims, OCR','cur','C1'),
+E('synergy','landing','Premium, claims, OCR, monthly','cur','C1'),
+E('ip','landing','Premium, claims, OCR','cur','C1'),
+E('ccs','landing','Combined claims CCF, daily','cur','C1'),
+E('duckcreek','globalscape','Premium CPF','cur',null),
+E('eclipse','globalscape','WIP & DIFC premium and claims','cur',null),
+E('transactor','globalscape','Telematics premium','cur',null),
+E('profin','globalscape','Premium, claims, OCR, monthly','cur',null),
+E('ice','globalscape','Premium + balance sheet','cur',null),
+E('hood','globalscape','Premium + balance sheet','cur',null),
+E('dxc','globalscape','Nightly CPF incl. corrected rejects','cur','C1'),
+E('genius','globalscape','Ireland premium & claims (Irish EFT)','cur',null),
+E('mthome','dmz','TPA premium & claims','cur',null),
+E('paws','cd','Pet claims CCF','cur',null),
+E('sapiens','fla','Treaty & cession data','cur','C16'),
+E('cd','landing','Relayed claim files','cur',null),
+E('dmz','landing','External-origin files relayed inward','cur','C1'),
+E('globalscape','landing','All third-party & DMZ files','cur','C1'),
+E('globalscape','dmz','External staging','cur',null),
+
+// ---- Sources into Azure platform
+E('ais','logic','Policy snapshot & status updates','cur',null),
+E('ukris','logic','Policy & intermediary updates','cur',null),
+E('stage2','logic','Policy snapshot','cur',null),
+E('duckcreek','logic','Policy & bank detail updates','cur',null),
+E('ice','logic','Policy data','cur',null),
+E('hood','logic','Policy data','cur',null),
+E('atlas','logic','Policy data','cur',null),
+E('eclipse','logic','Policy data','cur',null),
+E('dxc','logic','Policy data','cur',null),
+E('synergy','logic','Policy data','cur',null),
+E('ip','logic','Policy data','cur',null),
+E('ccs','cmt','Legacy claims for migration','cur','C7'),
+
+// ---- Azure internals
+E('logic','podsdb','Policy & product data','cur',null),
+E('logic','raw','Source files & messages','cur',null),
+E('podsdb','gw-api','Real-time policy lookup & retrieve','cur',null),
+E('gw-api','gwcc','Claim create, reserve, payment','cur',null),
+E('gwcm','gw-api','Payee & party detail','cur',null),
+E('gw-edge','gw-api','Digital channel claim events','cur',null),
+E('gwcc','cda','Claims data replication','cur',null),
+E('cda','raw','Replicated claim transactions','cur',null),
+E('docing','cda-s3','Documents to archive','cur',null),
+E('cda-s3','docing','Archived documents on retrieval','cur',null),
+E('ocr','processed','Structured attributes from documents','cur',null),
+E('raw','staging','ETL — ADF / Databricks','cur',null),
+E('staging','processed','ETL — ADF / Databricks','cur',null),
+E('processed','cods','Curated claims data','cur',null),
+E('processed','coexist','Legacy / strategic identifier mapping','cur','C7'),
+E('processed','paystg','Payment instructions','cur','C17'),
+E('cods','marts','Dimensional build','cur',null),
+E('lake','purview','Metadata & lineage','cur',null),
+E('marts','analytics','Claims analytics datasets','cur',null),
+E('analytics','aks','Model outputs','cur',null),
+E('cmt','gwcc','Migrated claim records','cur','C7'),
+E('marts','globalscape','GWC_TDS_CLAIM CCF built from Data Mart financials','cur','C1'),
+E('gwcc','marts','Claim financial events','cur',null),
+E('paystg','b2b','Claim payment requests','cur','C17'),
+E('b2b','baucal','Financial transactions','cur',null),
+E('baucal','sil','Claim financial transactions','cur',null),
+E('b2b','sapar','Payment requests & status','cur','C17'),
+
+// ---- Transport to SIL
+E('landing','sil','Premium CPF, claims CCF, MPF manuals','cur','C1'),
+E('fla','tds','Agency hierarchies, scheme groupings, intraday MIFF, plan & forecast, special claims','cur','C16'),
+E('fla','rds','Actuarial grids, IBNR, patterns, yield curves, trial balance, IFRS 17 inputs','cur','C16'),
+E('fla','cds','Finalised reinsurance result','cur','C16'),
+
+// ---- Reference data
+E('ataccama','globalscape','Versioned reference CSVs','cur','C9'),
+E('ataccama','sil','SIL, SCS & SAP reference tables','cur','C9'),
+E('ataccama','tds','TDS dimensional & Star 3 mapping tables','cur','C9'),
+E('sapmd','sil','GPC master tables, nightly 20:00','cur','C3'),
+E('sapmd','tds','Dimensional master data','cur','C3'),
+E('sapgl','sapmd','Profit centre, GL account, company code, currency','cur','C3'),
+E('sapgl','sil','SAP manual premium file (MPF) + MIFF posting/error files','cur','C5'),
+
+// ---- SIL outputs — the fork
+E('sil','tds','SIFF premium / CIFF claims / MIFF manuals','cur','C4'),
+E('sil','sapgl','32 SAP-format interface files — the nightly posting stream','cur','C4'),
+E('sil','silrej','Failed records held for correction','cur','C2'),
+E('silrej','sil','Recycled once master data corrected','cur','C2'),
+E('sil','infogix','Transaction counts & amounts','cur','C5'),
+E('tds','infogix','TDS transactions','cur','C5'),
+E('sapgl','infogix','Posted SAP transactions','cur','C5'),
+
+// ---- FDS internals
+E('tds','ads','Cover Snapshot, period measures','cur','C8'),
+E('tds','rds','Transactional base for results','cur',null),
+E('cds','rds','Reinsurance counterparty result','cur',null),
+E('rds','cds','Reinsurer panel splits & IBNR spread','cur',null),
+E('tds','osiris','Cover Snapshot direct database pull, monthly','cur',null),
+E('tds','pds','Daily delta of transactional & reference data','cur',null),
+E('tds','pbmi','Monthly scheduled extracts','cur',null),
+E('tds','cognos','Query & control reporting','cur','C15'),
+E('ads','cognos','Aggregates for reporting','cur','C15'),
+E('rds','cognos','Results & QRT reporting','cur','C15'),
+E('pds','qlik','Curated business data','cur',null),
+E('cognos','euc','Excel extracts','cur','C16'),
+
+// ---- FDS back to ledger
+E('tds','sapgl','WD1 automation: UPR, Ireland NRP, Transactor VAT, Global Network','ret','C11'),
+E('rds','sapgl','Quarter-end IBNR & technical provision postings','ret','C10'),
+E('sapgl','rds','SAP trial balance (STB) WD4 & WD6','cur','C12'),
+E('sapgl','hydra','30-minute transaction & trial balance extract via GlobalScape','cur','C12'),
+
+// ---- Ledger feeders
+E('ariba','sapgl','Approved supplier invoices','cur','C17'),
+E('concur','sapgl','Expense postings','cur','C17'),
+E('winshuttle','sapgl','Scripted journals & master data','cur','C16'),
+E('manual','sapgl','Off-system manual journals','cur','C16'),
+E('intrev','sapgl','Intra-group revenue eliminations','cur','C16'),
+E('groupre','sapgl','Group reinsurance revenue','cur','C16'),
+E('sunacct','sapgl','Regional GE balances','cur','C16'),
+E('dcbill','sapar','Billing cash & receivables','cur','C18'),
+E('intrev','fla','Internal revenue upload','cur','C16'),
+E('groupre','fla','Group RI upload','cur','C16'),
+E('sapgl','sapar','Subledger integration','cur',null),
+E('sapgl','sappi','External interface traffic','cur',null),
+
+// ---- Payments & cash
+E('sapar','ptx','Approved payment instructions','cur','C17'),
+E('sapar','orb','Overdue debt cases','cur','C18'),
+E('ptx','hsbc','Payment files','cur','C17'),
+E('bacs','hsbc','Bulk payment submission','cur','C17'),
+E('sapar','bacs','Payroll, supplier & settlement payments','cur','C17'),
+E('epg','hsbc','Direct debit collections','cur','C17'),
+E('duckcreek','epg','Collection instructions','cur',null),
+E('ais','epg','Collection instructions','cur',null),
+E('gps','echq','Cheque payment requests','cur','C17'),
+E('ccs','gps','Claim cheque requests','cur','C17'),
+E('echq','hsbc','Cheque presentation','cur','C17'),
+E('hsbc','ebank','Daily bank statements','cur','C18'),
+E('ebank','sapgl','Statement data for cash allocation','cur','C18'),
+E('hsbc','gps','Cashed cheque data & positive pay','cur','C18'),
+E('prgx','sapar','Duplicate payment exceptions','cur','C17'),
+E('orb','sapar','Recoveries & write-offs','cur','C18'),
+E('wallst','sapgl','Treasury accounting entries','cur',null),
+E('wallst','fides','Foreign payment instructions','cur','C17'),
+E('t360','wallst','Executed FX trades','cur',null),
+E('fides','hsbc','SWIFT / SEPA settlement','cur','C17'),
+E('globalscape','wallst','Treasury file exchange','cur',null),
+E('pex','sapgl','Exchange rates','cur','C9'),
+E('pex','tds','Currency load 02:00','cur','C9'),
+E('hsbc','bacs','BACS failures & returns','cur','C18'),
+
+// ---- Calculation engines
+E('osiris','resq','Panel & channel reserving datasets','cur',null),
+E('resq','igloo','Reserving results','cur',null),
+E('actmod','resq','Assumptions, patterns & ratios','cur','C16'),
+E('resq','fla','IBNR & reserving results as EUC upload','cur','C16'),
+E('igloo','fla','Capital & risk model outputs','cur',null),
+E('ads','ifrsstage','Quarterly aggregates & allocation amounts','cur','C14'),
+E('rds','ifrsstage','IFRS 17 cashflows, patterns & unit of account data','cur','C14'),
+E('ifrsstage','tagetik','17 datasets by SFTP, quarterly','cur','C14'),
+E('tagetik','sapgl','IFRS 17 journals by SFTP','ret','C14'),
+E('tagetik','star3','Star 3 extract — LFRC / LFIC movements','cur','C12'),
+
+// ---- Reporting & control
+E('sapgl','star3','Trial balance injection pack','cur','C12'),
+E('cognos','star3','Star 3 injection pack reports (15 forms)','cur','C12'),
+E('star3','cdm','Consolidated results','cur',null),
+E('star3','board','Group results','cur',null),
+E('rds','tm1','13 Solvency II QRT aggregates','cur','C12'),
+E('tm1','assist','Consolidated regulatory data','cur','C12'),
+E('sapgl','blackline','GL balances & reconciliation inputs','cur','C13'),
+E('sapgl','anaplan','Actuals for planning','cur',null),
+E('anaplan','sapgl','Expense & reinsurance allocation postings','ret','C16'),
+E('anaplan','fla','Plan & forecast upload','cur','C16'),
+E('qlik','board','Management information','cur',null),
+E('euc','fla','Manual adjustment uploads','ret','C16'),
+E('rosslyn','board','Procurement MI','cur',null),
+E('hydra','blackline','Reconciliation query data','cur','C13'),
+
+E('pivot','landing','Specialty premium transactions','cur','C1'),
+E('gwcc','respond','Complaints raised on claims','cur',null),
+E('respond','paystg','Redress payment requests','cur','C17'),
+E('ccs','visualfiles','Litigated claims & recovery cases','cur',null),
+E('visualfiles','sapar','Recovery receipts & legal spend','cur','C18'),
+
+// ---- messaging, document capture & scanning
+E('duckcreek','biztalk','Policy, billing & cash messages','cur',null),
+E('ccs','biztalk','Claims & cash messages','cur',null),
+E('biztalk','epg','Collection & payment instructions','cur','C17'),
+E('biztalk','dcbill','Billing messages','cur',null),
+E('ais','mq','Policy & payment messages','cur',null),
+E('ukris','mq','Policy & payment messages','cur',null),
+E('mq','gps','Cheque payment requests','cur','C17'),
+E('mq','landing','Mainframe extract handoff','cur','C1'),
+E('docscan','sapar','Invoice images supporting AP posting','cur','C17'),
+E('docscan','echq','Scanned cheque data','cur','C18'),
+E('ariba','docscan','Supplier invoice images','cur',null),
+E('gwcc','docscan','Claim documents for imaging','cur',null),
+
+// ---- HR & payroll
+E('sapportal','saphr','Approved employee & bank detail changes','cur',null),
+E('benefits','saphr','Benefit elections & pension deductions','cur','C16'),
+E('hmrc','saphr','Tax codes & statutory notices','cur','C6'),
+E('saphr','hmrc','RTI submissions — FPS, EPS, NVR, EYU','cur','C6'),
+E('saphr','sapgl','Payroll journals & cost centre spread','cur','C6'),
+E('saphr','bacs','Salary BACS payment file','cur','C17'),
+E('saphr','sapbw','Monthly HR data download','cur',null),
+E('saphr','benefits','Contribution & deduction files','cur','C16'),
+E('globalscape','benefits','Provider file exchange','cur',null),
+E('sapbw','anaplan','Headcount & people cost drivers','cur',null),
+E('sappi','hmrc','External filing traffic','cur',null),
+
+// ---- Blackline: real input streams
+E('sapar','blackline','AR / AP subledger balances & open items','cur','C13'),
+E('ebank','blackline','Bank statement data for cash reconciliation','cur','C18'),
+E('euc','blackline','Supporting schedules for reconciliations','cur','C16'),
+E('tds','blackline','Transaction detail supporting balance substantiation','cur','C13'),
+E('blackline','sapgl','Adjusting journals arising from reconciliation','ret','C13'),
+E('blackline','board','Reconciliation & certification status','cur','C13'),
+
+// ---- Anaplan: real input streams
+E('cognos','anaplan','Underwriting & expense actuals from FDS','cur',null),
+E('ads','anaplan','Monthly aggregates for planning baselines','cur',null),
+E('rosslyn','anaplan','Supplier spend for expense planning','cur',null),
+E('anaplan','pcm','Expense collections & allocation drivers','cur','C16'),
+E('pcm','sapgl','Allocation journals','ret','C16'),
+E('sapgl','pcm','Actuals for allocation','cur',null),
+E('anaplan','board','Plan, forecast and variance','cur',null),
+
+// ---- cards, external integration, legacy feeds, MDM
+E('cards','hsbc','Card settlement','cur','C17'),
+E('duckcreek','cards','Customer card collections','cur','C17'),
+E('gwcc','cards','Excess and recovery collections','cur','C17'),
+E('truecom','epg','External trading partner traffic','cur',null),
+E('legacyfeeds','globalscape','Residual policy books','cur','C1'),
+E('legacyfeeds','logic','Policy data for the ODS','cur',null),
+E('mdm','landing','Reconciled policy & billing data','cur','C1'),
+E('duckcreek','mdm','Policy, billing & customer master','cur',null),
+E('mdm','logic','Policy master data','cur',null),
+
+// ---- claims comms & fraud
+E('gwcc','comms','Document composition requests','cur',null),
+E('comms','cda-s3','Correspondence to archive','cur',null),
+E('ais','netreveal','Policy feed for fraud scoring','cur',null),
+E('gwcc','netreveal','Claim data for fraud scoring','cur',null),
+E('netreveal','gwcc','Fraud referrals into handling','cur',null),
+E('netreveal','visualfiles','Recovery cases','cur',null),
+
+// ---- payment file encryption
+E('sapar','globalscape','Payment instruction files for the bureau','cur','C19'),
+E('globalscape','fides','PGP-encrypted payment files','cur','C19'),
+
+// ---- extra ledger / reporting links evidenced in the models
+E('hydra','euc','Reconciliation query extracts','cur','C16'),
+E('cds','tagetik','Reinsurance links & counterparty allocations','cur','C14'),
+E('osiris','fla','Special claims & policy indicator files','cur','C16'),
+E('pds','pbmi','Shared reporting data','cur',null),
+E('ataccama','star3','Star 3 return mapping tables','cur','C9'),
+E('sapgl','cognos','SAP schema within FDS for reporting','cur',null),
+
+// ---- Target state
+E('acturis','edp','Policy transactions direct to platform','tgt',null),
+E('asima','edp','Policy transactions','tgt',null),
+E('newpas','edp','Policy & premium transactions','tgt',null),
+E('gwcc','edp','Claims data direct to platform','tgt',null),
+E('sil','edp','Legacy LoB data via existing integration logic','tgt',null),
+E('tds','edp','FDS feed avoids rebuilding logic for non-strategic LoBs','tgt',null),
+E('edp','sas','Master data, ledger outputs, UPR & cashflows','tgt',null),
+E('sas','ahcs','IFRS 17 measurement results','tgt',null),
+E('edp','ahcs','Transactional accounting data','tgt',null),
+E('ahcs','oracle','Accounting entries to the ledger','tgt',null),
+E('oracle','fccs','Ledger balances','tgt',null),
+E('oracle','epm','Ledger & reference data','tgt',null),
+E('oracle','faw','Ledger outputs','tgt',null),
+E('edp','faw','Finance data domain','tgt',null),
+E('fccs','workiva','Consolidated results','tgt',null),
+E('fccs','board','Group reporting','tgt',null),
+E('epm','oracle','Allocations & governed master data','tgt',null),
+E('anaplan','oracle','Planning & allocation (interim)','tgt',null),
+E('blackline','oracle','Reconciliation (until ARCS)','tgt',null),
+E('gwcc','comms','Customer correspondence','tgt',null),
+E('saphr','oracle','Payroll journals','tgt',null),
+];
+</script>
+<script>
+/* ===================== layout constants ===================== */
+const NW=160, NH=66, GX=18, GY=18;
+const CPAD=13, CHEAD=24, CGAP=26;
+const BHEAD=60, MARGIN=60, CANVAS_W=2760;
+const LANE_SP=13, LANE_TOP=26, LANE_BOT=26, MIN_GAP=64, CORNER=7;
+
+const nodeById={}; NODES.forEach(n=>nodeById[n.id]=n);
+const clusterById={}; CLUSTERS.forEach(c=>clusterById[c.id]=c);
+const bandById={}; BANDS.forEach(b=>bandById[b.id]=b);
+const ctlById={}; CONTROLS.forEach(c=>ctlById[c.id]=c);
+const bandIndex={}; BANDS.forEach((b,i)=>bandIndex[b.id]=i);
+NODES.forEach(n=>{n.band=clusterById[n.cluster].band; n.dx=0; n.dy=0;});
+
+const state={view:'cur',labels:false,ctl:true,decom:false,sel:null,query:'',collapsed:{}};
+const MODE_COL={auto:'var(--met)',semi:'var(--part)',manual:'var(--notmet)'};
+const MODE_TXT={auto:'AUTOMATED',semi:'SEMI-AUTO',manual:'MANUAL'};
+
+function visibleNode(n){
+  if(state.view==='both') return true;
+  if(state.view==='cur')  return n.state==='cur'||n.state==='both';
+  return n.state==='tgt'||n.state==='both';
+}
+function visibleEdge(e){
+  const a=nodeById[e.f], b=nodeById[e.t];
+  if(!a||!b||!visibleNode(a)||!visibleNode(b)) return false;
+  if(state.collapsed[a.band]||state.collapsed[b.band]) return false;
+  if(state.view==='cur'&&e.kind==='tgt') return false;
+  if(state.view==='tgt'&&e.kind!=='tgt'&&!(a.state!=='cur'&&b.state!=='cur')) return false;
+  return true;
+}
+
+/* ===================== layout ===================== */
+let LAYOUT={w:CANVAS_W,h:0,bands:[],clusters:[],gapAfter:{}};
+
+function layoutPass(gapAfter){
+  const bands=[], clusters=[];
+  let y=MARGIN;
+  BANDS.forEach(band=>{
+    if(!NODES.some(n=>n.band===band.id&&visibleNode(n))) return;
+    const top=y;
+    if(state.collapsed[band.id]){
+      bands.push({...band,y:top,h:46,collapsed:true});
+      y+=46+(gapAfter[band.id]||MIN_GAP); return;
+    }
+    let x=MARGIN, rowH=0, rowTop=top+BHEAD;
+    CLUSTERS.filter(c=>c.band===band.id).forEach(cl=>{
+      const ns=NODES.filter(n=>n.cluster===cl.id&&visibleNode(n));
+      if(!ns.length) return;
+      const cols=Math.min(cl.cols,ns.length), rows=Math.ceil(ns.length/cols);
+      const w=cols*NW+(cols-1)*GX+CPAD*2, h=rows*NH+(rows-1)*GY+CPAD*2+CHEAD;
+      if(x+w>CANVAS_W-MARGIN&&x>MARGIN){x=MARGIN;rowTop+=rowH+CGAP;rowH=0;}
+      ns.forEach((n,i)=>{n.ax=x+CPAD+(i%cols)*(NW+GX);
+                         n.ay=rowTop+CPAD+CHEAD+Math.floor(i/cols)*(NH+GY);});
+      clusters.push({...cl,x,y:rowTop,w,h});
+      x+=w+CGAP; rowH=Math.max(rowH,h);
+    });
+    const h=(rowTop+rowH)-top+CPAD;
+    bands.push({...band,y:top,h,collapsed:false});
+    y=top+h+(gapAfter[band.id]||MIN_GAP);
+  });
+  NODES.forEach(n=>{n.x=(n.ax||0)+n.dx; n.y=(n.ay||0)+n.dy;});
+  return {w:CANVAS_W,h:y+MARGIN,bands,clusters,gapAfter};
+}
+
+/* ---- port allocation: spread connections across box edges ---- */
+function allocPorts(edges){
+  const outs={}, ins={};
+  edges.forEach(e=>{(outs[e.f]=outs[e.f]||[]).push(e); (ins[e.t]=ins[e.t]||[]).push(e);});
+  for(const id in outs){
+    const list=outs[id].filter(e=>e.dir==='down');
+    list.sort((a,b)=>nodeById[a.t].x-nodeById[b.t].x);
+    list.forEach((e,i)=>{e.sx=nodeById[id].x+NW*(i+1)/(list.length+1);});
+    outs[id].filter(e=>e.dir!=='down').forEach(e=>{e.sx=nodeById[id].x+NW;});
+  }
+  for(const id in ins){
+    const list=ins[id].filter(e=>e.dir==='down');
+    list.sort((a,b)=>nodeById[a.f].x-nodeById[b.f].x);
+    list.forEach((e,i)=>{e.tx=nodeById[id].x+NW*(i+1)/(list.length+1);});
+    ins[id].filter(e=>e.dir!=='down').forEach(e=>{e.tx=nodeById[id].x+NW;});
+  }
+}
+
+/* ---- lane packing: horizontal runs share a gap without overlapping ---- */
+function packLanes(edges,bands){
+  const byBand={};
+  const bandOf={}; bands.forEach(b=>bandOf[b.id]=b);
+  edges.forEach(e=>{
+    if(e.dir!=='down') return;
+    const sb=nodeById[e.f].band;
+    (byBand[sb]=byBand[sb]||[]).push(e);
+  });
+  const laneCount={};
+  for(const bid in byBand){
+    const list=byBand[bid].slice().sort((a,b)=>
+      (Math.abs(a.tx-a.sx))-(Math.abs(b.tx-b.sx)));
+    const lanes=[];
+    list.forEach(e=>{
+      const lo=Math.min(e.sx,e.tx)-10, hi=Math.max(e.sx,e.tx)+10;
+      let placed=false;
+      for(let i=0;i<lanes.length;i++){
+        if(lanes[i].every(iv=>hi<iv[0]||lo>iv[1])){lanes[i].push([lo,hi]);e.lane=i;placed=true;break;}
+      }
+      if(!placed){lanes.push([[lo,hi]]);e.lane=lanes.length-1;}
+    });
+    laneCount[bid]=lanes.length;
+  }
+  return laneCount;
+}
+
+function computeLayout(){
+  const edges=EDGES.filter(visibleEdge);
+  edges.forEach(e=>{
+    const a=nodeById[e.f], b=nodeById[e.t];
+    const ai=bandIndex[a.band], bi=bandIndex[b.band];
+    e.dir = bi>ai ? 'down' : (bi<ai ? 'up' : 'side');
+  });
+  // pass 1 — rough positions with a minimum gap
+  const g1={}; BANDS.forEach(b=>g1[b.id]=MIN_GAP);
+  let L=layoutPass(g1);
+  allocPorts(edges);
+  let lanes=packLanes(edges,L.bands);
+  // pass 2 — grow each gap to fit its lanes
+  const g2={}; BANDS.forEach(b=>g2[b.id]=Math.max(MIN_GAP,LANE_TOP+LANE_BOT+(lanes[b.id]||0)*LANE_SP));
+  L=layoutPass(g2);
+  allocPorts(edges);
+  lanes=packLanes(edges,L.bands);
+  L.lanes=lanes; L.edges=edges;
+  L.right=Math.max(...L.clusters.map(c=>c.x+c.w), MARGIN+600)+CPAD;
+  LAYOUT=L;
+  return L;
+}
+
+/* ===================== path building ===================== */
+function ortho(pts,r){
+  let d=`M${pts[0][0]},${pts[0][1]}`;
+  for(let i=1;i<pts.length-1;i++){
+    const [px,py]=pts[i-1],[cx,cy]=pts[i],[nx,ny]=pts[i+1];
+    const d1=Math.hypot(cx-px,cy-py), d2=Math.hypot(nx-cx,ny-cy);
+    const rr=Math.min(r,d1/2,d2/2);
+    const ax=cx-(cx-px)/(d1||1)*rr, ay=cy-(cy-py)/(d1||1)*rr;
+    const bx=cx+(nx-cx)/(d2||1)*rr, by=cy+(ny-cy)/(d2||1)*rr;
+    d+=` L${ax},${ay} Q${cx},${cy} ${bx},${by}`;
+  }
+  const last=pts[pts.length-1];
+  d+=` L${last[0]},${last[1]}`;
+  return d;
+}
+
+function bandBottom(bid){const b=LAYOUT.bands.find(x=>x.id===bid);return b?b.y+b.h:0;}
+
+function buildPath(e){
+  const a=nodeById[e.f], b=nodeById[e.t];
+  if(e.dir==='down'){
+    const y0=a.y+NH, y1=b.y;
+    const laneY=bandBottom(a.band)+LANE_TOP+(e.lane||0)*LANE_SP;
+    if(Math.abs(e.sx-e.tx)<2) return {d:ortho([[e.sx,y0],[e.sx,y1]],CORNER),lx:e.sx,ly:(y0+y1)/2,run:0};
+    return {d:ortho([[e.sx,y0],[e.sx,laneY],[e.tx,laneY],[e.tx,y1]],CORNER),
+            lx:(e.sx+e.tx)/2, ly:laneY, run:Math.abs(e.tx-e.sx)};
+  }
+  if(e.dir==='up'){
+    const trunk=(LAYOUT.right||CANVAS_W)+22+((e.trunk||0)*11);
+    const y0=a.y+NH/2, y1=b.y+NH/2;
+    return {d:ortho([[a.x+NW,y0],[trunk,y0],[trunk,y1],[b.x+NW,y1]],CORNER),
+            lx:trunk, ly:(y0+y1)/2, run:Math.abs(y1-y0), vertical:true};
+  }
+  const l2r=b.x>=a.x;
+  const x0=l2r?a.x+NW:a.x, x1=l2r?b.x:b.x+NW;
+  const y0=a.y+NH/2, y1=b.y+NH/2;
+  const mid=(x0+x1)/2;
+  if(Math.abs(y0-y1)<2) return {d:ortho([[x0,y0],[x1,y1]],CORNER),lx:mid,ly:y0,run:Math.abs(x1-x0)};
+  return {d:ortho([[x0,y0],[mid,y0],[mid,y1],[x1,y1]],CORNER),lx:mid,ly:(y0+y1)/2,run:Math.abs(y1-y0)};
+}
+
+/* ===================== render ===================== */
+const world=document.getElementById('world'), svg=document.getElementById('wires');
+const SVGNS='http://www.w3.org/2000/svg';
+const el=(t,a)=>{const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+function relatives(id){
+  const up=new Set(), down=new Set();
+  const vis=EDGES.filter(visibleEdge);
+  const walk=(cur,dir,seen)=>{vis.forEach(e=>{
+    const from=dir==='down'?e.f:e.t, to=dir==='down'?e.t:e.f;
+    if(from===cur&&!seen.has(to)){seen.add(to);walk(to,dir,seen);}});};
+  walk(id,'down',down); walk(id,'up',up);
+  return {up,down};
+}
+
+function render(){
+  computeLayout(); drawSVG(); drawNodes();
+  document.getElementById('s-nodes').textContent=NODES.filter(visibleNode).length;
+  document.getElementById('s-edges').textContent=EDGES.filter(visibleEdge).length;
+  document.getElementById('s-ctl').textContent=CONTROLS.length;
+  document.getElementById('s-risk').textContent=NODES.filter(n=>visibleNode(n)&&n.flag==='decom').length;
+}
+
+function drawSVG(){
+  const L=LAYOUT;
+  const R=L.right, TOT=R+190;
+  world.style.width=TOT+'px'; world.style.height=L.h+'px';
+  svg.setAttribute('width',TOT); svg.setAttribute('height',L.h);
+  svg.innerHTML='';
+  const defs=el('defs');
+  [['ar','#8CA3A1'],['ar-c','#01B3BD'],['ar-d','#365655']].forEach(([id,c])=>{
+    const m=el('marker',{id,viewBox:'0 0 8 8',refX:'7',refY:'4',markerWidth:'6',markerHeight:'6',orient:'auto-start-reverse'});
+    m.appendChild(el('path',{d:'M0,0 L8,4 L0,8 z',fill:c})); defs.appendChild(m);});
+  svg.appendChild(defs);
+  const gBand=el('g'),gCl=el('g'),gEdge=el('g'),gLab=el('g'),gDia=el('g');
+  svg.append(gBand,gCl,gEdge,gLab,gDia);
+
+  L.bands.forEach(b=>{
+    gBand.appendChild(el('rect',{x:MARGIN-30,y:b.y,width:R-(MARGIN-30)+30,height:b.h,rx:6,
+      fill:'#365655','fill-opacity':.035,stroke:'#365655','stroke-opacity':.20}));
+    const g=el('g',{style:'cursor:pointer'}); g.dataset.band=b.id;
+    const t1=el('text',{x:MARGIN-8,y:b.y+30,class:'bandnum'}); t1.textContent=b.n;
+    const t2=el('text',{x:MARGIN+24,y:b.y+26,class:'bandlabel'}); t2.textContent=b.label;
+    const t3=el('text',{x:MARGIN+24,y:b.y+41,class:'bandsub'}); t3.textContent=b.sub;
+    const t4=el('text',{x:R+24,y:b.y+26,class:'clabel','text-anchor':'end'});
+    t4.textContent=state.collapsed[b.id]?'EXPAND +':'COLLAPSE −';
+    g.append(t1,t2,t3,t4);
+    g.addEventListener('click',()=>{state.collapsed[b.id]=!state.collapsed[b.id];render();});
+    gBand.appendChild(g);
+    if(b.id==='b6'&&!b.collapsed){
+      const n=L.edges.filter(e=>nodeById[e.t].band==='b6'&&nodeById[e.f].band!=='b6').length;
+      if(n){
+        gBand.appendChild(el('line',{x1:MARGIN-30,y1:b.y+BHEAD-6,x2:R+30,y2:b.y+BHEAD-6,
+          stroke:'#01B3BD','stroke-width':2.5}));
+        const t=el('text',{x:R+24,y:b.y+BHEAD-14,class:'clabel','text-anchor':'end',fill:'#DF0030'});
+        t.textContent=`${n} FLOWS CROSS INTO THE LEDGER  \u25BC`;
+        gBand.appendChild(t);
+      }
+    }
+  });
+
+  L.clusters.forEach(c=>{
+    gCl.appendChild(el('rect',{x:c.x,y:c.y,width:c.w,height:c.h,rx:4,fill:'#fff','fill-opacity':.66,
+      stroke:'#365655','stroke-opacity':.26,'stroke-dasharray':'3 3'}));
+    const t=el('text',{x:c.x+CPAD,y:c.y+16,class:'clabel'}); t.textContent=c.label; gCl.appendChild(t);
+  });
+
+  let up=new Set(),down=new Set();
+  if(state.sel){const r=relatives(state.sel);up=r.up;down=r.down;}
+  const inScope=id=>!state.sel||id===state.sel||up.has(id)||down.has(id);
+
+  // trunk index for return edges so they don't stack
+  L.edges.filter(e=>e.dir==='up').forEach((e,i)=>e.trunk=i%12);
+
+  const labelBoxes=[];
+  const overlaps=(r)=>labelBoxes.some(o=>!(r.x+r.w<o.x||r.x>o.x+o.w||r.y+r.h<o.y||r.y>o.y+o.h));
+
+  L.edges.forEach(e=>{
+    const P=buildPath(e); e._p=P;
+    const active=!state.sel||(inScope(e.f)&&inScope(e.t));
+    const isTgt=e.kind==='tgt', isRet=e.kind==='ret'||e.dir==='up';
+    const stroke=isTgt?'#365655':(isRet?'#01B3BD':'#8CA3A1');
+    const base=state.sel?(active?.95:.05):(isTgt?.55:.40);
+    const p=el('path',{d:P.d,fill:'none',stroke,'stroke-linejoin':'round',
+      'stroke-width':state.sel&&active?1.9:1.1,'stroke-opacity':base,
+      'stroke-dasharray':isTgt?'5 4':'','marker-end':`url(#${isTgt?'ar-d':(isRet?'ar-c':'ar')})`});
+    gEdge.appendChild(p);
+    const hit=el('path',{d:P.d,class:'hit'});
+    hit.addEventListener('click',ev=>{ev.stopPropagation();showEdge(e);});
+    hit.addEventListener('mouseenter',()=>{p.setAttribute('stroke-width',2.6);p.setAttribute('stroke-opacity',1);});
+    hit.addEventListener('mouseleave',()=>{p.setAttribute('stroke-width',state.sel&&active?1.9:1.1);p.setAttribute('stroke-opacity',base);});
+    gEdge.appendChild(hit);
+
+    // labels live in the empty lane between bands, never behind a box
+    const wantLabel=e.label&&P.run>70&&!P.vertical&&(state.labels||(state.sel&&active&&(e.f===state.sel||e.t===state.sel)));
+    if(wantLabel){
+      const txt=e.label.length>56?e.label.slice(0,54)+'…':e.label;
+      const w=txt.length*4.7+10, h=13;
+      const box={x:P.lx-w/2,y:P.ly-h/2-6,w,h};
+      if(!overlaps(box)){
+        labelBoxes.push(box);
+        gLab.appendChild(el('rect',{x:box.x,y:box.y,width:w,height:h,rx:2,fill:'#F4F2ED',
+          stroke:'#D6D2C8','stroke-width':.8}));
+        const t=el('text',{x:P.lx,y:box.y+9.5,class:'elabel','text-anchor':'middle'});
+        t.textContent=txt; gLab.appendChild(t);
+      }
+    }
+    if(e.ctl&&state.ctl){
+      const c=ctlById[e.ctl]; const ring=c?({auto:'#9FD6B4',semi:'#F2CE8A',manual:'#FF8CA5'})[c.m]:'#fff';
+      const dx=P.vertical?P.lx:(P.run>70?P.lx+(P.run/4):P.lx);
+      const g=el('g',{class:'cdia',transform:`translate(${dx},${P.ly})`,
+        opacity:state.sel&&!active?.10:1});
+      g.appendChild(el('rect',{x:-9.5,y:-9.5,width:19,height:19,transform:'rotate(45)',rx:2,fill:ring}));
+      g.appendChild(el('rect',{x:-7,y:-7,width:14,height:14,transform:'rotate(45)',rx:1.5,fill:'#365655'}));
+      const t=el('text',{y:2.7,'text-anchor':'middle'}); t.textContent=e.ctl.replace('C','');
+      g.appendChild(t);
+      g.addEventListener('click',ev=>{ev.stopPropagation();showControl(e.ctl);});
+      gDia.appendChild(g);
+    }
+  });
+}
+
+function drawNodes(){
+  let up=new Set(),down=new Set();
+  if(state.sel){const r=relatives(state.sel);up=r.up;down=r.down;}
+  const q=state.query.trim().toLowerCase();
+  world.querySelectorAll('.node').forEach(n=>n.remove());
+  NODES.filter(n=>visibleNode(n)&&!state.collapsed[n.band]).forEach(n=>{
+    const d=document.createElement('div');
+    d.className='node'; d.dataset.id=n.id;
+    d.style.cssText=`left:${n.x}px;top:${n.y}px;width:${NW}px;min-height:${NH}px`;
+    if(n.state==='tgt') d.classList.add('tgt');
+    else if(n.flag==='decom'){ d.classList.add('legacy'); if(state.decom) d.classList.add('flag'); }
+    if(state.sel===n.id) d.classList.add('sel');
+    else if(state.sel){ if(up.has(n.id))d.classList.add('up'); else if(down.has(n.id))d.classList.add('down'); else d.classList.add('dim'); }
+    if(q){ if((n.label+' '+n.sub).toLowerCase().includes(q)) d.classList.add('hit'); else d.classList.add('dim'); }
+    let chip='';
+    if(n.state==='tgt') chip='<span class="chip t">TARGET</span>';
+    else if(n.flag==='decom'&&state.decom) chip='<span class="chip d">EXIT</span>';
+    const cbar=(n.d.ctl&&n.d.ctl.length&&state.ctl)?`<div class="cbar">${n.d.ctl.map(c=>`<span>${c}</span>`).join('')}</div>`:'';
+    d.innerHTML=`${chip}<div class="lbl">${n.label}</div><div class="sub">${n.sub}</div>${cbar}`;
+    world.appendChild(d);
+  });
+}
+
+/* ===================== panel ===================== */
+const panel=document.getElementById('panel');
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const ctlRow=id=>{const c=ctlById[id];if(!c)return'';
+  return `<div class="ctl" data-c="${id}"><div class="ctl-h"><span class="ctl-id">${id}</span>
+  <span class="ctl-t">${esc(c.t)}</span><span class="ctl-m" style="background:${MODE_COL[c.m]}">${MODE_TXT[c.m]}</span></div>
+  <div class="ctl-d">${esc(c.d)}</div></div>`;};
+const bindCtl=()=>panel.querySelectorAll('.ctl').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+function showHome(){
+  state.sel=null;
+  const exits=NODES.filter(n=>visibleNode(n)&&n.flag==='decom').length;
+  panel.innerHTML=`
+  <div class="phead"><div class="kicker">How to read this map</div>
+    <h2>Everything flows down to the ledger</h2>
+    <div class="meta">Eight bands. Source at the top, reporting at the bottom.</div></div>
+  <div class="body">
+    <div class="field"><h3>Start here</h3>
+      <p>Click any system to trace its complete path — upstream in cyan, downstream in dark cyan, everything else faded.
+      Flow labels sit in the clear channels between bands, so they never hide behind a box.
+      Click a <b>diamond</b> on a line to read the control on that flow.</p></div>
+    <div class="field"><h3>Boxes</h3><div class="legend">
+      <div><span class="swatch" style="border-left:3px solid var(--cyan)"></span>System staying in the estate</div>
+      <div><span class="swatch" style="border-left:3px solid #C7B38A"></span>Legacy — exit candidate</div>
+      <div><span class="swatch" style="background:var(--sand);border-left:3px solid var(--deep)"></span>Exit candidate, highlighted</div>
+      <div><span class="swatch" style="border:1px dashed var(--deep);border-left:3px solid var(--deep)"></span>Target-state system</div>
+    </div></div>
+    <div class="field"><h3>Lines</h3><div class="legend">
+      <div><span class="swatch" style="background:#8CA3A1;height:2px;border:0"></span>Data moving forward</div>
+      <div><span class="swatch" style="background:var(--cyan);height:2px;border:0"></span>Returning to an earlier stage</div>
+      <div><span class="swatch" style="background:var(--deep);height:2px;border:0"></span>Target-state flow (dashed)</div>
+    </div></div>
+    <div class="field"><h3>Control diamonds</h3><div class="legend">
+      <div><span class="swatch" style="background:var(--met)"></span>Automated — runs without intervention</div>
+      <div><span class="swatch" style="background:var(--part)"></span>Semi-automated — system detects, people resolve</div>
+      <div><span class="swatch" style="background:var(--notmet)"></span>Manual — depends on people and spreadsheets</div>
+    </div>
+    <p class="note" style="margin-top:8px">How the control <i>operates</i>, taken from the operating models. Not an assessment of whether it is designed or operating effectively.</p></div>
+    <div class="field"><h3>Risk figures</h3>
+      <p><span class="riskfig">${exits}</span> of the systems on this view are exit candidates in the target architecture.
+      Red is used on this map for risk figures only.</p></div>
+    <div class="field"><h3>Control points</h3><div>${CONTROLS.map(c=>ctlRow(c.id)).join('')}</div></div>
+    <div class="field"><h3>Editing</h3>
+      <p class="note">Drag any box to move it. Double-click a box to rename it. Click a band heading to collapse it.
+      <kbd>Esc</kbd> clears a selection. <b>Save layout</b> keeps your edits as a file; <b>Load layout</b> brings them back on another machine.</p></div>
+  </div>`;
+  bindCtl();
+}
+
+function showNode(id){
+  state.sel=id; const n=nodeById[id], b=bandById[n.band], d=n.d||{};
+  const vis=EDGES.filter(visibleEdge);
+  const ins=vis.filter(e=>e.t===id), outs=vis.filter(e=>e.f===id);
+  const row=(e,other)=>`<li data-go="${other}"><b>${esc(nodeById[other].label)}</b>${e.label?`<span>${esc(e.label)}</span>`:''}</li>`;
+  panel.innerHTML=`
+  <div class="phead">
+    <div class="kicker">Band ${b.n} · ${esc(b.label)}</div>
+    <h2>${esc(n.label)}</h2>
+    <div class="meta">${esc(n.sub)}${d.freq?` &nbsp;·&nbsp; ${esc(d.freq)}`:''}${d.own?` &nbsp;·&nbsp; ${esc(d.own)}`:''}
+    ${n.state==='tgt'?' &nbsp;·&nbsp; <b style="color:#365655">Target state</b>':''}
+    ${n.flag==='decom'?' &nbsp;·&nbsp; <b style="color:#DF0030">Exit candidate</b>':''}</div></div>
+  <div class="body">
+    ${d.in?`<div class="field"><h3>What enters</h3><p>${esc(d.in)}</p></div>`:''}
+    ${d.proc?`<div class="field"><h3>What happens to it</h3><p>${esc(d.proc)}</p></div>`:''}
+    ${d.out?`<div class="field"><h3>Where it goes</h3><p>${esc(d.out)}</p></div>`:''}
+    ${(d.ctl&&d.ctl.length)?`<div class="field"><h3>Controls here</h3>${d.ctl.map(ctlRow).join('')}</div>`:''}
+    <div class="field"><h3>Receives from (${ins.length})</h3>
+      ${ins.length?`<ul class="flowlist">${ins.map(e=>row(e,e.f)).join('')}</ul>`:'<p style="font-size:12px;color:#6B7A78">Originating system — data starts here.</p>'}</div>
+    <div class="field"><h3>Sends to (${outs.length})</h3>
+      ${outs.length?`<ul class="flowlist">${outs.map(e=>row(e,e.t)).join('')}</ul>`:'<p style="font-size:12px;color:#6B7A78">Terminal system — nothing flows onward.</p>'}</div>
+    <div class="field"><button class="tbtn" id="clear">Clear selection</button></div>
+  </div>`;
+  bindCtl();
+  panel.querySelectorAll('[data-go]').forEach(li=>li.addEventListener('click',()=>{showNode(li.dataset.go);render();}));
+  const cb=document.getElementById('clear'); if(cb)cb.addEventListener('click',()=>{showHome();render();});
+  panel.scrollTop=0;
+}
+
+function showEdge(e){
+  const a=nodeById[e.f], b=nodeById[e.t];
+  panel.innerHTML=`
+  <div class="phead"><div class="kicker">Data flow</div>
+    <h2>${esc(a.label)} → ${esc(b.label)}</h2>
+    <div class="meta">${e.kind==='tgt'?'Target state':(e.dir==='up'||e.kind==='ret'?'Returns to an earlier stage':'Forward flow')}</div></div>
+  <div class="body">
+    <div class="field"><h3>What moves</h3><p>${esc(e.label||'Data transfer between these systems.')}</p></div>
+    ${e.ctl?`<div class="field"><h3>Control on this flow</h3>${ctlRow(e.ctl)}</div>`:''}
+    <div class="field"><button class="tbtn" data-go="${a.id}">Open ${esc(a.label)}</button>
+    <button class="tbtn" data-go="${b.id}" style="margin-top:6px">Open ${esc(b.label)}</button></div>
+  </div>`;
+  bindCtl(); panel.querySelectorAll('.ctl').forEach(c=>c.classList.add('open'));
+  panel.querySelectorAll('[data-go]').forEach(x=>x.addEventListener('click',()=>{showNode(x.dataset.go);render();}));
+}
+
+function showControl(id){
+  const c=ctlById[id]; if(!c) return;
+  const on=EDGES.filter(e=>e.ctl===id&&visibleEdge(e));
+  panel.innerHTML=`
+  <div class="phead"><div class="kicker">Control point ${id}</div><h2>${esc(c.t)}</h2>
+    <div class="meta"><span class="ctl-m" style="background:${MODE_COL[c.m]}">${MODE_TXT[c.m]}</span>
+    &nbsp; on ${on.length} mapped flow${on.length===1?'':'s'}</div></div>
+  <div class="body">
+    <div class="field"><h3>What the control does</h3><p>${esc(c.d)}</p></div>
+    <div class="field"><h3>Where it sits</h3><ul class="flowlist">
+    ${on.map(e=>`<li data-go="${e.f}"><b>${esc(nodeById[e.f].label)} → ${esc(nodeById[e.t].label)}</b><span>${esc(e.label||'')}</span></li>`).join('')}
+    </ul></div>
+    <div class="field"><button class="tbtn" id="home">Back to overview</button></div>
+  </div>`;
+  panel.querySelectorAll('[data-go]').forEach(x=>x.addEventListener('click',()=>{showNode(x.dataset.go);render();}));
+  document.getElementById('home').addEventListener('click',()=>{showHome();render();});
+}
+
+/* ===================== interaction ===================== */
+const vp=document.getElementById('viewport');
+let tx=0,ty=0,k=.6;
+const apply=()=>world.style.transform=`translate(${tx}px,${ty}px) scale(${k})`;
+vp.addEventListener('wheel',e=>{e.preventDefault();
+  const r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const nk=Math.min(2.4,Math.max(.10,k*(e.deltaY<0?1.12:1/1.12)));
+  tx=mx-(mx-tx)*(nk/k); ty=my-(my-ty)*(nk/k); k=nk; apply();},{passive:false});
+
+let pan=null,drag=null;
+vp.addEventListener('pointerdown',e=>{
+  const nd=e.target.closest('.node');
+  if(nd&&!nd.querySelector('[contenteditable="true"]')){
+    const n=nodeById[nd.dataset.id];
+    drag={n,el:nd,sx:e.clientX,sy:e.clientY,ox:n.dx,oy:n.dy,moved:false};
+    nd.classList.add('dragging'); nd.setPointerCapture(e.pointerId);
+  } else if(!e.target.closest('.cdia')&&!e.target.closest('[data-band]')){
+    pan={sx:e.clientX,sy:e.clientY,tx,ty}; vp.classList.add('grabbing');}
+});
+window.addEventListener('pointermove',e=>{
+  if(drag){
+    const dx=(e.clientX-drag.sx)/k, dy=(e.clientY-drag.sy)/k;
+    if(Math.abs(dx)>1.5||Math.abs(dy)>1.5) drag.moved=true;
+    drag.n.dx=drag.ox+dx; drag.n.dy=drag.oy+dy;
+    drag.n.x=drag.n.ax+drag.n.dx; drag.n.y=drag.n.ay+drag.n.dy;
+    drag.el.style.left=drag.n.x+'px'; drag.el.style.top=drag.n.y+'px';
+    drawSVG();
+  } else if(pan){tx=pan.tx+(e.clientX-pan.sx); ty=pan.ty+(e.clientY-pan.sy); apply();}
+});
+window.addEventListener('pointerup',()=>{
+  if(drag){drag.el.classList.remove('dragging');
+    if(!drag.moved){showNode(drag.n.id);render();} else render();
+    drag=null;}
+  pan=null; vp.classList.remove('grabbing');
+});
+world.addEventListener('dblclick',e=>{
+  const nd=e.target.closest('.node'); if(!nd) return; e.preventDefault();
+  const n=nodeById[nd.dataset.id], lbl=nd.querySelector('.lbl');
+  lbl.contentEditable='true'; lbl.focus(); document.getSelection().selectAllChildren(lbl);
+  const done=()=>{lbl.contentEditable='false'; n.label=lbl.textContent.trim()||n.label;
+    lbl.textContent=n.label; lbl.removeEventListener('blur',done); render(); toast('Renamed');};
+  lbl.addEventListener('blur',done);
+  lbl.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();lbl.blur();}
+    if(ev.key==='Escape'){lbl.textContent=n.label;lbl.blur();}});
+});
+vp.addEventListener('click',e=>{if(e.target===vp||e.target===world||e.target===svg){showHome();render();}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('[contenteditable="true"]')){showHome();render();}});
+
+/* ===================== toolbar ===================== */
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700);}
+document.querySelectorAll('#seg-view button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#seg-view button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); state.view=b.dataset.v; state.sel=null; showHome(); render(); fit();}));
+const tog=(id,key)=>document.getElementById(id).addEventListener('click',e=>{
+  state[key]=!state[key]; e.currentTarget.classList.toggle('on',state[key]); render();});
+tog('t-labels','labels'); tog('t-ctl','ctl'); tog('t-decom','decom');
+document.getElementById('search').addEventListener('input',e=>{state.query=e.target.value;drawNodes();});
+document.getElementById('t-reset').addEventListener('click',()=>{NODES.forEach(n=>{n.dx=0;n.dy=0;});render();fit();toast('Layout reset');});
+document.getElementById('t-fit').addEventListener('click',fit);
+document.getElementById('t-print').addEventListener('click',()=>{fit();setTimeout(()=>window.print(),200);});
+document.getElementById('t-save').addEventListener('click',()=>{
+  const data={v:2,saved:new Date().toISOString(),view:state.view,collapsed:state.collapsed,
+    nodes:NODES.map(n=>({id:n.id,label:n.label,sub:n.sub,dx:n.dx,dy:n.dy}))};
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='intact-data-flow-map-layout.json'; a.click(); toast('Layout saved');});
+document.getElementById('t-load').addEventListener('click',()=>document.getElementById('file').click());
+document.getElementById('file').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);
+    (d.nodes||[]).forEach(s=>{const n=nodeById[s.id];if(!n)return;
+      n.label=s.label??n.label;n.sub=s.sub??n.sub;n.dx=s.dx||0;n.dy=s.dy||0;});
+    if(d.collapsed)state.collapsed=d.collapsed;
+    if(d.view){state.view=d.view;document.querySelectorAll('#seg-view button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===d.view)));}
+    render(); fit(); toast('Layout loaded');
+  }catch(err){toast('That file could not be read');}};
+  r.readAsText(f); e.target.value='';});
+
+function fit(){const r=vp.getBoundingClientRect(); const W=(LAYOUT.right||LAYOUT.w)+220;
+  k=Math.min(r.width/W, r.height/(LAYOUT.h+40), 1.4);
+  tx=Math.max(0,(r.width-W*k)/2); ty=14; apply();}
+
+showHome(); render(); fit();
+</script>
+</body>
+</html>
