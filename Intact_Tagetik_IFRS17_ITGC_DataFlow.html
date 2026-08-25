@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tagetik IFRS17 CE — ITGC Control &amp; Data-Flow Explorer | Intact Insurance</title>
+<meta name="description" content="Interactive ITGC control narrative and end-to-end data flow for Tagetik IFRS17 CE, Intact Insurance UK &amp; International SOX readiness.">
+<style>
+:root{
+  --teal:#01B3BD; --teal-d:#018E96; --teal-l:#E6F7F8;
+  --red:#DF0030; --red-l:#FDEBEF; --red-d:#B00026;
+  --sand:#E8DDC8; --sand-l:#F5EFE3; --sand-d:#C9B893;
+  --ink:#001A1B; --ink-2:#0D2A2B; --slate:#5A6B6C; --slate-l:#88999A;
+  --paper:#FBF9F5; --line:#DED6C6; --white:#fff;
+  --amber:#B8860B; --amber-l:#FBF3DF;
+  --ok:#0F7A5A; --ok-l:#E7F5F0;
+  --shadow:0 1px 2px rgba(0,26,27,.06),0 8px 24px rgba(0,26,27,.07);
+  --shadow-lg:0 2px 4px rgba(0,26,27,.08),0 18px 48px rgba(0,26,27,.14);
+  --sans:"Segoe UI",Inter,-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,"Liberation Mono",monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--sand-l);
+  font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal-d)}
+h1,h2,h3,h4{margin:0; font-weight:650; letter-spacing:-.012em; line-height:1.22}
+
+/* ============ HEADER ============ */
+.hdr{background:var(--ink); color:#fff; padding:0; position:sticky; top:0; z-index:60;
+     box-shadow:0 1px 0 rgba(255,255,255,.08), 0 6px 24px rgba(0,26,27,.28)}
+.hdr-in{max-width:1680px; margin:0 auto; padding:14px 22px 0; display:flex; flex-wrap:wrap;
+        align-items:flex-start; gap:18px}
+.brand{display:flex; align-items:center; gap:12px; flex:0 0 auto}
+.brand-mark{font-family:var(--sans); font-weight:700; font-size:19px; letter-spacing:-.02em;
+  color:#fff; border-left:3px solid var(--red); border-right:3px solid var(--red);
+  padding:2px 9px; line-height:1.3}
+.brand-mark small{display:block; font-size:8.5px; letter-spacing:.30em; font-weight:600;
+  color:var(--sand); margin-top:1px}
+.hdr-title{flex:1 1 300px; min-width:240px}
+.hdr-title h1{font-size:20px; color:#fff}
+.hdr-title .sub{font-size:12px; color:#9FBFC0; margin-top:3px; letter-spacing:.01em}
+.hdr-title .sub b{color:var(--sand); font-weight:600}
+.hdr-tools{display:flex; gap:7px; flex-wrap:wrap; align-items:center; padding-bottom:2px}
+.btn{font-family:var(--sans); font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  padding:6px 11px; border-radius:7px; border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.07); color:#DFF3F4; cursor:pointer; white-space:nowrap;
+  transition:background .15s,border-color .15s,color .15s}
+.btn:hover{background:rgba(1,179,189,.24); border-color:var(--teal); color:#fff}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal); border-color:var(--teal); color:#00282A}
+.btn.primary:hover{background:#22C7D0}
+.btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+
+/* ============ NAV ============ */
+.nav{max-width:1680px; margin:0 auto; padding:10px 22px 0; display:flex; gap:2px;
+     overflow-x:auto; scrollbar-width:thin}
+.nav button{font-family:var(--sans); background:none; border:0; color:#87A9AB; cursor:pointer;
+  padding:9px 13px 10px; font-size:12.5px; font-weight:600; letter-spacing:.01em;
+  border-bottom:2.5px solid transparent; white-space:nowrap; transition:color .15s}
+.nav button .n{font-family:var(--mono); font-size:10px; opacity:.65; margin-left:5px}
+.nav button:hover{color:#fff}
+.nav button.on{color:#fff; border-bottom-color:var(--teal)}
+.nav button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:1680px; margin:0 auto; padding:22px}
+.pane{display:none} .pane.on{display:block}
+.pane-head{margin-bottom:16px; padding-bottom:13px; border-bottom:1px solid var(--line)}
+.pane-head h2{font-size:22px; letter-spacing:-.022em}
+.pane-head .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.19em;
+  color:var(--teal-d); font-weight:600; text-transform:uppercase; margin-bottom:5px}
+.pane-head p{margin:7px 0 0; color:var(--slate); font-size:13.5px; max-width:105ch}
+
+/* ============ CARDS / GRID ============ */
+.grid{display:grid; gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      padding:16px 18px; box-shadow:var(--shadow)}
+.card h3{font-size:13px; letter-spacing:.01em; margin-bottom:9px; color:var(--ink)}
+.card h3 .ic{color:var(--teal-d); margin-right:6px; font-family:var(--mono)}
+
+.kpi{background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--teal);
+     border-radius:var(--r); padding:13px 15px; box-shadow:var(--shadow)}
+.kpi .lab{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600}
+.kpi .val{font-size:23px; font-weight:700; letter-spacing:-.03em; margin-top:3px; line-height:1.1}
+.kpi .note{font-size:11.5px; color:var(--slate); margin-top:3px; line-height:1.4}
+.kpi.red{border-left-color:var(--red)} .kpi.red .val{color:var(--red-d)}
+.kpi.amber{border-left-color:var(--amber)} .kpi.amber .val{color:var(--amber)}
+.kpi.ok{border-left-color:var(--ok)} .kpi.ok .val{color:var(--ok)}
+
+/* ============ BADGES ============ */
+.b{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9.5px;
+   font-weight:600; letter-spacing:.09em; text-transform:uppercase; padding:3px 7px;
+   border-radius:5px; white-space:nowrap; border:1px solid transparent; line-height:1.35}
+.b-key{background:var(--red); color:#fff}
+.b-non{background:var(--sand); color:#6B5B3A; border-color:var(--sand-d)}
+.b-freq{background:var(--teal-l); color:var(--teal-d); border-color:#B9E7EA}
+.b-ok{background:var(--ok-l); color:var(--ok); border-color:#BEE3D6}
+.b-part{background:var(--amber-l); color:var(--amber); border-color:#E8D5A2}
+.b-gap{background:var(--red-l); color:var(--red-d); border-color:#F6C4CF}
+.b-na{background:#EEEAE2; color:var(--slate); border-color:var(--line)}
+.b-vend{background:#EDE7F6; color:#5B3E9B; border-color:#D3C4EC}
+
+/* chips */
+.chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:5px}
+.chip{font-size:11px; padding:2.5px 8px; border-radius:20px; background:var(--sand-l);
+  border:1px solid var(--line); color:#4A5C5D; white-space:nowrap}
+.chip.sys{font-family:var(--mono); font-size:10px; background:var(--teal-l);
+  border-color:#B9E7EA; color:var(--teal-d); font-weight:600}
+.chip.actor{background:#fff; border-color:var(--sand-d); color:#6B5B3A; font-weight:600; font-size:10.5px}
+
+/* ============ CONTROL CARD ============ */
+.ctrl{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      margin-bottom:14px; box-shadow:var(--shadow); overflow:hidden; scroll-margin-top:130px}
+.ctrl.gap{border-left:3px solid var(--red)}
+.ctrl.part{border-left:3px solid var(--amber)}
+.ctrl.ok{border-left:3px solid var(--ok)}
+.ctrl.vend{border-left:3px solid #7E5BC4}
+.ctrl.na{border-left:3px solid var(--sand-d)}
+.ctrl-h{display:flex; flex-wrap:wrap; align-items:center; gap:9px; padding:13px 17px;
+  background:linear-gradient(180deg,#fff,var(--paper)); border-bottom:1px solid var(--line);
+  cursor:pointer; user-select:none}
+.ctrl-h:hover{background:linear-gradient(180deg,#fff,var(--teal-l))}
+.ctrl-id{font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--teal-d);
+  background:var(--teal-l); border:1px solid #B9E7EA; padding:3px 8px; border-radius:6px}
+.ctrl-n{font-size:14px; font-weight:650; flex:1 1 230px; letter-spacing:-.008em}
+.ctrl-tw{display:flex; gap:5px; flex-wrap:wrap; align-items:center}
+.ctrl-cx{font-family:var(--mono); font-size:14px; color:var(--slate); transition:transform .2s;
+  width:16px; text-align:center}
+.ctrl.open .ctrl-cx{transform:rotate(90deg)}
+.ctrl-b{display:none; padding:17px} .ctrl.open .ctrl-b{display:block}
+
+.obj{background:#fff; border:1px solid var(--line); border-left:3px solid var(--teal);
+  border-radius:7px; padding:10px 13px; margin-bottom:14px; font-size:13px}
+.obj .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:600; display:block; margin-bottom:3px}
+
+.meta{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:15px}
+.meta > div{background:#fff; border:1px solid var(--line); border-radius:7px; padding:9px 12px}
+.meta .l{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; display:block; margin-bottom:3px}
+.meta .v{font-size:12.5px; line-height:1.45}
+
+/* ============ STEP RAIL (the process visual) ============ */
+.rail-l{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; margin:16px 0 8px; display:flex; align-items:center; gap:9px}
+.rail-l::after{content:''; flex:1; height:1px; background:var(--line)}
+.rail{display:flex; gap:0; overflow-x:auto; padding:3px 3px 12px; scrollbar-width:thin}
+.step{flex:0 0 auto; width:206px; background:#fff; border:1px solid var(--line);
+  border-radius:9px; padding:11px 12px 12px; position:relative; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; gap:6px}
+.step + .step{margin-left:26px}
+.step + .step::before{content:''; position:absolute; left:-26px; top:50%; width:26px; height:2px;
+  background:linear-gradient(90deg,var(--sand-d),var(--teal)); transform:translateY(-50%)}
+.step + .step::after{content:''; position:absolute; left:-8px; top:50%; width:0; height:0;
+  border-left:7px solid var(--teal); border-top:5px solid transparent;
+  border-bottom:5px solid transparent; transform:translateY(-50%)}
+.step-n{position:absolute; top:-9px; left:11px; font-family:var(--mono); font-size:9.5px;
+  font-weight:700; background:var(--ink); color:var(--sand); width:19px; height:19px;
+  border-radius:50%; display:grid; place-items:center; letter-spacing:0}
+.step-a{font-family:var(--mono); font-size:9px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:700; margin-top:4px; line-height:1.4}
+.step-t{font-size:12.2px; line-height:1.48; flex:1}
+.step-s{font-family:var(--mono); font-size:9.5px; color:#6B5B3A; background:var(--sand-l);
+  border:1px solid var(--line); border-radius:5px; padding:3px 6px; align-self:flex-start;
+  max-width:100%; word-break:break-word; line-height:1.4}
+.step.dec{border-color:var(--amber); background:var(--amber-l)}
+.step.dec .step-n{background:var(--amber); color:#fff}
+.step.dec .step-a{color:var(--amber)}
+.step.out{border-color:var(--teal); background:var(--teal-l)}
+.step.out .step-n{background:var(--teal-d); color:#fff}
+.step.stop{border-color:var(--red); background:var(--red-l)}
+.step.stop .step-n{background:var(--red); color:#fff}
+.step.stop .step-a{color:var(--red-d)}
+
+/* alt branch rail */
+.rail.alt .step{background:var(--amber-l); border-color:#E8D5A2}
+.rail.alt .step + .step::before{background:linear-gradient(90deg,#E8D5A2,var(--amber))}
+.rail.alt .step + .step::after{border-left-color:var(--amber)}
+.rail.alt .step-n{background:var(--amber); color:#fff}
+.rail.alt .step-a{color:var(--amber)}
+
+/* ============ NOTE BANDS ============ */
+.band{border-radius:8px; padding:11px 14px; margin-top:12px; font-size:12.6px; line-height:1.55}
+.band .bt{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:5px}
+.band ul{margin:4px 0 0; padding-left:17px} .band li{margin:3px 0}
+.band.limit{background:var(--red-l); border:1px solid #F6C4CF; color:#5C1220}
+.band.limit .bt{color:var(--red-d)}
+.band.exc{background:var(--amber-l); border:1px solid #E8D5A2; color:#5C4A12}
+.band.exc .bt{color:var(--amber)}
+.band.ev{background:var(--sand-l); border:1px solid var(--line); color:#4A4335}
+.band.ev .bt{color:#6B5B3A}
+.band.fut{background:var(--teal-l); border:1px solid #B9E7EA; color:#0A4548}
+.band.fut .bt{color:var(--teal-d)}
+.band.risk{background:#EDE7F6; border:1px solid #D3C4EC; color:#3B2A66}
+.band.risk .bt{color:#5B3E9B}
+.band.tod{background:#fff; border:1px dashed var(--sand-d); color:var(--slate); font-style:italic}
+.band.tod .bt{color:#6B5B3A; font-style:normal}
+
+/* ============ FLOW CANVAS ============ */
+.flow-tools{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:11px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r); padding:9px 12px;
+  box-shadow:var(--shadow)}
+.flow-tools .btn{border-color:var(--line); background:#fff; color:var(--ink)}
+.flow-tools .btn:hover{background:var(--teal-l); border-color:var(--teal); color:var(--teal-d)}
+.zlvl{font-family:var(--mono); font-size:11px; color:var(--slate); font-weight:600;
+  min-width:42px; text-align:center}
+.flow-tools .hint{font-size:11.5px; color:var(--slate); margin-left:auto; text-align:right}
+.flow-tools .hint kbd{font-family:var(--mono); font-size:10px; background:var(--sand-l);
+  border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 5px}
+
+.canvas-outer{background:
+    linear-gradient(var(--paper),var(--paper)) padding-box,
+    var(--line) border-box;
+  border:1px solid var(--line); border-radius:var(--r); overflow:auto; position:relative;
+  box-shadow:var(--shadow); max-height:78vh}
+.canvas-shim{position:relative}
+.canvas{position:relative; transform-origin:0 0;
+  background-image:radial-gradient(circle, #DED6C6 1px, transparent 1px);
+  background-size:22px 22px; background-color:var(--paper)}
+.bands{position:absolute; inset:0; z-index:0; pointer-events:none}
+.bandzone{position:absolute; top:0; bottom:0; border-right:1px dashed var(--sand-d)}
+.bandzone:nth-child(odd){background:rgba(232,221,200,.28)}
+.divider{position:absolute; left:0; right:0; height:0; border-top:1.5px dashed var(--sand-d)}
+.divider span{position:absolute; top:-9px; left:26px; background:var(--paper);
+  padding:0 12px; font-family:var(--mono); font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:#9A8C6E; font-weight:700}
+.bandzone .bl{position:absolute; top:12px; left:0; right:0; text-align:center;
+  font-family:var(--mono); font-size:10px; letter-spacing:.19em; text-transform:uppercase;
+  color:#9A8C6E; font-weight:700}
+.bandzone .bl small{display:block; font-size:9px; letter-spacing:.09em; color:#B2A488;
+  text-transform:none; margin-top:2px; font-weight:600}
+svg.edges{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:visible}
+.edge{fill:none; stroke:var(--slate); stroke-width:1.7; opacity:.72}
+.edge.batch{stroke-dasharray:7 4}
+.edge.manual{stroke-dasharray:2 3; stroke:var(--amber); opacity:.9}
+.edge.api{stroke:var(--teal); opacity:.95}
+.edge.unk{stroke:var(--red); stroke-dasharray:4 4; opacity:.9}
+.edge.hi{stroke:var(--teal); stroke-width:3.2; opacity:1}
+.elab{font-family:var(--mono); font-size:9.5px; fill:#3E4E4F; font-weight:600}
+.elab-bg{fill:var(--paper); stroke:var(--line); stroke-width:1; rx:4}
+
+.node{position:absolute; z-index:2; width:184px; background:#fff; border:1.5px solid var(--line);
+  border-radius:9px; padding:9px 11px 10px; box-shadow:var(--shadow); cursor:grab;
+  user-select:none; transition:box-shadow .15s, border-color .15s}
+.node:hover{box-shadow:var(--shadow-lg); border-color:var(--teal)}
+.node.dragging{cursor:grabbing; box-shadow:var(--shadow-lg); z-index:40; border-color:var(--teal)}
+.node.sel{border-color:var(--teal); box-shadow:0 0 0 3px rgba(1,179,189,.24),var(--shadow-lg)}
+.node .nk{font-family:var(--mono); font-size:8.5px; letter-spacing:.14em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:3px}
+.node .nt{font-size:12.6px; font-weight:650; line-height:1.3; letter-spacing:-.008em}
+.node .ns{font-size:10.5px; color:var(--slate); margin-top:3px; line-height:1.38; padding-right:16px}
+.node[data-k="source"]{border-color:var(--sand-d); background:#FFFDF8}
+.node[data-k="source"] .nk{color:#9A7B2E}
+.node[data-k="process"]{border-color:var(--teal)}
+.node[data-k="process"] .nk{color:var(--teal-d)}
+.node[data-k="store"]{border-color:#7E5BC4; background:#FBF9FF}
+.node[data-k="store"] .nk{color:#5B3E9B}
+.node[data-k="gl"]{border-color:var(--red); background:#FFF7F9}
+.node[data-k="gl"] .nk{color:var(--red-d)}
+.node[data-k="report"]{border-color:var(--ok); background:#F7FCFA}
+.node[data-k="report"] .nk{color:var(--ok)}
+.node[data-k="ctrl"]{border-color:var(--amber); background:var(--amber-l); border-style:dashed}
+.node[data-k="ctrl"] .nk{color:var(--amber)}
+.node[data-k="tool"]{border-color:#88999A; background:#F7F9F9}
+.node[data-k="tool"] .nk{color:#5A6B6C}
+.node .ninfo{position:absolute; bottom:6px; right:6px; width:17px; height:17px;
+  border-radius:50%; border:1px solid var(--line); background:#fff; color:var(--slate);
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:1; cursor:pointer;
+  display:grid; place-items:center; padding:0; opacity:.55; transition:opacity .15s,background .15s}
+.node:hover .ninfo{opacity:1}
+.node .ninfo:hover{background:var(--teal); border-color:var(--teal); color:#00282A}
+.node .ninfo:focus-visible{outline:2px solid var(--teal); outline-offset:1px; opacity:1}
+.node .ctag{position:absolute; top:-8px; right:8px; display:flex; gap:3px}
+.node .ctag span{font-family:var(--mono); font-size:8px; font-weight:700; background:var(--ink);
+  color:var(--sand); padding:2px 5px; border-radius:4px; letter-spacing:.05em}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:11px; background:var(--paper);
+  border:1px solid var(--line); border-radius:var(--r); padding:11px 14px; box-shadow:var(--shadow)}
+.legend .lg{display:flex; align-items:center; gap:6px; font-size:11.5px; color:#3E4E4F}
+.legend .sw{width:15px; height:15px; border-radius:4px; border:1.5px solid; flex:0 0 auto}
+.legend .ln{width:26px; height:0; border-top:2px solid; flex:0 0 auto}
+
+/* detail drawer */
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(430px,92vw); background:var(--paper);
+  border-left:1px solid var(--line); box-shadow:-14px 0 46px rgba(0,26,27,.20); z-index:80;
+  transform:translateX(102%); transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column}
+.drawer.on{transform:none}
+.drawer-h{padding:15px 18px; border-bottom:1px solid var(--line); background:var(--ink); color:#fff;
+  display:flex; align-items:flex-start; gap:11px}
+.drawer-h h3{font-size:15px; flex:1; color:#fff}
+.drawer-h .k{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal); font-weight:700; display:block; margin-bottom:3px}
+.drawer-h button{background:none; border:0; color:#9FBFC0; font-size:21px; cursor:pointer;
+  line-height:1; padding:0 3px}
+.drawer-h button:hover{color:#fff}
+.drawer-b{padding:17px 18px; overflow-y:auto; flex:1}
+.drawer-b h4{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); margin:16px 0 6px; font-weight:700}
+.drawer-b h4:first-child{margin-top:0}
+.drawer-b p{margin:0 0 8px; font-size:12.8px}
+.drawer-b ul{margin:0; padding-left:17px; font-size:12.6px} .drawer-b li{margin:4px 0}
+.scrim{position:fixed; inset:0; background:rgba(0,26,27,.34); z-index:79; opacity:0;
+  pointer-events:none; transition:opacity .26s}
+.scrim.on{opacity:1; pointer-events:auto}
+
+/* ============ TABLES ============ */
+.tbl-w{overflow-x:auto; background:var(--paper); border:1px solid var(--line);
+  border-radius:var(--r); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; font-size:12.5px; min-width:640px}
+th{background:var(--ink); color:var(--sand); font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.13em; text-transform:uppercase; text-align:left; padding:9px 12px;
+  font-weight:600; position:sticky; top:0; z-index:2}
+td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.5}
+tbody tr:hover{background:var(--teal-l)}
+tbody tr:last-child td{border-bottom:0}
+td.mono,th.mono{font-family:var(--mono); font-size:11px; white-space:nowrap}
+.rmark{display:inline-block; width:17px; height:17px; border-radius:4px; text-align:center;
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:17px}
+.rmark.x{background:var(--teal); color:#00282A}
+.rmark.o{background:var(--sand); color:#9A8C6E}
+
+/* search / filter */
+.filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+  padding:9px 12px; box-shadow:var(--shadow); position:sticky; top:104px; z-index:30}
+.filters input[type=search]{flex:1 1 210px; min-width:150px; font-family:var(--sans); font-size:12.5px;
+  padding:6px 11px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink)}
+.filters input[type=search]:focus{outline:2px solid var(--teal); outline-offset:-1px; border-color:var(--teal)}
+.fbtn{font-family:var(--mono); font-size:9.5px; font-weight:600; letter-spacing:.09em;
+  text-transform:uppercase; padding:5px 9px; border-radius:6px; border:1px solid var(--line);
+  background:#fff; color:var(--slate); cursor:pointer}
+.fbtn.on{background:var(--ink); color:var(--sand); border-color:var(--ink)}
+.fbtn:hover:not(.on){background:var(--sand-l); color:var(--ink)}
+
+/* editable */
+[contenteditable="true"]{outline:none; border-radius:3px; transition:background .12s}
+[contenteditable="true"]:hover{background:rgba(1,179,189,.10); box-shadow:0 0 0 2px rgba(1,179,189,.10)}
+[contenteditable="true"]:focus{background:#fff; box-shadow:0 0 0 2px var(--teal)}
+.editing-off [contenteditable="true"]:hover{background:none; box-shadow:none}
+
+.toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px);
+  background:var(--ink); color:var(--sand); padding:10px 20px; border-radius:8px; font-size:12.5px;
+  box-shadow:var(--shadow-lg); z-index:200; transition:transform .3s cubic-bezier(.2,1.2,.4,1);
+  font-weight:500}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+.foot{max-width:1680px; margin:26px auto 0; padding:16px 22px 34px; border-top:1px solid var(--line);
+  color:var(--slate); font-size:11.5px; line-height:1.65}
+.foot b{color:var(--ink)}
+
+/* ============ PRINT ============ */
+@media print{
+  body{background:#fff; font-size:10pt}
+  .hdr{position:static; background:#fff; color:var(--ink); box-shadow:none;
+       border-bottom:2.5px solid var(--red)}
+  .hdr-title h1{color:var(--ink)} .hdr-title .sub{color:var(--slate)}
+  .hdr-title .sub b{color:var(--ink)}
+  .brand-mark{color:var(--ink)} .brand-mark small{color:var(--slate)}
+  .hdr-tools,.nav,.filters,.flow-tools,.drawer,.scrim,.toast{display:none!important}
+  .pane{display:block!important; page-break-before:always}
+  .pane:first-of-type{page-break-before:avoid}
+  .ctrl-b{display:block!important}
+  .ctrl,.card,.kpi,.tbl-w{box-shadow:none; break-inside:avoid}
+  .rail{overflow:visible; flex-wrap:wrap; gap:20px}
+  .step{width:172px; margin-left:0!important; break-inside:avoid}
+  .step + .step::before,.step + .step::after{display:none}
+  .canvas-outer{max-height:none; overflow:visible}
+  th{position:static}
+  a{text-decoration:none; color:var(--ink)}
+}
+@media (max-width:760px){
+  .wrap{padding:14px} .hdr-in{padding:12px 14px 0} .nav{padding:8px 14px 0}
+  .hdr-title h1{font-size:17px} .filters{top:0; position:static}
+  .node{width:158px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important; animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-mark">intact<small>insurance</small></div>
+    </div>
+    <div class="hdr-title">
+      <h1>Tagetik IFRS17 CE &mdash; ITGC Control &amp; Data-Flow Explorer</h1>
+      <div class="sub">IFRS 17 calculation & reporting · Cloud-hosted SaaS v5.3.31 · Quarterly cycle &nbsp;&middot;&nbsp; <b>SOX / ICOFR readiness</b> &nbsp;&middot;&nbsp; Current-state view, draft for validation</div>
+    </div>
+    <div class="hdr-tools">
+      <button class="btn" id="btnExpand">Editing on</button>
+      <button class="btn" id="btnImport">Load edits</button>
+      <button class="btn" id="btnExport">Save edits</button>
+      <button class="btn primary" id="btnPrint">Print / PDF</button>
+      <input type="file" id="fileIn" accept="application/json,.json" hidden>
+    </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer class="foot">
+  <b>How to use this file.</b> Every heading, step description and box label is editable &mdash; click it and type.
+  Drag boxes on the Data flow tab to rearrange the picture; click a box to open its detail panel.
+  Use <b>Save edits</b> to download your changes as a JSON file, and <b>Load edits</b> to bring them back later
+  or share them with a colleague. Nothing is stored automatically, so save before you close the tab.
+  <br><br>
+  <b>Source and status.</b> Content is drawn from the Tagetik IFRS17 CE Control Narrative Document
+  (Intact Insurance UK &amp; International, draft). Control statuses and gap severities are an indicative
+  readiness view derived from the narrative alone &mdash; they are not tested conclusions. Confirm each item
+  through SOX test of design and test of operating effectiveness before reporting.
+  Items marked TBC in the source document are shown as TBC here rather than inferred.
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Node detail">
+  <div class="drawer-h">
+    <div style="flex:1">
+      <span class="k" id="drawerKind"></span>
+      <h3 id="drawerTitle"></h3>
+    </div>
+    <button id="drawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-b" id="drawerBody"></div>
+</aside>
+
+<script>
+/* ============================================================
+   Intact ITGC Control & Data-Flow Explorer  —  runtime
+   No external dependencies. Works offline.
+   ============================================================ */
+const esc = s => String(s==null?'':s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+
+const STATUS = {
+  ok:   {cls:'ok',   badge:'b-ok',   label:'Operating'},
+  part: {cls:'part', badge:'b-part', label:'Design gap'},
+  gap:  {cls:'gap',  badge:'b-gap',  label:'Not performed'},
+  vend: {cls:'vend', badge:'b-vend', label:'Vendor reliance'},
+  na:   {cls:'na',   badge:'b-na',   label:'Not applicable'}
+};
+
+let toastT;
+function toast(msg){
+  let t=$('#toast'); if(!t){t=el('div','toast'); t.id='toast'; document.body.appendChild(t);}
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2100);
+}
+
+/* ---------------- editable helper ---------------- */
+function ed(tag, cls, txt, path){
+  return `<${tag} class="${cls}" contenteditable="true" spellcheck="false" data-p="${esc(path)}">${esc(txt)}</${tag}>`;
+}
+
+/* ============================================================
+   1. CONTROL CARDS
+   ============================================================ */
+function renderControl(c, di, ci){
+  const st = STATUS[c.status] || STATUS.na;
+  const card = el('div','ctrl '+st.cls);
+  card.id = c.id.replace(/\./g,'-');
+  card.dataset.search = (c.id+' '+c.name+' '+c.objective+' '+(c.roles||[]).join(' ')+' '+
+      (c.steps||[]).map(s=>s.actor+' '+s.text+' '+(s.sys||'')).join(' ')+' '+
+      (c.limits||[]).join(' ')).toLowerCase();
+  card.dataset.status = c.status;
+  card.dataset.key = c.key ? 'key':'non';
+
+  /* --- header --- */
+  const h = el('div','ctrl-h');
+  h.innerHTML = `<span class="ctrl-cx">&#9656;</span>
+    <span class="ctrl-id">${esc(c.id)}</span>
+    <span class="ctrl-n">${esc(c.name)}</span>
+    <span class="ctrl-tw">
+      <span class="b ${c.key?'b-key':'b-non'}">${c.key?'Key':'Non-key'}</span>
+      <span class="b b-freq">${esc(c.freq)}</span>
+      <span class="b ${st.badge}">${esc(c.statusLabel||st.label)}</span>
+    </span>`;
+  h.addEventListener('click', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    card.classList.toggle('open');
+  });
+  card.appendChild(h);
+
+  /* --- body --- */
+  const b = el('div','ctrl-b');
+  let html = `<div class="obj"><span class="l">Control objective</span>
+      ${ed('span','', c.objective, `d.${di}.controls.${ci}.objective`)}</div>`;
+
+  html += `<div class="meta">
+      <div><span class="l">Frequency</span><span class="v">${ed('span','',c.freq,`d.${di}.controls.${ci}.freq`)}</span></div>
+      <div><span class="l">Roles involved</span><div class="chips">${
+        (c.roles||[]).map(r=>`<span class="chip actor">${esc(r)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+      <div><span class="l">Systems &amp; tools</span><div class="chips">${
+        (c.systems||[]).map(s=>`<span class="chip sys">${esc(s)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+    </div>`;
+
+  if(c.steps && c.steps.length){
+    html += `<div class="rail-l">${esc(c.railLabel||'How the control operates')}</div><div class="rail">`;
+    c.steps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${i+1}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.steps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if(c.altSteps && c.altSteps.length){
+    html += `<div class="rail-l">${esc(c.altLabel||'Exception / alternate route')}</div><div class="rail alt">`;
+    c.altSteps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${String.fromCharCode(65+i)}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.altSteps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  const has = v => v && String(v).trim() && String(v).trim().toUpperCase() !== 'NA';
+  if(has(c.exception)) html += band('exc','Exception handling', c.exception);
+  if(c.limits && c.limits.length) html += bandList('limit','Limitations / identified gaps', c.limits);
+  if(has(c.risk)) html += band('risk','Risk acceptance', c.risk);
+  if(c.evidence && c.evidence.length) html += bandList('ev','Evidence retained', c.evidence);
+  if(has(c.future)) html += band('fut','Future state', c.future);
+  if(has(c.tod)) html += band('tod','SOX test-of-design focus', c.tod);
+
+  b.innerHTML = html;
+  card.appendChild(b);
+  return card;
+}
+const band = (k,t,txt)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span>${esc(txt)}</div>`;
+const bandList=(k,t,arr)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span><ul>${
+  arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+
+/* ============================================================
+   2. FLOW CANVAS
+   ============================================================ */
+const FLOW = {zoom:1, sel:null};
+
+function renderFlow(f){
+  const outer = $('#canvasOuter');
+  const cv = $('#canvas');
+  cv.innerHTML='';
+  cv.style.width = f.w+'px';
+  cv.style.height = f.h+'px';
+
+  /* bands */
+  const bz = el('div','bands');
+  (f.bands||[]).forEach(b=>{
+    const z = el('div','bandzone');
+    z.style.left=b.x+'px'; z.style.width=b.w+'px';
+    z.innerHTML = `<div class="bl">${esc(b.label)}${b.sub?`<small>${esc(b.sub)}</small>`:''}</div>`;
+    bz.appendChild(z);
+  });
+  (f.dividers||[]).forEach(d=>{
+    const dv = el('div','divider');
+    dv.style.top = d.y+'px';
+    dv.innerHTML = `<span>${esc(d.label)}</span>`;
+    bz.appendChild(dv);
+  });
+  cv.appendChild(bz);
+
+  /* svg */
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','edges');
+  svg.setAttribute('width',f.w); svg.setAttribute('height',f.h);
+  svg.id='edges';
+  cv.appendChild(svg);
+
+  /* nodes */
+  f.nodes.forEach((n,i)=>{
+    const d = el('div','node');
+    d.dataset.k = n.k; d.dataset.id = n.id; d.dataset.i = i;
+    d.style.left = n.x+'px'; d.style.top = n.y+'px';
+    d.innerHTML = `${n.tags?`<div class="ctag">${n.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
+      <button class="ninfo" title="Show detail for this box" aria-label="Show detail">i</button>
+      <span class="nk">${esc(n.kind||n.k)}</span>
+      <div class="nt" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.t">${esc(n.t)}</div>
+      ${n.s?`<div class="ns" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.s">${esc(n.s)}</div>`:''}`;
+    cv.appendChild(d);
+    makeDraggable(d, n, f);
+    d.querySelector('.ninfo').addEventListener('pointerdown', e=>e.stopPropagation());
+    d.querySelector('.ninfo').addEventListener('click', e=>{
+      e.stopPropagation(); openDrawer(n, f);
+    });
+    d.addEventListener('click', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      if(d.dataset.moved==='1'){d.dataset.moved='0'; return;}
+      openDrawer(n, f);
+    });
+    d.addEventListener('dblclick', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      openDrawer(n, f);
+    });
+  });
+
+  drawEdges(f);
+  outer.scrollLeft = 0;
+}
+
+function nodeRect(f, id){
+  const d = $(`#canvas .node[data-id="${CSS.escape(id)}"]`);
+  const n = f.nodes.find(x=>x.id===id);
+  if(!d||!n) return null;
+  return {x:n.x, y:n.y, w:d.offsetWidth, h:d.offsetHeight};
+}
+
+function drawEdges(f){
+  const svg = $('#edges'); if(!svg) return;
+  svg.innerHTML='';
+  const NS='http://www.w3.org/2000/svg';
+  const labels=[];
+  (f.edges||[]).forEach((e,i)=>{
+    const a = nodeRect(f,e.from), b = nodeRect(f,e.to);
+    if(!a||!b) return;
+    let x1,y1,x2,y2,c1x,c1y,c2x,c2y;
+    const ac={x:a.x+a.w/2,y:a.y+a.h/2}, bc={x:b.x+b.w/2,y:b.y+b.h/2};
+    const dx=bc.x-ac.x, dy=bc.y-ac.y;
+    if(Math.abs(dx) >= Math.abs(dy)*0.72){          /* mostly horizontal */
+      const dir = dx>=0?1:-1;
+      x1 = dir>0? a.x+a.w : a.x;  y1 = ac.y;
+      x2 = dir>0? b.x     : b.x+b.w; y2 = bc.y;
+      const k = Math.max(34, Math.abs(x2-x1)*0.44);
+      c1x=x1+k*dir; c1y=y1; c2x=x2-k*dir; c2y=y2;
+    } else {                                         /* mostly vertical */
+      const dir = dy>=0?1:-1;
+      x1 = ac.x; y1 = dir>0? a.y+a.h : a.y;
+      x2 = bc.x; y2 = dir>0? b.y     : b.y+b.h;
+      const k = Math.max(28, Math.abs(y2-y1)*0.46);
+      c1x=x1; c1y=y1+k*dir; c2x=x2; c2y=y2-k*dir;
+    }
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d',`M${x1},${y1} C${c1x},${c1y} ${c2x},${c2y} ${x2},${y2}`);
+    p.setAttribute('class','edge '+(e.k||''));
+    p.setAttribute('marker-end','url(#ah'+(e.k||'d')+')');
+    p.dataset.i=i;
+    svg.appendChild(p);
+
+    if(e.l){
+      const t=.5, mt=1-t;
+      const mx = mt*mt*mt*x1 + 3*mt*mt*t*c1x + 3*mt*t*t*c2x + t*t*t*x2;
+      const my = mt*mt*mt*y1 + 3*mt*mt*t*c1y + 3*mt*t*t*c2y + t*t*t*y2;
+      const lines = String(e.l).split('|');
+      const wpx = Math.max(...lines.map(s=>s.length))*5.35 + 12;
+      const hpx = lines.length*11 + 7;
+      labels.push({x:mx, y:my, w:wpx, h:hpx, lines});
+    }
+  });
+
+  /* place labels, nudging vertically to avoid other labels AND node boxes */
+  const placed = f.nodes.map(n=>{
+    const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`);
+    const w=d?d.offsetWidth:184, h=d?d.offsetHeight:80;
+    return {x:n.x+w/2, y:n.y+h/2, w:w, h:h};
+  });
+  const hit=(a,b)=> a.x-a.w/2 < b.x+b.w/2+4 && a.x+a.w/2+4 > b.x-b.w/2 &&
+                    a.y-a.h/2 < b.y+b.h/2+3 && a.y+a.h/2+3 > b.y-b.h/2;
+  labels.forEach(L=>{
+    const y0=L.y;
+    for(let k=0; k<9; k++){
+      const off = Math.ceil(k/2)*(L.h+5)*(k%2?1:-1);
+      L.y = y0+off;
+      if(!placed.some(q=>hit(L,q))) break;
+    }
+    placed.push(L);
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('class','elab-bg');
+    r.setAttribute('x',L.x-L.w/2); r.setAttribute('y',L.y-L.h/2);
+    r.setAttribute('width',L.w); r.setAttribute('height',L.h);
+    r.setAttribute('rx',4);
+    svg.appendChild(r);
+    const tx=document.createElementNS(NS,'text');
+    tx.setAttribute('class','elab');
+    tx.setAttribute('x',L.x); tx.setAttribute('y',L.y-L.h/2+11.5);
+    tx.setAttribute('text-anchor','middle');
+    L.lines.forEach((ln,j)=>{
+      const ts=document.createElementNS(NS,'tspan');
+      ts.setAttribute('x',L.x); if(j)ts.setAttribute('dy','11');
+      ts.textContent=ln; tx.appendChild(ts);
+    });
+    svg.appendChild(tx);
+  });
+  /* arrowheads */
+  const defs=document.createElementNS(NS,'defs');
+  [['d','#5A6B6C'],['batch','#5A6B6C'],['manual','#B8860B'],['api','#01B3BD'],['unk','#DF0030']]
+    .forEach(([k,col])=>{
+      const m=document.createElementNS(NS,'marker');
+      m.setAttribute('id','ah'+k); m.setAttribute('markerWidth','8');
+      m.setAttribute('markerHeight','8'); m.setAttribute('refX','7');
+      m.setAttribute('refY','3'); m.setAttribute('orient','auto');
+      m.setAttribute('markerUnits','userSpaceOnUse');
+      const pp=document.createElementNS(NS,'path');
+      pp.setAttribute('d','M0,0 L7,3 L0,6 z'); pp.setAttribute('fill',col);
+      m.appendChild(pp); defs.appendChild(m);
+    });
+  svg.insertBefore(defs, svg.firstChild);
+}
+
+function makeDraggable(d, n, f){
+  let sx,sy,ox,oy,drag=false;
+  d.addEventListener('pointerdown', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    drag=true; d.dataset.moved='0';
+    d.setPointerCapture(e.pointerId);
+    sx=e.clientX; sy=e.clientY; ox=n.x; oy=n.y;
+    d.classList.add('dragging');
+  });
+  d.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    const z=FLOW.zoom;
+    const nx = Math.max(4, ox + (e.clientX-sx)/z);
+    const ny = Math.max(4, oy + (e.clientY-sy)/z);
+    if(Math.abs(nx-ox)>3||Math.abs(ny-oy)>3) d.dataset.moved='1';
+    n.x = Math.round(nx); n.y = Math.round(ny);
+    d.style.left=n.x+'px'; d.style.top=n.y+'px';
+    drawEdges(f);
+  });
+  const up=e=>{ if(!drag)return; drag=false; d.classList.remove('dragging');
+    try{d.releasePointerCapture(e.pointerId);}catch(_){} drawEdges(f); };
+  d.addEventListener('pointerup',up); d.addEventListener('pointercancel',up);
+}
+
+/* ---------- drawer ---------- */
+function openDrawer(n, f){
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+  const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`); if(d)d.classList.add('sel');
+  const dw=$('#drawer');
+  const ins=(f.edges||[]).filter(e=>e.to===n.id);
+  const outs=(f.edges||[]).filter(e=>e.from===n.id);
+  const nm=id=>{const x=f.nodes.find(v=>v.id===id); return x?x.t:id;};
+  $('#drawerKind').textContent = n.kind||n.k;
+  $('#drawerTitle').textContent = n.t;
+  let h='';
+  if(n.s) h+=`<p><b>${esc(n.s)}</b></p>`;
+  if(n.desc) h+=`<h4>What it does</h4><p>${esc(n.desc)}</p>`;
+  if(ins.length) h+=`<h4>Data in (${ins.length})</h4><ul>${ins.map(e=>
+    `<li><b>${esc(nm(e.from))}</b> &rarr; ${esc(String(e.l||'').replace(/\|/g,' &middot; '))}${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(outs.length) h+=`<h4>Data out (${outs.length})</h4><ul>${outs.map(e=>
+    `<li>${esc(String(e.l||'').replace(/\|/g,' &middot; '))} &rarr; <b>${esc(nm(e.to))}</b>${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(n.controls&&n.controls.length) h+=`<h4>ITGC control points</h4><div class="chips">${
+    n.controls.map(c=>`<span class="chip sys">${esc(c)}</span>`).join('')}</div>`;
+  if(n.owner) h+=`<h4>Owner / operator</h4><p>${esc(n.owner)}</p>`;
+  if(n.note) h+=`<h4>Audit note</h4><div class="band limit" style="margin-top:0">${esc(n.note)}</div>`;
+  $('#drawerBody').innerHTML=h||'<p style="color:#5A6B6C">No further detail recorded.</p>';
+  dw.classList.add('on'); $('#scrim').classList.add('on');
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on');
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+}
+
+/* ============================================================
+   3. BOOT
+   ============================================================ */
+let DATA;
+function boot(data){
+  DATA = data;
+  document.title = data.app + ' — ITGC Control & Data-Flow Explorer | Intact Insurance';
+
+  /* ---- nav + panes ---- */
+  const nav=$('#nav'), main=$('#main');
+
+  const addPane=(id,build)=>{
+    const p=el('div','pane'); p.id='pane-'+id;
+    main.appendChild(p);          // must be in the DOM before build() queries it
+    build(p); return p;
+  };
+  const addTab=(id,label,n)=>{
+    const b=el('button',null,esc(label)+(n?`<span class="n">${n}</span>`:''));
+    b.dataset.t=id; nav.appendChild(b);
+    b.addEventListener('click',()=>go(id));
+    return b;
+  };
+
+  /* OVERVIEW */
+  addTab('overview','Overview');
+  addPane('overview', p=>{
+    const o=data.overview;
+    let h=`<div class="pane-head"><div class="eyebrow">System profile</div>
+      <h2>${esc(data.app)}</h2><p>${esc(o.purpose)}</p></div>`;
+    h+=`<div class="grid g4" style="margin-bottom:16px">${o.kpis.map(k=>
+      `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div>
+       <div class="val">${esc(k.val)}</div>${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+    h+=`<div class="grid g2" style="margin-bottom:16px">${o.facts.map(f=>
+      `<div class="card"><h3><span class="ic">&#9642;</span>${esc(f.t)}</h3>
+       <div style="font-size:12.8px;line-height:1.6">${f.v}</div></div>`).join('')}</div>`;
+    /* RACI */
+    h+=`<div class="pane-head" style="margin-top:26px"><div class="eyebrow">Accountability</div>
+      <h2>Roles &amp; responsibility ownership</h2>
+      <p><span class="rmark x">X</span> primary responsibility &nbsp;
+         <span class="rmark o">&ndash;</span> supporting involvement</p></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th style="min-width:200px">Role</th>
+      <th>Responsibility summary</th><th class="mono">APD</th><th class="mono">CM</th>
+      <th class="mono">PD</th><th class="mono">CO</th><th class="mono">TPRM</th></tr></thead><tbody>`;
+    o.raci.forEach(r=>{
+      h+=`<tr><td><b>${esc(r.role)}</b></td><td>${esc(r.sum)}</td>`;
+      r.m.forEach(v=>{h+=`<td style="text-align:center"><span class="rmark ${v?'x':'o'}">${v?'X':'–'}</span></td>`;});
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+    if(o.sources) h+=`<div class="card" style="margin-top:16px"><h3><span class="ic">&#9642;</span>Source documents referenced</h3>
+      <ul style="margin:0;padding-left:18px;font-size:12.5px">${o.sources.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`;
+    p.innerHTML=h;
+  });
+
+  /* FLOW */
+  addTab('flow','Data flow', (data.flow.nodes||[]).length);
+  addPane('flow', p=>{
+    const f=data.flow;
+    p.innerHTML=`<div class="pane-head"><div class="eyebrow">End-to-end data movement</div>
+      <h2>${esc(f.title)}</h2><p>${esc(f.intro)}</p></div>
+      <div class="flow-tools">
+        <button class="btn" id="zIn">Zoom in</button>
+        <button class="btn" id="zOut">Zoom out</button>
+        <span class="zlvl" id="zLvl">100%</span>
+        <button class="btn" id="zFit">Fit width</button>
+        <button class="btn" id="zReset">Reset layout</button>
+        <span class="hint">Drag any box to move it &middot; click a box for detail &middot;
+          double-click a label to rename &middot; <kbd>Ctrl</kbd>+<kbd>P</kbd> to print</span>
+      </div>
+      <div class="canvas-outer" id="canvasOuter"><div class="canvas-shim" id="canvasShim"><div class="canvas" id="canvas"></div></div></div>
+      <div class="legend" id="legend"></div>
+      ${f.notes?`<div class="band limit" style="margin-top:14px"><span class="bt">Documented gaps in the data-flow record</span><ul>${
+        f.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
+      ${f.tableTitle?`<div class="pane-head" style="margin-top:28px"><div class="eyebrow">Interface register</div>
+        <h2>${esc(f.tableTitle)}</h2></div>
+        <div class="tbl-w"><table><thead><tr><th>Source</th><th>Processing layer</th>
+        <th>Destination</th><th>Data / business purpose</th></tr></thead><tbody>${
+        f.table.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td></tr>`).join('')
+      }</tbody></table></div>`:''}`;
+
+    renderFlow(f);
+    /* legend */
+    const K=[['source','Source system'],['process','Processing / application'],['store','Data store / staging'],
+             ['gl','General ledger'],['report','Reporting output'],['ctrl','Control / monitoring'],['tool','Supporting tool']];
+    const cols={source:'#C9B893',process:'#01B3BD',store:'#7E5BC4',gl:'#DF0030',report:'#0F7A5A',ctrl:'#B8860B',tool:'#88999A'};
+    let lg = K.map(([k,l])=>`<div class="lg"><span class="sw" style="border-color:${cols[k]};background:${cols[k]}22"></span>${l}</div>`).join('');
+    lg += `<div class="lg"><span class="ln" style="border-color:#5A6B6C"></span>System interface</div>
+      <div class="lg"><span class="ln" style="border-color:#5A6B6C;border-top-style:dashed"></span>Scheduled / batch file</div>
+      <div class="lg"><span class="ln" style="border-color:#B8860B;border-top-style:dotted"></span>Manual / human hand-off</div>
+      <div class="lg"><span class="ln" style="border-color:#01B3BD"></span>API / real-time</div>
+      <div class="lg"><span class="ln" style="border-color:#DF0030;border-top-style:dashed"></span>Mechanism not evidenced</div>`;
+    $('#legend').innerHTML=lg;
+
+    const setZoom=z=>{
+      FLOW.zoom=Math.min(1.6,Math.max(0.30,z));
+      const cv=$('#canvas'), shim=$('#canvasShim');
+      cv.style.transform=`scale(${FLOW.zoom})`;
+      shim.style.width=(f.w*FLOW.zoom)+'px';
+      shim.style.height=(f.h*FLOW.zoom)+'px';
+      $('#zLvl').textContent=Math.round(FLOW.zoom*100)+'%';
+    };
+    $('#zIn').onclick=()=>setZoom(FLOW.zoom+0.14);
+    $('#zOut').onclick=()=>setZoom(FLOW.zoom-0.14);
+    $('#zFit').onclick=()=>FLOW.fit();
+    $('#zReset').onclick=()=>{f.nodes.forEach((n,i)=>{n.x=f.home[i][0]; n.y=f.home[i][1];});
+      renderFlow(f); setZoom(FLOW.zoom); toast('Layout reset to default positions');};
+    FLOW.fit = ()=>setZoom(($('#canvasOuter').clientWidth-26)/f.w);
+    setTimeout(()=>setZoom(1),50);
+  });
+
+  /* DOMAINS */
+  data.domains.forEach((d,di)=>{
+    addTab('d'+di, d.short, d.controls.length);
+    addPane('d'+di, p=>{
+      let h=`<div class="pane-head"><div class="eyebrow">${esc(d.code)} &middot; ITGC domain</div>
+        <h2>${esc(d.name)}</h2><p>${esc(d.intro)}</p></div>`;
+      if(d.summary) h+=`<div class="grid g4" style="margin-bottom:16px">${d.summary.map(k=>
+        `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div><div class="val">${esc(k.val)}</div>
+         ${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+      h+=`<div class="filters">
+        <input type="search" placeholder="Filter ${esc(d.short)} controls — try a role, system or keyword…" data-f="${di}">
+        <button class="fbtn on" data-s="all" data-d="${di}">All</button>
+        <button class="fbtn" data-s="key" data-d="${di}">Key only</button>
+        <button class="fbtn" data-s="gap" data-d="${di}">Gaps</button>
+        <button class="fbtn" data-s="part" data-d="${di}">Design gaps</button>
+        <button class="fbtn" data-s="vend" data-d="${di}">Vendor reliance</button>
+        <button class="fbtn" data-x="open" data-d="${di}">Expand all</button>
+        <button class="fbtn" data-x="close" data-d="${di}">Collapse all</button>
+      </div><div id="list${di}"></div>`;
+      p.innerHTML=h;
+      const list=p.querySelector('#list'+di);
+      d.controls.forEach((c,ci)=>list.appendChild(renderControl(c,di,ci)));
+      if(d.outro) list.insertAdjacentHTML('afterend',
+        `<div class="band tod" style="margin-top:18px"><span class="bt">Domain note</span>${esc(d.outro)}</div>`);
+
+      /* filters */
+      const apply=()=>{
+        const q=(p.querySelector('input[type=search]').value||'').toLowerCase().trim();
+        const s=p.querySelector('.fbtn.on[data-s]')?.dataset.s||'all';
+        let shown=0;
+        Array.from(list.children).forEach(c=>{
+          if(!c.classList.contains('ctrl')) return;
+          const okQ = !q || c.dataset.search.includes(q);
+          const okS = s==='all' || (s==='key'? c.dataset.key==='key' : c.dataset.status===s);
+          const vis = okQ&&okS; c.style.display = vis?'':'none'; if(vis)shown++;
+        });
+        let m=p.querySelector('.nores');
+        if(!shown){ if(!m){m=el('div','nores card'); m.style.textAlign='center';
+          m.innerHTML='<b>No controls match that filter.</b><br><span style="color:#5A6B6C">Clear the search box or choose “All”.</span>';
+          list.appendChild(m);} }
+        else if(m) m.remove();
+      };
+      p.querySelector('input[type=search]').addEventListener('input',apply);
+      p.querySelectorAll('.fbtn[data-s]').forEach(b=>b.addEventListener('click',()=>{
+        p.querySelectorAll('.fbtn[data-s]').forEach(x=>x.classList.remove('on'));
+        b.classList.add('on'); apply();
+      }));
+      p.querySelector('.fbtn[data-x="open"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.add('open')));
+      p.querySelector('.fbtn[data-x="close"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.remove('open')));
+    });
+  });
+
+  /* GAP REGISTER */
+  addTab('gaps','Gap register', data.gaps.length);
+  addPane('gaps', p=>{
+    const sev={H:'b-gap',M:'b-part',L:'b-na'};
+    const sevL={H:'High',M:'Medium',L:'Low'};
+    let h=`<div class="pane-head"><div class="eyebrow">Consolidated exceptions</div>
+      <h2>Gap register — ${esc(data.app)}</h2>
+      <p>Every limitation recorded across the control narrative, in one list. Severity is an
+      indicative SOX readiness view based on whether the control is Key and whether any control
+      activity currently operates.</p></div>`;
+    const cnt=k=>data.gaps.filter(g=>g.sev===k).length;
+    h+=`<div class="grid g4" style="margin-bottom:16px">
+      <div class="kpi red"><div class="lab">High</div><div class="val">${cnt('H')}</div>
+        <div class="note">Key control not operating, or no evidenced activity</div></div>
+      <div class="kpi amber"><div class="lab">Medium</div><div class="val">${cnt('M')}</div>
+        <div class="note">Control operates but design or evidence is incomplete</div></div>
+      <div class="kpi"><div class="lab">Low</div><div class="val">${cnt('L')}</div>
+        <div class="note">Documentation, SLA or housekeeping matters</div></div>
+      <div class="kpi ok"><div class="lab">Total logged</div><div class="val">${data.gaps.length}</div>
+        <div class="note">Across APD, CM, CO, PD and TPRM</div></div></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th class="mono" style="width:78px">Control</th>
+      <th style="width:82px">Severity</th><th style="min-width:280px">Gap identified</th>
+      <th style="min-width:250px">Why it matters for SOX</th></tr></thead><tbody>`;
+    data.gaps.forEach(g=>{
+      h+=`<tr><td class="mono"><b>${esc(g.id)}</b></td>
+        <td><span class="b ${sev[g.sev]}">${sevL[g.sev]}</span></td>
+        <td>${esc(g.gap)}</td><td style="color:#4A5C5D">${esc(g.why)}</td></tr>`;
+    });
+    h+='</tbody></table></div>';
+    h+=`<div class="band tod" style="margin-top:16px"><span class="bt">How to read this</span>
+      Severity is an indicative view derived from the control narrative only. It is not a tested
+      conclusion — confirm each item through SOX test of design and test of operating effectiveness
+      before reporting.</div>`;
+    p.innerHTML=h;
+  });
+
+  go('overview');
+
+  /* ---- toolbar ---- */
+  $('#btnExport').onclick=()=>{
+    harvestEdits();
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+    const a=el('a'); a.href=URL.createObjectURL(blob);
+    a.download=(DATA.app.replace(/[^A-Za-z0-9]+/g,'_'))+'_ITGC_edits.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Exported your edits as JSON');
+  };
+  $('#btnImport').onclick=()=>$('#fileIn').click();
+  $('#fileIn').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      if(!d.app||!d.domains) throw new Error('not a valid file');
+      main.innerHTML=''; nav.innerHTML=''; boot(d); toast('Loaded '+f.name);
+    }catch(err){ toast('That file could not be read: '+err.message); } };
+    r.readAsText(f); e.target.value='';
+  };
+  $('#btnPrint').onclick=()=>{$$('.ctrl').forEach(c=>c.classList.add('open')); setTimeout(()=>window.print(),120);};
+  $('#btnExpand').onclick=()=>{
+    const on=document.body.classList.toggle('editing-off');
+    $('#btnExpand').textContent = on?'Editing off':'Editing on';
+    $$('[contenteditable]').forEach(n=>n.setAttribute('contenteditable', on?'false':'true'));
+    toast(on?'Editing locked — click again to unlock':'Editing unlocked — click any text to change it');
+  };
+  $('#scrim').onclick=closeDrawer;
+  $('#drawerClose').onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+  window.addEventListener('resize',()=>{ if(DATA&&DATA.flow&&$('#edges')) drawEdges(DATA.flow); });
+}
+
+function go(id){
+  $$('.pane').forEach(p=>p.classList.toggle('on', p.id==='pane-'+id));
+  $$('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.t===id));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='flow'&&DATA) setTimeout(()=>drawEdges(DATA.flow),40);
+}
+
+/* write contenteditable values back into DATA before export */
+function harvestEdits(){
+  $$('[data-p]').forEach(n=>{
+    const path=n.dataset.p.split('.');
+    let o=DATA, key=path.pop();
+    if(path[0]==='d'){ path.shift(); o=DATA.domains; }
+    else if(path[0]==='flow'){ path.shift(); o=DATA.flow; }
+    for(const k of path){ if(o==null) return; o=o[/^\d+$/.test(k)?Number(k):k]; }
+    if(o) o[/^\d+$/.test(key)?Number(key):key]=n.textContent.trim();
+  });
+}
+
+const DATA_JSON = {"app":"Tagetik IFRS17 CE","tagline":"IFRS 17 calculation & reporting · Cloud-hosted SaaS v5.3.31 · Quarterly cycle","overview":{"purpose":"Tagetik IFRS17 CE is a cloud-hosted SaaS financial reporting and calculation platform used for quarterly IFRS 17 processing. Quarterly data is loaded into the Tagetik data layer, transformed through the Input Data Model into cashflows, processed through the IFRS 17 Starter Kit to generate cashflows and accounting entries, and used to produce Balance Sheet and P&L reporting plus RSA journal entries exported to SAP.","kpis":[{"lab":"Users in scope","val":"~50","note":"Plus 4 system administrators, vendor support users and the SailPoint service account"},{"lab":"Application version","val":"5.3.31","note":"Vendor-managed SaaS in a private-cloud environment"},{"lab":"Recertification","val":"3× / year","note":"Every four months through SailPoint; privileged users included"},{"lab":"Risk accepted","val":"Admin overlap","tone":"amber","note":"Same administrators develop, promote, administer access and run Production"}],"facts":[{"t":"System type","v":"Vendor-managed SaaS operating in a private-cloud environment. Current application version <b>5.3.31</b>. Core platform development is performed by the Tagetik vendor; Intact performs functional configuration through the Master Data Module and calculation changes through the analytical workspace using SQL."},{"t":"Environments","v":"<b>Development, UAT, Patch and Production.</b> Development is used to build changes; UAT for business validation; <b>Patch is used for vendor service-pack testing and sits outside the standard quarterly change path</b>; Production supports live IFRS 17 processing. Development and Patch are restricted to administrator users; UAT is generally accessible to the same population as Production."},{"t":"Geographical scope","v":"Current user access is based globally across the <b>UK, India, Ireland and Europe</b>."},{"t":"Access model","v":"Three effective access categories — <b>Standard User, Administrator, and Super User by exception</b> — combined with <b>entity-level restrictions</b> (which legal entities, business units or datasets) and <b>form-level restrictions</b> (which forms, screens, reports and functions). No custom roles are created or deleted in the environment."},{"t":"Authentication","v":"Ordinary users authenticate through <b>corporate SSO using standard OPD accounts</b> and hold no separate Tagetik password. The SailPoint service account connects through a REST API; vendor support users authenticate through vendor-managed support IDs under the support contract."},{"t":"Change cycle","v":"A <b>quarterly change cycle</b> governed by the Tagetik Change Management Build Cycle in Blueworks: Change Committee approval → development → unit testing → regression testing → system testing → UAT → Production approval → Production implementation → post-go-live checks. The Finance Systems Team maintains a SharePoint change log."},{"t":"Processing","v":"<b>There are no scheduled batch jobs within Tagetik</b> — the quarterly calculation-engine process is manually initiated. No internal scheduler population or automated batch-failure alert is maintained, which is why CO.C02 is scoped out."},{"t":"Audit logging","v":"Tagetik records administrator activity in application audit logs covering database-level access, configuration changes, code changes and database-structure changes. Logs are <b>retained indefinitely and cannot be deleted</b>. Logging can technically be switched off, but <b>any change to the logging status is itself recorded in the audit log</b>."}],"raci":[{"role":"Regional Business Owner / Business Approver","sum":"Approves business access requests, reviews and approves business-impacting changes, participates in testing and business validation activities, and supports assessment of issues affecting financial reporting outcomes.","m":[1,1,0,0,0]},{"role":"UK&I Finance Systems Team","sum":"Administers user access, implements approved changes, performs application configuration and support activities, manages operational processing and incident resolution, and coordinates vendor interactions.","m":[1,1,0,1,0]},{"role":"Actuarial Business Owner","sum":"Approves actuarial-user access, validates actuarial and calculation-related changes, participates in testing and readiness activities, supports issue investigation, and validates actuarial processing outputs.","m":[1,1,0,0,0]},{"role":"System Owner / Application Owner","sum":"Provides application governance, oversees access reviews, change promotion activities, operational escalations, privileged-access oversight and vendor dependencies.","m":[1,1,0,1,1]},{"role":"SailPoint Team / IAM Function","sum":"Operates access recertification processes, manages user-population retrieval through API integration, supports identity-governance activities and maintains recertification evidence.","m":[1,0,0,0,0]},{"role":"TRM Team","sum":"Performs vendor-assurance activities, including SOC report reviews, bridge coverage assessment, CUEC evaluation, third-party risk oversight and remediation tracking.","m":[0,0,0,0,1]},{"role":"Tagetik Vendor","sum":"Provides SaaS platform services including hosting, vendor support, platform updates, backup, recovery and resilience capabilities under the support agreement.","m":[0,0,0,1,1]},{"role":"End Users (Finance / Actuarial)","sum":"Request and use approved access, participate in UAT and business validation activities, perform operational processing and reporting activities, and raise issues affecting business outputs.","m":[0,0,0,0,0]}],"sources":["Tagetik IFRS17 CE Control Narrative Document — Intact Insurance UK & International","Tagetik Logical Access Process maintained in Blueworks","FSCP – Group FOS – Tagetik Change Management Build Cycle (Blueworks)","SharePoint-hosted Tagetik change log","Common Program Development and Third-Party Risk Management Control Narratives","Tagetik SOC 1 Type II report (vendor-provided)"]},"flow":{"title":"Quarterly IFRS 17 data flow — from source data to SAP journals and reporting","intro":"Tagetik is a calculation engine that both consumes from and returns to the finance landscape. Quarterly IFRS 4 data, regional inputs, reference datasets and global datasets are transferred by SFTP and loaded via ETL into the Tagetik data layer. The Input Data Model transforms IFRS 4 data into cashflows; the IFRS 17 Starter Kit generates IFRS 17 cashflows and accounting entries; journal generation produces RSA journal entries exported to SAP; and a parallel reporting branch produces IFRS 17 Balance Sheet and P&L outputs. Drag any box to rearrange; click a box for detail.","w":2500,"h":1200,"dividers":[{"y":860,"label":"Control layer — access, change and environments"}],"bands":[{"x":0,"w":460,"label":"Source","sub":"UK & regional systems"},{"x":460,"w":400,"label":"Ingest","sub":"SFTP & ETL load"},{"x":860,"w":620,"label":"Calculation","sub":"Tagetik IFRS17 CE"},{"x":1480,"w":460,"label":"Output","sub":"Journals & reporting"},{"x":1940,"w":560,"label":"Downstream","sub":"SAP, FDS & Intact reporting"}],"nodes":[{"id":"ukfds","k":"source","kind":"Source · Data store","t":"UK FDS","s":"Finance Data Store","x":60,"y":120,"desc":"UK Finance Data Store — one of five quarterly source populations feeding the Tagetik IFRS 17 calculation.","owner":"Finance / FDS operations"},{"id":"regional","k":"source","kind":"Source · Data store","t":"Regional Data Stores","s":"Regional input datasets","x":60,"y":270,"desc":"Regional data stores supplying regional input datasets for IFRS 17 processing.","owner":"Regional Finance teams"},{"id":"ice","k":"source","kind":"Source · System","t":"ICE","s":"Source system","x":60,"y":420,"desc":"ICE is identified as one of the quarterly source populations feeding the Tagetik data layer.","owner":"Source system owner"},{"id":"regions","k":"source","kind":"Source · Business","t":"Regions","s":"Regional submissions","x":60,"y":570,"desc":"Regional submissions forming part of the quarterly source population.","owner":"Regional Finance teams"},{"id":"iateam","k":"source","kind":"Source · Business","t":"IA Team","s":"Reference & global datasets","x":60,"y":720,"desc":"The IA team supplies reference datasets and global input datasets used in the IFRS 17 calculation.","owner":"IA Team"},{"id":"sftp","k":"tool","kind":"Ingest · Transfer","t":"SFTP transfer","s":"Secure file transfer","x":500,"y":330,"desc":"SFTP supports data transfer within the wider flow, connecting Tagetik with SAP, FDS, the Injection Pack and the Intact finance application landscape.","controls":["CO.C05"]},{"id":"etl","k":"process","kind":"Ingest · ETL","t":"ETL Load","s":"Populates the Tagetik data layer","x":500,"y":530,"desc":"An ETL load populates the Tagetik data layer with quarterly IFRS 4 data, input datasets, reference datasets and global datasets.","controls":["CO.C05","CM.C02"],"note":"Detailed business-interface completeness and accuracy controls are outside this ITGC narrative and are addressed through the relevant IT application control (ITAC) or interface-control assessment."},{"id":"datalayer","k":"store","kind":"Calculation · Data layer","t":"Tagetik Data Layer","s":"Quarterly IFRS4 & input data","x":900,"y":160,"desc":"The Tagetik data layer holds the loaded quarterly IFRS 4 data, regional input datasets, reference datasets and global input datasets.","owner":"UK&I Finance Systems Team"},{"id":"idm","k":"process","kind":"Calculation · Transform","t":"Input Data Model (IDM)","s":"IFRS4 → cashflows","x":900,"y":340,"desc":"The Input Data Model transforms IFRS 4 data into cashflows and calculation-ready data structures.","controls":["CM.C03","CM.C05","APD.C09"]},{"id":"starterkit","k":"process","kind":"Calculation · Core","t":"IFRS17 Starter Kit","s":"Cashflows + accounting entries","x":900,"y":520,"desc":"The IFRS 17 Starter Kit generates IFRS 17 cashflows and accounting entries, validated through cross-check and consistency-check procedures. Vendor-provided Starter Kit updates are tested by the vendor outside the Intact-controlled change process; Intact reviews, assesses impact, validates internally and approves implementation.","controls":["CM.C02","CM.C03","CM.C08"],"owner":"Tagetik vendor (kit) / UK&I Finance Systems Team (configuration)","tags":["CM.C02"]},{"id":"calcengine","k":"ctrl","kind":"Calculation · Execution","t":"Calculation engine run","s":"Manually initiated — no scheduler","x":1180,"y":700,"desc":"There are no scheduled batch jobs within Tagetik. The quarterly calculation-engine process is manually initiated in Production by an administrator. No internal scheduler population or automated batch-failure alert is maintained.","controls":["CO.C02","APD.C11","CM.C06"],"note":"Administrator users can execute the calculation engine in Production and also develop, promote changes and maintain access. This overlap is formally risk accepted under APD.C11 and CM.C06.","tags":["Risk accepted"]},{"id":"crosscheck","k":"ctrl","kind":"Calculation · Validation","t":"Cross-check & consistency checks","s":"Validates generated entries","x":1180,"y":400,"desc":"IFRS 17 cashflows and accounting entries are generated and validated through cross-check and consistency-check procedures.","controls":["Business-process / ITAC scope"]},{"id":"journalgen","k":"process","kind":"Output · Journals","t":"Journal Generation","s":"RSA journal entries & export files","x":1520,"y":300,"desc":"RSA journal entries and journal export files are generated and transferred to SAP to support downstream financial accounting and ledger processing.","controls":["CM.C09","CO.C05"]},{"id":"reporting","k":"report","kind":"Output · Reporting","t":"IFRS17 Reporting Outputs","s":"Balance Sheet & P&L","x":1520,"y":500,"desc":"IFRS 17 Balance Sheet and Profit & Loss reporting outputs are generated for financial reporting and regulatory reporting purposes.","owner":"Finance / Actuarial teams"},{"id":"star3","k":"tool","kind":"Output · Decommissioned","t":"StAR3","s":"Decommissioned — no longer in current state","x":1740,"y":700,"desc":"The Scope section references StAR3 extracts and reports as a Tagetik output. The Overview states StAR3 has been decommissioned and is no longer part of the current-state flow.","note":"The narrative contradicts itself: Scope lists StAR3 outputs among Tagetik's generated outputs, while the Overview data-flow table states StAR3 has been decommissioned. Confirm the current-state position before SOX test of design."},{"id":"sap","k":"gl","kind":"Downstream · GL","t":"SAP","s":"Financial accounting & ledger","x":1970,"y":300,"desc":"Receives RSA journal entries and journal export files from Tagetik to support downstream financial accounting and ledger processing.","owner":"SAP application teams"},{"id":"fds","k":"store","kind":"Downstream · Data store","t":"FDS","s":"Finance Data Store","x":1970,"y":500,"desc":"Part of the downstream finance reporting chain consuming Tagetik-derived financial reporting data. Note UK FDS also appears upstream as a source — FDS both feeds Tagetik and consumes from the wider chain.","owner":"Finance / FDS operations"},{"id":"injection","k":"store","kind":"Downstream · Pack","t":"Injection Pack","s":"Downstream finance reporting","x":1970,"y":700,"desc":"Part of the downstream finance reporting processes consuming financial reporting data within the wider Intact finance architecture.","owner":"Finance reporting teams"},{"id":"intactrep","k":"report","kind":"Downstream · Reporting","t":"Intact Reporting Landscape","s":"Wider finance architecture","x":2250,"y":140,"desc":"Financial reporting data is consumed by downstream reporting processes within the wider Intact finance architecture. Data flows from UK and regional systems into the Tagetik Calculation Engine and from the Calculation Engine back into UK systems.","controls":["All key controls"]},{"id":"sailpoint","k":"tool","kind":"Access · IGA","t":"SailPoint","s":"REST API · daily population retrieval","x":900,"y":1050,"desc":"SailPoint connects to the Tagetik repository through a REST API and retrieves the Tagetik user population daily. The retrieved population supports the four-monthly access-recertification process. SailPoint does NOT provision, modify or remove Tagetik access in the current-state process.","owner":"SailPoint Team / IAM Function","controls":["APD.C03","APD.C05","APD.C07","APD.C08","APD.C10"],"note":"A formal reconciliation of the SailPoint campaign population to the complete active Tagetik user population is not evidenced for each campaign, and inclusion of vendor support IDs and the SailPoint service account is not confirmed.","tags":["APD.C07"]},{"id":"sdp","k":"tool","kind":"Access · ITSM","t":"ServiceDesk Plus","s":"Access & application change requests","x":400,"y":900,"desc":"Access requests for standard-user, administrator and super-user access are raised through ServiceDesk Plus and routed through the configured approval workflow. Application-specific changes — configuration, calculation, reporting and model changes — are also raised and managed through ServiceDesk Plus.","controls":["APD.C01","APD.C03","APD.C04","APD.C08","CM.C02"],"owner":"UK&I Finance Systems Team"},{"id":"envroute","k":"ctrl","kind":"Change · Environments","t":"Dev → UAT → Production","s":"Patch sits outside the standard route","x":1400,"y":900,"desc":"The standard quarterly change lifecycle runs Development → UAT → Production. The Patch environment is used separately for testing vendor service packs and does not form part of the standard promotion route. Development and Patch are restricted to administrator users; business users access UAT for validation.","controls":["CM.C03","CM.C04","CM.C06"],"tags":["CM.C04"]}],"edges":[{"from":"ukfds","to":"sftp","k":"batch","l":"Quarterly IFRS4|data"},{"from":"regional","to":"sftp","k":"batch","l":"Regional input|datasets"},{"from":"ice","to":"sftp","k":"batch","l":"Source data"},{"from":"regions","to":"sftp","k":"batch","l":"Regional|submissions"},{"from":"iateam","to":"sftp","k":"batch","l":"Reference & global|datasets"},{"from":"sftp","to":"etl","k":"batch","l":"SFTP transfer"},{"from":"etl","to":"datalayer","k":"batch","l":"ETL load"},{"from":"datalayer","to":"idm","k":"api","l":"IFRS4 data"},{"from":"idm","to":"starterkit","k":"api","l":"Cashflows &|calc-ready structures"},{"from":"calcengine","to":"starterkit","k":"manual","l":"Manual run|in Production"},{"from":"starterkit","to":"crosscheck","k":"api","l":"Generated entries"},{"from":"starterkit","to":"journalgen","k":"api","l":"IFRS17 cashflows|& accounting entries"},{"from":"starterkit","to":"reporting","k":"api","l":"Reporting layer"},{"from":"journalgen","to":"sap","k":"batch","l":"RSA journal entries|& export files"},{"from":"reporting","to":"intactrep","k":"batch","l":"IFRS17 BS & P&L"},{"from":"sap","to":"intactrep","k":"batch","l":"Ledger data"},{"from":"sap","to":"fds","k":"batch","l":"Finance data"},{"from":"fds","to":"intactrep","k":"batch","l":"Reporting feed"},{"from":"injection","to":"intactrep","k":"batch","l":"Injection Pack|data"},{"from":"sap","to":"injection","k":"batch","l":"Downstream|processing"},{"from":"sailpoint","to":"datalayer","k":"api","l":"REST API — daily|user population","detail":"Retrieves the Tagetik user population daily to support four-monthly recertification. Read-only: SailPoint does not modify access."},{"from":"sdp","to":"datalayer","k":"manual","l":"Approved access|→ manual config","detail":"Following workflow approval the Finance Systems Team manually provisions the user and applies entity-level and form-level restrictions."},{"from":"sdp","to":"envroute","k":"manual","l":"Approved change|request"},{"from":"envroute","to":"starterkit","k":"manual","l":"Starter Kit &|service-pack updates"},{"from":"reporting","to":"star3","k":"unk","l":"Status disputed|in the narrative"}],"notes":["The narrative is internally inconsistent on StAR3: the Scope section lists StAR3 extracts and reports as a Tagetik output, while the Overview data-flow table states StAR3 has been decommissioned and is no longer part of the current-state flow.","There are no scheduled batch jobs within Tagetik — the calculation process is manually initiated, so no internal scheduler population or automated batch-failure alert exists.","Detailed business-interface completeness and accuracy controls are outside this ITGC narrative and are addressed through the relevant IT application control (ITAC) or interface-control assessment.","The definitive system of record for each category of change is not confirmed — the respective use of ServiceNow, ServiceDesk Plus, SharePoint and vendor-managed repositories for interface changes, application changes and vendor-driven changes requires confirmation.","FDS appears on both sides of the flow: UK FDS is a quarterly source population feeding Tagetik, and FDS also sits downstream consuming financial reporting data."],"tableTitle":"Source, processing layer and destination as documented","table":[["UK FDS, Regional Data Stores, ICE, Regions and IA Team","ETL Load","Tagetik Data Layer","Quarterly IFRS4 data, input datasets, reference datasets and global datasets are transferred via SFTP and loaded into the Tagetik data layer for IFRS17 processing."],["Tagetik Data Layer","Input Data Model (IDM)","IFRS17 Starter Kit","IFRS4 data is transformed into IFRS17 cashflows and calculation-ready data structures."],["Input Data Model (IDM)","IFRS17 Starter Kit","Journal Generation","IFRS17 cashflows and accounting entries are generated and validated through cross-check and consistency-check procedures."],["IFRS17 Starter Kit","Journal Generation","SAP","RSA journal entries and journal export files are generated and transferred to SAP to support downstream financial accounting and ledger processing."],["IFRS17 Starter Kit","Reporting","IFRS17 Reporting Outputs","IFRS17 Balance Sheet and Profit & Loss reporting outputs are generated for financial reporting and regulatory reporting purposes."],["SAP / FDS / Injection Pack","Downstream Finance Reporting Processes","Intact Reporting Landscape","Financial reporting data is consumed by downstream reporting processes within the wider Intact finance architecture. StAR3 has been decommissioned and is no longer part of the current state flow."],["SailPoint","REST API Integration","Tagetik Repository","User population information is retrieved daily to support user access recertification activities."]],"home":[[60,120],[60,270],[60,420],[60,570],[60,720],[500,330],[500,530],[900,160],[900,340],[900,520],[1180,700],[1180,400],[1520,300],[1520,500],[1740,700],[1970,300],[1970,500],[1970,700],[2250,140],[900,1050],[400,900],[1400,900]]},"domains":[{"code":"APD","short":"APD","name":"Access to Programs and Data","intro":"Access management is governed through the Tagetik Logical Access Process in Blueworks, supported by ServiceDesk Plus workflows, corporate SSO, SailPoint recertification and manual administration by the UK&I Finance Systems Team. Every provisioning, modification and removal action is performed manually inside Tagetik — SailPoint retrieves the population and records decisions but never changes access itself.","summary":[{"lab":"Controls","val":"12","note":"11 key, 1 non-key"},{"lab":"Operating","val":"4","tone":"ok","note":"C04, C07, C09 plus C01"},{"lab":"Design gaps","val":"5","tone":"amber","note":"C02, C03, C05, C08, C10"},{"lab":"Not performed","val":"3","tone":"red","note":"C06, C11, C12"}],"outro":"APD.C09 is a genuine strength here — a quarterly review of the complete administrator-activity population, independently performed by the System Owner with an IPE record-count check. That is the single best-designed control across all three applications reviewed. The corresponding weakness is that the same small administrator population that is being monitored also develops changes, promotes them, maintains access and runs Production — an overlap that is formally risk accepted rather than remediated.","controls":[{"id":"APD.C01","name":"AM Policies & Procedures","key":false,"status":"part","freq":"TBC","objective":"To confirm that access management policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["UK&I Finance Systems Team","System Owner / Application Owner"],"systems":["Blueworks","ServiceDesk Plus","SSO","SailPoint"],"railLabel":"What the documented process establishes","steps":[{"actor":"Blueworks","text":"The Tagetik Logical Access Process documents the current workflow for requesting, approving, provisioning, modifying and revoking access.","sys":"Tagetik Logical Access Process"},{"actor":"Request intake","text":"Requests for standard-user, administrator and super-user access are raised through ServiceDesk Plus.","sys":"ServiceDesk Plus"},{"actor":"Workflow","text":"ServiceDesk Plus routes requests through the configured approval workflow and retains the request and approval record.","sys":"Configured workflow","type":"dec"},{"actor":"Finance Systems Team","text":"Following approval, manually configures the approved access within Tagetik.","sys":"Manual configuration"},{"actor":"Lifecycle","text":"Access modification and revocation activities are also addressed through the access-management process, and SailPoint supports periodic recertification.","sys":"SailPoint recertification","type":"out"}],"exception":"NA","limits":["The Blueworks process does not document complete lifecycle requirements for vendor support accounts, the SailPoint service account, generic accounts, shared accounts or other service or system accounts.","The application-specific procedure does not define detailed evidence-retention requirements for access requests, approvals, implementation, modification, revocation, recertification and remediation.","Frequency of review of the procedure itself is recorded as TBC."],"future":"NA","tod":"Validate the Logical Access Process document owner, preparer, reviewer, approver, effective date, version history, annual review evidence and evidence-retention requirements, including coverage of vendor support IDs and the SailPoint service account."},{"id":"APD.C02","name":"User Profile Management","key":true,"status":"part","freq":"Ad-hoc","objective":"To ensure that user access is granted, modified, and revoked in alignment with role-based access principles and organizational policies, minimizing unauthorized access risks.","roles":["UK&I Finance Systems Team","System Owner / Application Owner"],"systems":["Tagetik","ServiceDesk Plus"],"railLabel":"How access is composed","steps":[{"actor":"Access category","text":"An approved user is assigned one of three effective categories: Standard User, Administrator, or Super User by exception.","sys":"3 categories"},{"actor":"Entity-level restriction","text":"Limits the legal entities, business units or datasets that the user can access.","sys":"Entity restriction"},{"actor":"Form-level restriction","text":"Limits the forms, screens, reports and functions available to the user.","sys":"Form restriction"},{"actor":"Requestor","text":"Standard-user, administrator and super-user access is requested through ServiceDesk Plus. Super-user access is identified as exception-based within the request.","sys":"ServiceDesk Plus","type":"dec"},{"actor":"Finance Systems Team","text":"Following workflow approval, manually assigns the approved access category and the associated entity-level and form-level restrictions. Tagetik records the user addition.","sys":"Manual assignment"},{"actor":"Role stability","text":"No custom roles are created or deleted in the environment. Changes to access categories, roles or underlying access configuration follow the Change Management process.","sys":"No custom roles","type":"out"}],"exception":"Super user access is managed by exception and requires explicit approval through the ServiceDesk Plus workflow before assignment.","limits":["A periodic review of the role-to-restriction design is not currently performed.","A formally approved role-to-access matrix is not maintained to map the standard-user, administrator and super-user categories to their underlying permissions.","The permitted combinations of entity-level and form-level restrictions are not documented within a formally approved matrix."],"future":"NA","tod":"Validate the standard-user, administrator and super-user access categories, entity-level and form-level restrictions, access ownership and approval requirements. The absence of a formally approved role-to-restriction matrix and periodic review of the access design will be considered through the Tagetik gap assessment."},{"id":"APD.C03","name":"Access Provisioning / Joiners","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that access creation of user accounts is in line with user's roles and responsibilities.","roles":["UK&I Finance Systems Team","Regional Business Owner / Business Approver","Actuarial Business Owner","System Owner / Application Owner"],"systems":["ServiceDesk Plus","Tagetik","SSO / OPD","SailPoint"],"railLabel":"Joiner journey — request to configured access","steps":[{"actor":"Requestor","text":"Access requests are raised through ServiceDesk Plus by the end user or the user's line manager. Each request identifies the required access category and the required entity-level or form-level access.","sys":"ServiceDesk Plus"},{"actor":"Workflow routing","text":"ServiceDesk Plus routes the request to the applicable approver based on the user population and access requested. Finance-user and actuarial-user requests follow their respective approval paths.","sys":"Population-based routing","type":"dec"},{"actor":"Approver","text":"The workflow retains the access request and approval record before access is implemented.","sys":"Approval before implementation","type":"dec"},{"actor":"Finance Systems Team","text":"Manually provisions the user in Tagetik, assigning the approved access category and configuring the approved entity-level and form-level restrictions.","sys":"Manual provisioning"},{"actor":"Evidence","text":"Tagetik logs the user addition; ServiceDesk Plus retains the request details and workflow approval.","sys":"Tagetik log + SDP record","type":"out"},{"actor":"SSO association","text":"Once provisioned, ordinary user access is associated with the user's corporate OPD identity through SSO — users access Tagetik using their corporate identity, not a separate Tagetik identity.","sys":"OPD SSO","type":"out"}],"altLabel":"Account populations that bypass the standard workflow","altSteps":[{"actor":"Super Users","text":"Requested through ServiceDesk Plus but identified and processed as exception-based access requiring explicit approval.","sys":"Exception approval","type":"dec"},{"actor":"Vendor Support Accounts","text":"Created by the Tagetik vendor under the support contract. These do NOT follow the standard ServiceDesk Plus user-provisioning workflow.","sys":"Vendor-created","type":"stop"},{"actor":"SailPoint Service Account","text":"Supports the API connection used to retrieve the Tagetik user population for recertification. NOT created through the routine user-provisioning process.","sys":"Outside routine process","type":"stop"},{"actor":"SailPoint","text":"Does not provision ordinary Tagetik users in the documented current-state process — its role is limited to retrieving the population for recertification.","sys":"Read-only","type":"dec"}],"exception":"Super user access is processed as exception-based access and requires explicit approval before provisioning. Vendor support accounts and the SailPoint service account are managed outside the routine ServiceDesk Plus provisioning process.","limits":["A separate documented Segregation of Duties or sensitive-access assessment is not evidenced before each access approval.","A post-provisioning check performed independently of the Finance Systems Team implementer is not evidenced — the same team that configures access also confirms it.","The operational provisioning timeline is approximately five days, but this is not documented as an approved SLA.","Vendor support accounts do not follow the standard ServiceDesk Plus provisioning workflow.","The SailPoint service account is not created through the routine user-provisioning process."],"future":"NA","tod":"Review selected ServiceDesk Plus requests to validate approval before provisioning, appropriate approver routing, Finance Systems Team fulfilment, access category and restriction configuration, fulfiller identity and retained evidence. Vendor support IDs and the SailPoint service account will be assessed separately from ordinary user provisioning."},{"id":"APD.C04","name":"Access Modification / Movers","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that access modifications to user accounts is in line with changes to user's roles and responsibilities.","roles":["UK&I Finance Systems Team","Designated access approver(s)"],"systems":["ServiceDesk Plus","Tagetik","SailPoint"],"railLabel":"Mover journey","steps":[{"actor":"Trigger","text":"A change to the user's role, responsibilities, team, entity coverage or required application functionality.","sys":"5 trigger types"},{"actor":"Requestor","text":"The modification request may be raised through ServiceDesk Plus by the end user, the user's line manager or a relevant management contact.","sys":"3 intake routes"},{"actor":"Scope of change","text":"May include changing the access category, or adding, removing or changing entity-level or form-level restrictions.","sys":"Category / entity / form"},{"actor":"Approver","text":"ServiceDesk Plus routes the request through the designated approval workflow.","sys":"Configured workflow","type":"dec"},{"actor":"Finance Systems Team","text":"Following approval, manually modifies the user's access within Tagetik.","sys":"Manual modification","type":"out"}],"altLabel":"Modifications identified through recertification","altSteps":[{"actor":"SailPoint","text":"The access decision is recorded through the recertification process.","sys":"SailPoint campaign","type":"dec"},{"actor":"Communication","text":"The required access change is communicated to the UK&I Finance Systems Team.","sys":"Remediation notification"},{"actor":"Finance Systems Team","text":"Manually completes the required modification within Tagetik. SailPoint does not automatically modify Tagetik access.","sys":"Manual completion","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Review selected modification requests to validate the change trigger, approval, existing and revised access, entity-level and form-level restrictions, manual implementation by the Finance Systems Team and completion evidence."},{"id":"APD.C05","name":"Access Deprovisioning / Leavers","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm access right revocation is performed on a timely basis upon the user's last working day.","roles":["UK&I Finance Systems Team","SailPoint Team / IAM Function"],"systems":["Tagetik","ServiceDesk Plus","SailPoint"],"railLabel":"Leaver journey","steps":[{"actor":"Trigger","text":"The user leaves the organisation, transfers to another role or team, no longer requires access, or is identified for removal through SailPoint recertification.","sys":"4 triggers"},{"actor":"Origin","text":"The removal requirement may originate from a leaver notification, transfer request, management instruction or recertification outcome.","sys":"4 origins"},{"actor":"Routing","text":"The requirement is communicated through the established access-management workflow and routed to the Finance Systems Team for action.","sys":"Access-management workflow","type":"dec"},{"actor":"Finance Systems Team","text":"Manually disables or removes the user's access within Tagetik, operating to an approximate one-day removal timeline.","sys":"~1 day (not an SLA)"},{"actor":"Evidence","text":"The resulting user status is updated within Tagetik and retained as evidence that removal has been completed.","sys":"Tagetik user status","type":"out"}],"altLabel":"Removals identified through recertification","altSteps":[{"actor":"SailPoint","text":"Supports recertification and retrieval of the user population but does NOT automatically remove access.","sys":"Read-only","type":"stop"},{"actor":"Communication","text":"The removal requirement is communicated to the Finance Systems Team for remediation.","sys":"Remediation notification"},{"actor":"Finance Systems Team","text":"Manually disables or removes the access within Tagetik and tracks it through the established request or remediation process until completion.","sys":"Manual removal"},{"actor":"Evidence","text":"The updated Tagetik user status is retained as completion evidence.","sys":"User status","type":"out"}],"exception":"Vendor support IDs and the SailPoint service account are managed separately from ordinary user access. Their revocation requirements are not documented within the standard leaver process.","limits":["The approximate one-day removal timeline is not formally documented as an approved SLA.","Formal monitoring and escalation of overdue access-removal requests are not evidenced.","A periodic review of user activity following the required removal date is not incorporated into the deprovisioning process.","Revocation requirements for vendor support IDs are not documented within the standard leaver process.","Revocation requirements for the SailPoint service account are not documented within the standard leaver process.","The workflow used to track recertification-driven removals — whether ServiceDesk Plus, RITM tickets or another mechanism — is not confirmed."],"future":"NA","tod":"Review selected removals to validate the leaver, transfer or recertification trigger, manual removal by the Finance Systems Team, completion date and updated user status. The one-day operating timeline, overdue-removal monitoring and removal requirements for vendor support IDs and the SailPoint service account will also be assessed."},{"id":"APD.C06","name":"Periodic Review of Terminated and Transferred Users","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm that access to non-SSO in-scope financially relevant systems is periodically reviewed to ensure that all terminated or transferred users have their access disabled.","roles":[],"systems":["SSO / OPD","ServiceDesk Plus","SailPoint"],"railLabel":"What compensates — and what is missing","steps":[{"actor":"SSO dependency","text":"Ordinary users authenticate through corporate SSO using standard OPD accounts. Corporate identity disablement prevents an ordinary terminated user from authenticating through the standard SSO route.","sys":"OPD disablement","type":"dec"},{"actor":"Additional mechanisms","text":"ServiceDesk Plus notifications, manual Tagetik access updates and SailPoint recertification provide further access-governance coverage.","sys":"3 mechanisms"},{"actor":"The gap","text":"These mechanisms support the management of access but do NOT constitute a separate periodic reconciliation of terminated and transferred personnel against the active Tagetik user population.","sys":"No reconciliation","type":"stop"},{"actor":"Non-SSO exposure","text":"Vendor support IDs and the SailPoint service account do not follow the ordinary OPD leaver process, and no separate terminated and transferred-user review covers them.","sys":"Non-SSO accounts uncovered","type":"stop"}],"exception":"NA","limits":["A separate periodic reconciliation of terminated and transferred personnel against the active Tagetik user population is not performed.","Active Tagetik records belonging to terminated or transferred users are not independently reconciled to an authoritative terminated and transferred-user population.","Vendor support IDs and the SailPoint service account do not follow the ordinary OPD leaver process.","A separate terminated and transferred-user review is not performed for vendor support IDs, the SailPoint service account or other non-SSO accounts."],"future":"NA","tod":"APD.C06 is not currently evidenced as a separate reconciliation control. Assess the need for a periodic comparison of the active Tagetik population against authoritative terminated and transferred-user populations, including coverage of vendor support IDs, service accounts and other non-SSO accounts."},{"id":"APD.C07","name":"User Access Reviews (UAR)","key":true,"status":"part","freq":"Every four months","objective":"To confirm underlying access of users is authorized.","roles":["SailPoint Team / IAM Function","System Owner / Application Owner","Line Managers and Business Reviewers (Finance and Actuarial)","UK&I Finance Systems Team"],"systems":["SailPoint","REST API","Tagetik"],"railLabel":"Four-monthly recertification cycle","steps":[{"actor":"SailPoint","text":"Connects to the Tagetik repository through a REST API and retrieves the Tagetik user population daily. The retrieved population provides the source for review activities.","sys":"REST API · daily retrieval"},{"actor":"System Owner","text":"Recertification tasks are routed through the System Owner process and allocated to the relevant Line Managers and Business Reviewers within the Finance and Actuarial functions.","sys":"Task allocation","type":"dec"},{"actor":"Reviewers","text":"Assess whether each user's access remains appropriate for the user's current responsibilities and record retain, modify or revoke decisions directly within SailPoint. Privileged users are included.","sys":"Decisions in SailPoint"},{"actor":"Remediation trigger","text":"Where a decision identifies that access must be modified or removed, the requirement is communicated to the Finance Systems Team.","sys":"Remediation notification","type":"dec"},{"actor":"Finance Systems Team","text":"Manually implements the required access amendment within Tagetik through the established access-management process, tracked through to closure. SailPoint does not automatically modify or remove access.","sys":"Manual remediation"},{"actor":"Evidence","text":"SailPoint campaign records, reviewer decisions, reviewer and remediation notifications, remediation actions and evidence of completed modifications or removals within Tagetik.","sys":"5 evidence types","type":"out"}],"exception":"NA","limits":["A formal reconciliation of the SailPoint campaign population to the complete active Tagetik user population is not evidenced for each campaign.","Inclusion of vendor support IDs within the SailPoint campaign is not confirmed.","Inclusion of the SailPoint service account within the campaign is not confirmed.","A formally documented remediation SLA is not established.","Independent validation of completed remediation is not evidenced.","A look-back review is not performed where inappropriate access is identified.","The method used to track remediation activities — ServiceDesk Plus, RITM or another workflow — is not confirmed."],"future":"NA","tod":"Validate the four-monthly SailPoint campaign, daily REST API population retrieval, reviewer assignments, privileged-user coverage, population completeness and accuracy, review decisions, remediation and closure evidence. Confirm inclusion of vendor support IDs and the SailPoint service account, and the method used to track remediation."},{"id":"APD.C08","name":"Privileged Accounts Access Management","key":true,"status":"part","freq":"Ad-hoc","objective":"To confirm no unauthorized and inappropriate user has administrator access in the system.","roles":["UK&I Finance Systems Team","System Owner / Application Owner","Designated access approver(s)"],"systems":["ServiceDesk Plus","Tagetik","SailPoint"],"railLabel":"Privileged access — what it grants and how it is governed","steps":[{"actor":"Definition","text":"Privileged access consists principally of Administrator access and Super-user access by exception.","sys":"2 privileged categories"},{"actor":"Capability","text":"Administrator access provides application administration, database configuration, access administration, configuration changes, structural changes, change promotion and Production calculation-engine execution.","sys":"7 elevated capabilities","type":"dec"},{"actor":"Request & approval","text":"Requested through ServiceDesk Plus. Super-user access is explicitly identified as exception-based within the request. Workflow approval is completed before the Finance Systems Team assigns the elevated access.","sys":"Approval before assignment"},{"actor":"Standing access","text":"Privileged access is provided as STANDING access rather than through a documented Just-In-Time process, and is not managed through an identified PAM solution.","sys":"Standing · no PAM","type":"stop"},{"actor":"Recertification","text":"Privileged access is included within the SailPoint recertification process three times per year.","sys":"3× / year"},{"actor":"Activity review","text":"Administrator activities are separately subject to a quarterly review under APD.C09.","sys":"APD.C09","type":"out"},{"actor":"Vendor support IDs","text":"Vendor support users access Tagetik through vendor support IDs managed under the applicable support contract, separately from administrator and super-user access.","sys":"Vendor-managed","type":"dec"}],"exception":"Super-user access is managed by exception and requires explicit approval through the ServiceDesk Plus workflow. Vendor support users access Tagetik through vendor support IDs managed separately under the support contract.","limits":["Privileged access remains standing rather than being provided through a documented Just-In-Time process.","Tagetik privileged access is not managed through an identified PAM solution.","Documented ownership of vendor support IDs is not evidenced within the Tagetik Logical Access Process.","The authorised-user population associated with vendor support IDs is not evidenced.","The approved access duration for vendor support IDs is not evidenced.","Internal periodic validation requirements for vendor support IDs are not evidenced."],"future":"NA","tod":"Validate administrator and super-user requests, exception approval, standing-access justification, current privileged-user population, three-times-per-year recertification and remediation evidence. Ownership, authorised-user population, access duration and periodic validation of vendor support IDs will be assessed separately."},{"id":"APD.C09","name":"Privileged and Sensitive Activities Monitoring","key":true,"status":"ok","freq":"Quarterly","objective":"To confirm that elevated privileged accounts are not misused.","roles":["UK&I Finance Systems Team","System Owner / Application Owner"],"systems":["Tagetik audit logs"],"railLabel":"Quarterly administrator-activity review","steps":[{"actor":"Logging capability","text":"Tagetik records administrator activity in application audit logs. Logs are retained indefinitely and cannot be deleted. Logging can technically be switched off, but any change to the logging status is itself recorded in the audit log.","sys":"Indefinite · tamper-evident"},{"actor":"Finance Systems Team","text":"Downloads the Tagetik audit logs quarterly.","sys":"Quarterly extract"},{"actor":"Finance Systems Team","text":"Filters the extract to identify administrator activity and removes routine administrative activity from the review population.","sys":"Filter + de-noise","type":"dec"},{"actor":"Review population","text":"The remaining population includes database-level access, configuration changes, code changes and structural changes.","sys":"4 activity types"},{"actor":"IPE check","text":"Completeness and accuracy of the audit-log extract are supported through an IPE-based record-count check.","sys":"Record-count check","type":"dec"},{"actor":"System Owner","text":"Performs an INDEPENDENT review of the administrator-activity population. The review covers the complete population rather than a sample.","sys":"Complete population · independent"},{"actor":"Investigation","text":"Unusual or unauthorised administrator activity identified through the review is investigated. The extract, completed review, reviewer sign-off and supporting investigation evidence are retained.","sys":"4 retained artefacts","type":"out"}],"exception":"NA","limits":["Vendor support activity is not explicitly included within the quarterly privileged-activity review."],"future":"NA","tod":"Validate the complete quarterly administrator-activity population, filtering criteria, System Owner review, sign-off, investigation and remediation evidence."},{"id":"APD.C10","name":"Access Authentication","key":true,"status":"part","freq":"Not performed as a separate annual review","objective":"To confirm that password complexity and account management practices, including the handling of default user accounts, comply with the organization's security policy.","roles":["UK&I Finance Systems Team","System Owner / Application Owner"],"systems":["Corporate SSO / OPD","SailPoint service account","Vendor support IDs"],"railLabel":"Three authentication populations","steps":[{"actor":"Ordinary users","text":"Authenticate through corporate SSO using standard OPD accounts. They do not maintain a separate Tagetik password for standard application access.","sys":"SSO · OPD","type":"out"},{"actor":"SailPoint service account","text":"Connects to the Tagetik repository through a REST API to retrieve the user population for recertification purposes.","sys":"REST API","type":"dec"},{"actor":"Vendor support users","text":"Authenticate through vendor-managed support IDs maintained under the applicable support contract.","sys":"Vendor-managed IDs","type":"dec"},{"actor":"The gap","text":"Password controls, MFA requirements, credential-rotation requirements and credential-storage requirements for the SailPoint service account and vendor support IDs are not documented in the access procedure.","sys":"Undocumented","type":"stop"}],"exception":"NA","limits":["Password controls, MFA, credential-rotation and credential-storage requirements for the SailPoint service account and vendor support IDs are not documented within the Tagetik access procedure.","The existence and authentication arrangements for local, default, emergency and break-glass accounts are not confirmed.","A Tagetik-specific annual review of SSO settings, MFA applicability, conditional-access applicability, default accounts and non-SSO authentication settings is not evidenced."],"future":"NA","tod":"Validate corporate SSO and OPD configuration, non-SSO and local accounts, MFA and conditional-access applicability, the SailPoint service-account authentication method, vendor support-ID authentication, credential storage and rotation, and any approved exceptions."},{"id":"APD.C11","name":"Segregation of Duties — periodic detective checks","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm segregation of duties violations are identified periodically.","roles":[],"systems":["Tagetik"],"railLabel":"The administrator overlap and what compensates for it","steps":[{"actor":"Context","text":"Tagetik is used for IFRS 17 calculation and reporting rather than transactional payment processing. The principal SoD risk arises from the combination of elevated activities available to administrator users.","sys":"Not transactional"},{"actor":"The overlap","text":"Administrators can develop or configure changes, promote approved changes, maintain user access, maintain application configuration AND execute the calculation engine in Production.","sys":"5 conflicting capabilities","type":"stop"},{"actor":"Why","text":"Complete preventive segregation is not enforced because of the small administrator population and the overlap in administrator responsibilities.","sys":"Small population"},{"actor":"Compensating controls","text":"Approved privileged-access assignment, restricted administrator population, recertification 3× per year, change approval, unit / regression / system testing, UAT, post-go-live checks, post-implementation review and quarterly independent review of administrator activity.","sys":"11 compensating activities","type":"dec"},{"actor":"The residual gap","text":"Quarterly administrator-activity monitoring reviews what administrators did, but does not constitute a formal SoD conflict review against an approved ruleset.","sys":"No ruleset applied","type":"stop"}],"exception":"The administrator access overlap is risk accepted. The applicable risk-acceptance process maintains the risk owner, approving authority, approval date, compensating controls and periodic review or expiry requirements.","limits":["A separate periodic review identifying each user holding a defined SoD conflict or sensitive-access combination is not performed.","Quarterly administrator-activity monitoring reviews activity but does not identify SoD conflicts against an approved ruleset.","Complete preventive segregation between development, deployment, access administration and Production execution is not enforced."],"risk":"The administrator access overlap is risk accepted. The risk owner, approving authority, approval date, compensating controls and periodic review or expiry requirements are maintained through the applicable risk-acceptance process.","future":"NA","tod":"Validate the administrator capability overlaps, the current risk acceptance, risk owner, approving authority, approval date, review or expiry requirement, and the operation of the identified compensating controls."},{"id":"APD.C12","name":"Segregation of Duties Ruleset review","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm that the appropriateness of the Segregation of duties ruleset is periodically confirmed by management / information owners.","roles":[],"systems":["Tagetik access categories"],"railLabel":"The oversight model in place of a ruleset","steps":[{"actor":"Access categories","text":"Standard User, Administrator and Super User, with super-user access managed by exception. Entity-level and form-level restrictions further limit data and functionality.","sys":"3 categories + 2 restriction types"},{"actor":"Known conflict","text":"Administrators can develop or configure changes, promote approved changes, maintain user access, maintain application configuration and execute Production processing.","sys":"Known administrator conflict","type":"stop"},{"actor":"Current oversight","text":"Approved access requests, restricted administrator access, entity-level restrictions, form-level restrictions, recertification 3× per year, quarterly administrator-activity review and quarterly Change Management and PIR processes.","sys":"7 oversight activities","type":"dec"},{"actor":"The gap","text":"These activities provide oversight over access and administrator activity, but do NOT constitute a formal Tagetik SoD and sensitive-access ruleset or a periodic management review of one.","sys":"No ruleset","type":"stop"}],"exception":"NA","limits":["A formal Tagetik SoD and sensitive-access ruleset is not maintained.","A formal ruleset is not periodically reviewed.","The existing access, recertification, administrator-monitoring and Change Management controls do not constitute a formal SoD and sensitive-access ruleset."],"future":"NA","tod":"Assess the appropriateness of this design, including the standard-user, administrator and super-user categories, entity and form restrictions, the known administrator conflict and compensating controls, through the Tagetik SOX gap assessment and TOD."}]},{"code":"CM","short":"Change","name":"Change Management","intro":"Tagetik change management is governed through the Tagetik Change Management Build Cycle in Blueworks and operates on a quarterly cycle: Change Committee approval, development, unit testing, regression testing, system testing, UAT, Production approval, Production implementation and post-go-live checks. The Finance Systems Team maintains a SharePoint change log. Internal interface changes go through ServiceNow; application changes go through ServiceDesk Plus — and which system is the definitive record is not yet confirmed.","summary":[{"lab":"Controls","val":"9","note":"8 key, 1 non-key"},{"lab":"Operating","val":"4","tone":"ok","note":"C03, C04, C08 plus C01"},{"lab":"Design gaps","val":"4","tone":"amber","note":"C02, C05, C06, C09"},{"lab":"Not applicable","val":"1","note":"C07 — no SoD ruleset exists"}],"outro":"The quarterly build cycle is well designed and genuinely multi-stage. The recurring weakness is population completeness: neither CM.C05 nor CM.C09 reconciles the full population of Production deployments and direct configuration changes back to approved change records, so authorisation of every Production change cannot be demonstrated.","controls":[{"id":"CM.C01","name":"CM Policies & Procedures","key":false,"status":"part","freq":"Annual","objective":"To confirm that change management policies and standard operating procedures (SOPs) are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["UK&I Finance Systems Team","Business Owner","System Owner / Application Owner"],"systems":["Blueworks","SharePoint change log"],"railLabel":"The nine-stage quarterly build cycle","steps":[{"actor":"1 · Approve","text":"Change Committee approval.","sys":"Change Committee","type":"dec"},{"actor":"2 · Build","text":"Development in the Development environment.","sys":"Development"},{"actor":"3–4 · Test","text":"Unit testing and regression testing are completed before the change is promoted to UAT.","sys":"Unit + regression"},{"actor":"5–6 · Validate","text":"System testing and UAT are completed before Production promotion.","sys":"System test + UAT"},{"actor":"7 · Approve","text":"The Business Owner and System Owner review the system-testing and UAT results and approve the change for Production promotion.","sys":"Dual approval","type":"dec"},{"actor":"8 · Implement","text":"Production implementation.","sys":"Production"},{"actor":"9 · Verify","text":"Post-go-live checks are completed in Production before the relevant reporting period.","sys":"Post-go-live","type":"out"}],"altLabel":"The documented emergency-change route","altSteps":[{"actor":"Criteria","text":"An essential change may be processed outside the quarterly cycle where insufficient time exists to follow the normal process and take the Production database offline. The change must be low risk and simple.","sys":"Essential · low risk · simple","type":"dec"},{"actor":"Approval","text":"The Business Owner and System Owner approve the change.","sys":"Dual approval","type":"dec"},{"actor":"Safeguard","text":"A backup of the Production database is taken before implementation, and the change is validated and tested in a copy or version of Production where possible.","sys":"Prod backup taken"},{"actor":"After","text":"Following implementation the change is tested in Production and evidence of completion is retained.","sys":"Post-implementation test","type":"out"}],"exception":"An essential change may be completed outside the quarterly change cycle where insufficient time exists to follow the normal process and take the Production database offline. The emergency change must be low risk and simple and requires Business Owner and System Owner approval.","limits":["Document ownership, approval, effective date, version history and defined review cycle for the Tagetik Change Management Build Cycle remain subject to validation.","The completeness of documented roles and responsibilities and evidence-retention requirements remain subject to validation.","Vendor-managed platform-change procedures are not governed through the Intact-maintained Build Cycle and are assessed separately through vendor assurance."],"future":"NA","tod":"Validate the approved Build Cycle — document ownership, approval, effective date, version history, review cycle, roles and responsibilities, quarterly and emergency-change requirements and evidence retention. Vendor-managed platform-change procedures assessed separately through the SOC 1 Type II report."},{"id":"CM.C02","name":"Change Request Approval","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that all changes are supported by documented and approved business or IT requirements.","roles":["UK&I Finance Systems Team","Change Committee","Business Owner","System Owner / Application Owner"],"systems":["ServiceNow","ServiceDesk Plus","SharePoint change log"],"railLabel":"From request to approved progression","steps":[{"actor":"Requestors","text":"Business users, Finance and Actuarial stakeholders, Finance Systems Team members and application support personnel can raise change requests.","sys":"4 requestor groups"},{"actor":"Change types","text":"Functional configuration changes, data-structure changes through the Master Data Module, calculation changes through the analytical workspace using SQL, interface changes, vendor Starter Kit updates, service packs, platform updates and other enhancements.","sys":"8 change types"},{"actor":"System routing","text":"Internal interface-related changes go through ServiceNow change requests. Application-specific changes — configuration, calculation, reporting and model — go through ServiceDesk Plus.","sys":"ServiceNow vs SDP","type":"dec"},{"actor":"SharePoint change log","text":"The Finance Systems Team maintains the log used to track approved changes through the quarterly cycle, providing visibility over status, required approvals, testing activities, implementation progress and completion evidence.","sys":"5 tracked attributes"},{"actor":"Change Committee","text":"Reviews the proposed change, the underlying business requirement, the expected impact, the proposed implementation approach, the impact on financial reporting, the required testing activities and deployment considerations.","sys":"7 review criteria","type":"dec"},{"actor":"Change Committee","text":"Approves whether the proposed change may progress through the change lifecycle. Once approved, the change remains subject to testing, review and Production-promotion approval before implementation.","sys":"Gate to lifecycle","type":"out"}],"altLabel":"Vendor-originated updates","altSteps":[{"actor":"Vendor","text":"Starter Kit updates, service packs and platform updates are coordinated through the vendor relationship.","sys":"Vendor-originated"},{"actor":"Intact retains","text":"Reviewing the impact of the update and determining whether implementation should proceed.","sys":"Impact review","type":"dec"},{"actor":"Intact retains","text":"Coordinating the required internal testing and internal validation activities.","sys":"Internal testing"},{"actor":"Intact retains","text":"Coordinating deployment into the Tagetik environment.","sys":"Deployment coordination","type":"out"}],"exception":"NA","limits":["The definitive system of record for each category of change is not currently confirmed.","The respective use of ServiceNow, ServiceDesk Plus, SharePoint and vendor-managed repositories for interface changes, application changes and vendor-driven changes requires confirmation."],"future":"NA","tod":"Review selected Intact-managed changes to validate the originating change request, approval evidence, change classification, business and financial-reporting impact assessment, SharePoint change-log tracking, Change Committee approval, implementation traceability and retained evidence. Confirm the system of record for each change category."},{"id":"CM.C03","name":"Change Development & Testing Approval","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that changes are developed by authorized personnel and validated by QA and/or UAT in a separate non-production environment before deployment.","roles":["UK&I Finance Systems Team","Authorised administrator users","Business Owner","System Owner / Application Owner","Business Users performing UAT"],"systems":["Master Data Module","Analytical workspace (SQL)","Development","UAT","Patch","Production"],"railLabel":"Development through to Production approval","steps":[{"actor":"Authorised administrators","text":"Develop or configure approved changes within the Development environment. Development begins only after the required change-request approvals and remains traceable to the originating ServiceNow change, ServiceDesk Plus ticket or other approved record.","sys":"Development env"},{"actor":"Development method","text":"Functional changes and data-structure changes are completed through the Master Data Module. Calculation changes are completed through the analytical workspace using SQL.","sys":"MDM · AWX SQL","type":"dec"},{"actor":"Testing gate 1","text":"Unit testing and regression testing are completed before a change is promoted to UAT.","sys":"Unit + regression"},{"actor":"Business users","text":"UAT is used to perform business validation and confirm the change operates as intended and satisfies the approved business requirements. Business users participate and assess the outcomes.","sys":"Business UAT"},{"actor":"Defect loop","text":"Defects identified through testing are resolved before the change progresses to Production.","sys":"Resolve before progress","type":"dec"},{"actor":"Business Owner + System Owner","text":"Review the testing results and approve progression to Production. Changes are promoted only after required testing, approvals and validation are complete.","sys":"Dual approval","type":"dec"},{"actor":"Route","text":"The standard quarterly lifecycle is Development → UAT → Production. The Patch environment is used separately for vendor service packs and is not part of that route.","sys":"Patch outside route","type":"out"}],"exception":"Vendor-provided Starter Kit updates, service packs and platform updates are tested by the vendor outside the Intact-controlled change process. Intact reviews the vendor communications, assesses the business impact, performs the required internal validation and approves implementation into the Tagetik environment.","limits":[],"evidence":["Testing evidence, approval records, implementation records and supporting documentation retained as part of the quarterly Change Management documentation","Approved change records traceable throughout development, testing, approval and deployment"],"future":"NA","tod":"Review selected Intact-managed changes to validate development activities, unit testing, regression testing, system testing, UAT, defect resolution, Business Owner and System Owner approvals, promotion approvals and traceability of the tested change to Production. Vendor Starter Kit updates, service packs and platform changes assessed through vendor assurance together with Intact's testing, validation and acceptance."},{"id":"CM.C04","name":"Environment Segregation","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that logical separation exists between production and non-production environments to protect system integrity.","roles":["UK&I Finance Systems Team","Authorised administrator users","Business Owner","System Owner / Application Owner"],"systems":["Development","UAT","Patch","Production"],"railLabel":"Four environments and their purposes","steps":[{"actor":"Development","text":"Used to build and initially test functional, calculation and data-structure changes. Access restricted to authorised administrator users.","sys":"Admin-only"},{"actor":"UAT","text":"Used for system testing and business validation before promotion to Production. Relevant business users access UAT to perform validation.","sys":"Business accessible","type":"dec"},{"actor":"Patch","text":"Used separately for testing vendor service packs. Access restricted to authorised administrator users. Sits outside the standard quarterly promotion route.","sys":"Admin-only · off-route","type":"dec"},{"actor":"Production","text":"Supports live IFRS 17 calculation and reporting.","sys":"Production"},{"actor":"Route enforcement","text":"Changes follow the approved environment route — developed and tested in the applicable non-Production environments before Production promotion.","sys":"Dev → UAT → Prod","type":"out"}],"exception":"The documented emergency-change process permits an approved direct Production change where the emergency-change requirements are met.","limits":[],"future":"NA","tod":"Validate the user and administrator access assigned to Development, UAT, Patch and Production — who can build, test, approve and promote changes, whether access is periodically reviewed and whether conflicting access is subject to approved mitigation. Hosting and platform-level environment controls assessed through the SOC 1 Type II report."},{"id":"CM.C05","name":"Direct Production Changes","key":true,"status":"part","freq":"Quarterly","objective":"To confirm that direct changes to production are restricted and the changes are logged, monitored and reviewed for their appropriateness by an authorized user.","roles":["UK&I Finance Systems Team","Authorised administrator users","System Owner / Application Owner"],"systems":["Tagetik audit logs"],"railLabel":"The quarterly detective review over Production activity","steps":[{"actor":"Access position","text":"Production access is restricted to authorised administrator users. The same administrator population can develop or configure changes in lower environments and promote approved changes to Production.","sys":"Same population","type":"stop"},{"actor":"No system enforcement","text":"A system-enforced restriction preventing an administrator with development responsibilities from directly amending the Production configuration is not implemented.","sys":"No technical block","type":"stop"},{"actor":"Audit logging","text":"Tagetik records administrator activity — database-level access, configuration changes, code changes and database-structure changes. Logs are retained indefinitely and cannot be deleted; disabling logging is itself logged.","sys":"Tamper-evident logs"},{"actor":"Finance Systems Team","text":"Each quarter downloads the complete user-activity extract, filters for administrator activity and removes routine administrative activity from the review population.","sys":"Quarterly filter"},{"actor":"IPE check","text":"Completeness and accuracy of the extract are supported through an IPE-based record-count check.","sys":"Record-count check","type":"dec"},{"actor":"System Owner","text":"Independently checks the administrator-activity population. The completed review and reviewer sign-off are retained.","sys":"Independent check","type":"dec"},{"actor":"Follow-up","text":"Unusual or unauthorised activity is investigated and followed through to remediation.","sys":"Investigation","type":"out"}],"exception":"Approved emergency changes may be implemented directly in Production where the documented emergency-change requirements are met. These changes are formally approved and tested under CM.C08 and are not treated as unauthorised direct Production changes.","limits":["Complete preventive segregation is not enforced between administrators who develop or configure changes in lower environments and administrators who promote changes to Production.","A system-enforced restriction preventing administrators with development responsibilities from directly amending Production configuration is not implemented.","The quarterly administrator-activity review does not reconcile every Production change to an approved change ticket.","A complete detective control confirming that all Production changes are authorised and traceable to approved change records is therefore not evidenced."],"future":"NA","tod":"Validate Production administrator access, direct configuration capability, audit-log completeness, the quarterly administrator-activity review and approved emergency activity. The absence of a complete reconciliation of the Production-change population to approved change records will be assessed through the gap assessment."},{"id":"CM.C06","name":"Developer Access to Production (IT Segregation of Duties)","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that production access is restricted to authorized personnel based on job roles and segregated from development functions, and that segregation of duties exists between developers and deployment personnel who implement changes in the production environment.","roles":["UK&I Finance Systems Team","Authorised administrator users","Change Committee","Business Owner","System Owner / Application Owner"],"systems":["Development","Patch","Production"],"railLabel":"What administrators can do — and what constrains them","steps":[{"actor":"Access position","text":"Production deployment access is restricted to authorised administrator users. Development and Patch access is also restricted to the administrator population.","sys":"Admin-only across all"},{"actor":"Administrator activities","text":"Develop and configure functional, calculation and data-structure changes in non-Production; promote approved changes to Production; and execute the calculation engine within Production.","sys":"5 activities","type":"stop"},{"actor":"The conflict","text":"An administrator who develops or configures a change is NOT technically prevented from promoting the same change to Production. Complete segregation between development and Production deployment is not enforced.","sys":"No technical separation","type":"stop"},{"actor":"Governance before Production","text":"Change Committee approval, applicable testing activities, business UAT, Business Owner approval, System Owner approval and Production-promotion approval.","sys":"6 approval gates","type":"dec"},{"actor":"Detective oversight","text":"Quarterly administrator-activity monitoring and the post-implementation review provide detective oversight over elevated administrator activity and implemented changes.","sys":"APD.C09 · CM.C09"},{"actor":"No CI/CD","text":"Tagetik does not use an evidenced CI/CD pipeline for the quarterly application change process. Changes are developed and promoted through the Tagetik application environments.","sys":"No pipeline","type":"dec"}],"exception":"Complete segregation between change development and Production deployment is not enforced. The overlapping administrator responsibilities are risk accepted and are subject to the identified approval, testing, validation and monitoring controls.","limits":["Complete segregation between change development and Production deployment is not enforced.","The same administrator population can develop or configure changes, promote approved changes to Production and execute the calculation engine within Production.","An administrator who develops or configures a change is not technically prevented from promoting the same change to Production.","An evidenced CI/CD pipeline is not used for the quarterly change process."],"risk":"The overlapping administrator responsibilities are risk accepted. The control design relies on restricted administrator access, approved change requests, business UAT, Production-promotion approval, post-go-live validation, post-implementation review and quarterly administrator-activity monitoring.","future":"NA","tod":"Validate the administrator population across Development, Patch and Production — development and promotion capabilities, overlapping access, current risk acceptance and the operation of Change Committee approval, UAT, Production-promotion approval, PIR and quarterly administrator-activity monitoring. Vendor-side development and deployment access assessed separately through the SOC 1 Type II report."},{"id":"CM.C07","name":"Changes to the Rulesets of Segregation of Duties (SoD) and Sensitive Access (SA)","key":false,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To confirm that changes to SoD / SA ruleset are authorized and appropriate.","roles":[],"systems":[],"railLabel":"Why the control does not arise","steps":[{"actor":"Precondition absent","text":"CM.C07 is not currently applicable as an operating control because a formal Tagetik SoD and Sensitive Access ruleset is not maintained.","sys":"No ruleset","type":"stop"},{"actor":"Where changes are covered","text":"Any changes to Tagetik roles, permissions or sensitive-access configuration are reviewed through the applicable access or Change Management process.","sys":"APD / CM route","type":"dec"},{"actor":"Conclusion linkage","text":"The control conclusion is considered together with APD.C11 and APD.C12.","sys":"APD.C11 · APD.C12","type":"out"}],"exception":"NA","limits":["A formal Tagetik SoD and Sensitive Access ruleset is not maintained, so CM.C07 does not operate as a separate control."],"future":"NA","tod":"As part of SOX TOD, changes to roles, permissions or sensitive-access configuration will be reviewed through the applicable access or Change Management process, and the control conclusion considered together with APD.C11 and APD.C12."},{"id":"CM.C08","name":"Emergency Changes","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that expedited procedures for emergency changes are backed by incident tickets or approvals and reviewed post-deployment.","roles":["UK&I Finance Systems Team","Authorised administrator users","Business Owner","System Owner / Application Owner"],"systems":["Blueworks process policy","Master Data Module","Analytical workspace","Production"],"railLabel":"Emergency change — criteria to post-implementation test","steps":[{"actor":"Criteria","text":"Implemented outside the standard quarterly cycle only where the change is essential for the current reporting period, insufficient time is available to follow the normal promotion route, the change is low risk and the change is simple.","sys":"4 criteria","type":"dec"},{"actor":"Justification","text":"The reason for using the emergency-change process is documented in the Blueworks process policy.","sys":"Documented justification"},{"actor":"Business Owner + System Owner","text":"Approve before implementation. Critically, both approvers are SEPARATE from the administrator responsible for implementing the emergency change.","sys":"Approver independence","type":"dec"},{"actor":"Pre-implementation","text":"A backup of the Production database is taken before the change is implemented. Where time permits, the change is validated and tested in a copy or version of the Production database.","sys":"Prod backup + test copy"},{"actor":"Implementation","text":"Where time constraints prevent use of the normal MDM or AWX promotion route, the approved configuration change may be applied directly within Production.","sys":"Direct Production apply","type":"dec"},{"actor":"After","text":"The emergency change is tested in Production and evidence of the completed change is retained. It remains subject to approval, testing and validation even where the normal route is not followed.","sys":"Production test + evidence","type":"out"}],"exception":"Vendor-side emergency remediation is raised through the Tagetik vendor support process. The vendor manages the corresponding SaaS platform change under its own support and change processes. Relevant vendor-operated controls are considered through the SOC 1 Type II report and TPRM.","limits":["Mandatory linkage between every internal emergency change and an incident ticket is not evidenced.","A defined timeframe for completing the post-deployment review is not formally documented."],"future":"NA","tod":"Review selected emergency changes to validate the essential, low-risk and simple criteria, documented justification, Business Owner and System Owner approval, approver independence, Production backup, available pre-implementation testing, authorised implementation, Production validation and retained evidence. Confirm incident linkage and the timing of the post-deployment review."},{"id":"CM.C09","name":"Post-Implementation Review (PIR) or Change Review","key":true,"status":"part","freq":"Quarterly","objective":"To confirm that all system deployments are authorized, reviewed, and traceable to approved change tickets.","roles":["UK&I Finance Systems Team","Authorised administrator users","Independent reviewer","Business Owner","System Owner / Application Owner"],"systems":["Quarterly Change Management records"],"railLabel":"Post-implementation review cycle","steps":[{"actor":"Promoting administrator","text":"Completes the initial post-implementation review as part of the quarterly change cycle.","sys":"Initial PIR"},{"actor":"Independent reviewer","text":"A separate individual performs an independent check over the implemented changes.","sys":"Independent check","type":"dec"},{"actor":"The independent check","text":"Compares the expected promoted changes with the Production implementation, uses sample-based validation within each selected change, and confirms that an expected object or configuration change has been implemented.","sys":"Sample-based within change"},{"actor":"Post-go-live","text":"Post-go-live checks are also completed in Production and the results are reviewed before the relevant reporting period.","sys":"Before reporting period","type":"dec"},{"actor":"Evidence retained","text":"PIR documentation, evidence of the independent check, approval evidence and evidence of post-go-live checks are retained with the quarterly Change Management records.","sys":"4 retained artefacts","type":"out"}],"exception":"NA","limits":["The review does not reconcile the complete population of Production deployments to approved change tickets.","The review does not reconcile the complete population of direct Production configuration changes to approved change tickets.","The completeness and accuracy of the Production-change population are not formally certified before the review.","The control therefore does not establish that every Production deployment, emergency change or direct Production change is included in the review population.","A mandatory PIR requirement for all failed changes is not formally documented.","A mandatory PIR requirement for all backed-out changes is not formally documented.","A mandatory PIR requirement for changes causing High or Critical incidents is not formally documented.","Formal tracking of PIR findings and corrective actions through to closure is not evidenced for every identified exception."],"future":"NA","tod":"Validate the quarterly change and Production-promotion populations, PIR documentation, independent review, sample selection, post-go-live checks, identified exceptions and corrective-action closure. Assess population completeness and coverage of emergency, failed, backed-out and incident-causing changes."}]},{"code":"CO","short":"Operations","name":"Computer Operations","intro":"Tagetik operates as a vendor-managed SaaS application. The UK&I Finance Systems Team performs internal application support — supporting manually initiated calculation runs, receiving and triaging incidents and escalating SaaS platform issues through vendor support. The vendor operates the hosting environment, underlying platform, backups, restoration and resilience.","summary":[{"lab":"Controls","val":"6","note":"CO.C01 to CO.C06"},{"lab":"Intact-operated","val":"1","tone":"ok","note":"CO.C05 incident management"},{"lab":"Vendor reliance","val":"3","note":"CO.C03, CO.C04, CO.C06"},{"lab":"Not applicable","val":"1","note":"CO.C02 — no scheduled batch jobs"}],"outro":"CO.C01 is the notable gap here: no formal Computer Operations policy or procedure specific to Tagetik exists at all, and no annual review or approval of one is evidenced — while CO.C05 operates beneath it without a documented procedure.","controls":[{"id":"CO.C01","name":"CO Policies & Procedures","key":false,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"Computer Operations Policy and SOPs, describing computer operation management objective, control processes, and relevant service level agreements (SLAs), must be reviewed and approved by authorized personnel at least on an annual basis.","roles":["UK&I Finance Systems Team","System Owner / Application Owner"],"systems":["Vendor support process"],"railLabel":"Division of operational responsibility","steps":[{"actor":"Finance Systems Team","text":"Performs initial internal support triage.","sys":"Internal triage"},{"actor":"Escalation","text":"Where an incident or operational issue requires action within the SaaS platform, the matter is escalated through the Tagetik vendor support process.","sys":"Vendor support","type":"dec"},{"actor":"Vendor-managed","text":"Backup operations, restoration operations, hosting and underlying platform operations, and wider SaaS platform operations are all vendor managed.","sys":"4 vendor-managed areas"},{"actor":"Intact responsibilities","text":"Internal support, initial triage, vendor escalation and oversight of the vendor-managed services.","sys":"4 Intact responsibilities"},{"actor":"The gap","text":"A formal Computer Operations policy or procedure specific to Tagetik IFRS17 CE is NOT established, and formal annual review and approval are not evidenced.","sys":"No procedure exists","type":"stop"}],"exception":"NA","limits":["A formal Computer Operations policy or procedure specific to Tagetik IFRS17 CE is not established.","Formal annual review and approval of a Tagetik Computer Operations procedure are not evidenced.","The internal support procedure, process ownership, incident-intake requirements, vendor-escalation requirements, evidence-retention requirements and periodic review and approval arrangements remain to be validated."],"future":"NA","tod":"Validate the internal support procedure, process owner, incident-intake and vendor escalation requirements, evidence retention and periodic review and approval."},{"id":"CO.C02","name":"Batch Job Failure Resolution Within Timely Manner","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not applicable to scheduled batch jobs","objective":"To confirm that data flow between systems is adequately controlled and any errors identified should be resolved within a timely manner.","roles":["UK&I Finance Systems Team"],"systems":["Tagetik calculation engine"],"railLabel":"Why batch-job controls do not apply","steps":[{"actor":"Assessment","text":"There are no scheduled batch jobs within Tagetik.","sys":"No scheduler","type":"stop"},{"actor":"Processing model","text":"The quarterly calculation-engine process is manually initiated.","sys":"Manual initiation"},{"actor":"Consequence","text":"No internal scheduler population or automated batch-failure alert is maintained.","sys":"No alerting","type":"stop"},{"actor":"Where requirements land instead","text":"Requirements concerning manual processing and financially relevant interfaces are addressed through the relevant business-process, incident-management or interface controls, not as scheduled batch-job controls.","sys":"ITAC · CO.C05 route","type":"dec"}],"exception":"NA","limits":["Because processing is manually initiated with no automated failure alerting, detection of a failed or incomplete quarterly calculation depends entirely on the operator and on downstream business-process controls."],"future":"NA","tod":"Confirm the absence of a scheduler population. Assess how a failed or incomplete manually initiated calculation run would be detected, escalated and remediated, and whether that is evidenced under CO.C05 or the applicable ITAC."},{"id":"CO.C03","name":"Data Backup Failures Resolution and Backup Restoration","key":true,"status":"vend","freq":"Vendor-operated","objective":"Backup processes are continuously monitored to ensure critical financial data remains complete, accurate, and recoverable when needed.","roles":["Tagetik Vendor","TRM Team"],"systems":["Vendor backup platform"],"railLabel":"Where backup responsibility sits","steps":[{"actor":"Tagetik vendor","text":"Operates the application and data backup process.","sys":"Vendor-operated"},{"actor":"Intact","text":"Does not directly configure, schedule, monitor, investigate or re-execute Tagetik backups.","sys":"No Intact operation","type":"stop"},{"actor":"TRM Team","text":"Backup coverage, secure storage, encryption, failure monitoring, re-execution, successful completion and restoration procedures require assessment through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only. Note the interaction with CM.C08 — the emergency-change process requires a Production database backup to be taken before implementation, which depends on vendor backup capability."],"future":"NA","tod":"Assess backup coverage, secure storage, encryption, failure monitoring, re-execution, successful completion and restoration procedures through the SOC 1 Type II report and TPRM."},{"id":"CO.C04","name":"Business Continuity and Disaster Recovery","key":true,"status":"vend","freq":"Vendor-operated","objective":"To confirm that a documented, approved, and periodically tested Business Continuity and Disaster Recovery Plan is maintained to ensure operational readiness and timely restoration of critical operations and systems.","roles":["Tagetik Vendor","TRM Team"],"systems":["Vendor hosting platform"],"railLabel":"Resilience and recovery","steps":[{"actor":"Tagetik vendor","text":"Operates the technical hosting, platform-resilience and disaster-recovery capability.","sys":"Vendor-operated"},{"actor":"Intact","text":"Does not directly operate the vendor recovery environment.","sys":"No Intact operation","type":"stop"},{"actor":"TRM Team","text":"Recovery objectives, vendor testing, exceptions, CUECs and any retained Intact continuity responsibilities require assessment through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only."],"future":"NA","tod":"Assess recovery objectives, vendor testing, exceptions, CUECs and retained Intact continuity responsibilities through the SOC 1 Type II report and TPRM."},{"id":"CO.C05","name":"Incident Management","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that incidents impacting financial reporting-related system jobs, processes, and programs are identified and resolved in a timely manner.","roles":["UK&I Finance Systems Team","Authorised administrator users","Tagetik Vendor"],"systems":["Internal support route","Tagetik vendor support"],"railLabel":"Incident lifecycle","steps":[{"actor":"Identification","text":"Incidents may be identified by Finance users, Actuarial users or members of the Finance Systems Team through the established internal support route.","sys":"3 sources"},{"actor":"Finance Systems Team","text":"Performs initial triage and determines whether the incident can be investigated and resolved internally, or requires support from the Tagetik vendor.","sys":"Triage decision","type":"dec"},{"actor":"Authorised administrator","text":"Where action is required within the SaaS platform, raises a support case through the Tagetik vendor support process.","sys":"Vendor support case"},{"actor":"Classification","text":"Vendor support cases are classified as High, Medium or Low. The case enters the vendor's incident-resolution queue based on the assigned classification.","sys":"High / Medium / Low","type":"dec"},{"actor":"Finance Systems Team","text":"Monitors the vendor case and coordinates communications relating to the affected incident.","sys":"Case monitoring","type":"out"}],"exception":"NA","limits":["A detailed ServiceNow incident-management process is not currently operated for Tagetik.","Documented requirements covering financial-reporting impact assessment, resolution validation, business validation and formal closure evidence for each incident are not evidenced."],"future":"NA","tod":"Review selected incidents to validate the internal intake route, Finance Systems Team triage, financial-reporting impact assessment, vendor escalation, status monitoring, resolution, business validation and closure evidence."},{"id":"CO.C06","name":"Backup Restoration Testing and Validation","key":true,"status":"vend","freq":"Vendor-operated","objective":"To ensure effectiveness of data recovery procedures and validate that data can be successfully recovered and used as intended.","roles":["Tagetik Vendor","TRM Team"],"systems":["Vendor restoration process"],"railLabel":"Restoration testing","steps":[{"actor":"Tagetik vendor","text":"Performs backup restoration and recovery testing within the SaaS environment.","sys":"Vendor-operated"},{"actor":"Intact","text":"Does not directly execute restoration tests over the vendor-hosted platform.","sys":"No Intact testing","type":"stop"},{"actor":"TRM Team","text":"Restoration procedures, testing, approval, successful-recovery evidence and exceptions require assessment through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only."],"future":"NA","tod":"Assess restoration procedures, testing, approval, successful-recovery evidence and exceptions through the SOC 1 Type II report and TPRM."}]},{"code":"PD","short":"Development","name":"Program Development","intro":"Tagetik IFRS17 CE is a purchased and customised SaaS application. Core platform development is performed by the vendor. Internal activity is limited to functional configuration through the Master Data Module, calculation changes through the analytical workspace using SQL, and coordination of vendor Starter Kit and platform updates — all treated as routine application changes under Change Management.","summary":[{"lab":"Controls","val":"4","note":"PD.C01 to PD.C04"},{"lab":"Via common CN","val":"1","note":"PD.C01 policies"},{"lab":"Not applicable","val":"3","note":"PD.C02, C03, C04"},{"lab":"Watch item","val":"F&AT","tone":"amber","note":"Tagetik is expanding under the Finance & Actuarial Transformation programme"}],"outro":"Routine activity becomes Program Development only if it introduces a new system or module, creates significant new functionality, or materially alters the existing financial-reporting process. The proposed introduction of other Tagetik databases and future ServiceNow or SailPoint changes sit outside this control environment unless their direct effect on the IFRS17 CE database is confirmed.","controls":[{"id":"PD.C01","name":"PD Policies and Procedures","key":false,"status":"na","statusLabel":"Via common CN","freq":"Per common CN","objective":"To confirm that project acquisition and development policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Common Program Development control owners"],"systems":["Common PD Control Narrative"],"railLabel":"Where the methodology lives","steps":[{"actor":"Intact","text":"Tagetik does not maintain a separate application-specific Program Development or SDLC procedure.","sys":"No app-specific SDLC"},{"actor":"Common methodology","text":"Intact's common Program Development policies and methodology apply where a qualifying major development or migration initiative affects Tagetik IFRS17 CE.","sys":"Common PD CN","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Refer to the Common Program Development Control Narrative for the enterprise methodology, project governance requirements and the distinction between qualifying Program Development activity and routine Change Management."},{"id":"PD.C02","name":"Program Development and Data Migration","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To confirm program development related activities are governed, approved, and assessed for IT general control readiness prior to implementation.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No current major development or data-migration initiative affecting Tagetik IFRS17 CE is evidenced.","sys":"No qualifying initiative","type":"stop"},{"actor":"Routine activity","text":"Routine configuration changes, SQL-based calculation changes, Master Data Module changes, vendor Starter Kit updates and platform updates are governed through Change Management.","sys":"CM route","type":"dec"},{"actor":"Boundary","text":"These become Program Development only if they introduce a new system or module, create significant new functionality, or materially alter the existing financial-reporting process.","sys":"3 qualifying triggers","type":"dec"}],"exception":"NA","limits":["Tagetik is expanding under the broader Finance & Actuarial Transformation (F&AT) programme. This control narrative remains focused on the current IFRS17 CE environment, so F&AT activity should be monitored for a qualifying trigger."],"future":"NA","tod":"Confirm whether any major development, new module or migration initiative affecting the IFRS17 CE database arose during the period, including any F&AT workstream."},{"id":"PD.C03","name":"Data Migration Completeness and Accuracy Validation","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that data migrated as part of program development initiatives is complete and accurate through defined data validation, reconciliation, and exception resolution procedures prior to production deployment.","roles":[],"systems":[],"railLabel":"Quarterly loads are not migrations","steps":[{"actor":"Assessment","text":"No current legacy-to-Tagetik IFRS17 CE data migration is evidenced.","sys":"No migration","type":"stop"},{"actor":"Classification","text":"Quarterly data loads and recurring interfaces are part of the ongoing financial-reporting process and do not represent a Program Development data migration.","sys":"BAU, not migration","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying migration occurred. Quarterly load completeness and accuracy remain in scope under the applicable ITAC or interface-control assessment."},{"id":"PD.C04","name":"Program Development Testing and Approval","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that program development activities are executed in accordance with a documented methodology and are formally tested, documented, and approved by management prior to deployment.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No current major Program Development initiative affecting Tagetik IFRS17 CE is evidenced.","sys":"No qualifying initiative","type":"stop"},{"actor":"Not duplicated","text":"Testing and approval of routine application changes are addressed under CM.C03 and are not duplicated under PD.C04.","sys":"CM.C03 route","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying initiative arose; testing of routine changes is tested under CM.C03."}]},{"code":"TPRM","short":"Third party","name":"Third-Party Risk Management","intro":"Tagetik is externally hosted by the vendor. The vendor provides a SOC 1 Type II report supporting reliance over vendor-managed infrastructure and platform controls. The TRM Team performs the review and assessment through Intact's centrally managed Third-Party Risk Management process. Period of coverage and bridge letter are recorded as TBC.","summary":[{"lab":"Assurance report","val":"SOC 1 II","note":"Vendor-provided"},{"lab":"Coverage period","val":"TBC","tone":"amber","note":"Not recorded in the narrative"},{"lab":"Bridge letter","val":"TBC","tone":"amber","note":"Not recorded in the narrative"},{"lab":"Dependent controls","val":"6","note":"CM.C04, CM.C08, CO.C03, CO.C04, CO.C06 and CM.C06 vendor side"}],"outro":"Detailed vendor-specific SOC 1 Type II analysis is treated as separate vendor-assurance or TPRM documentation. Where reliance is placed on a third party, the applicable SOC report, bridge coverage, CUECs, vendor exceptions, management review and mitigation requirements are documented in the specific TPRM control narrative.","controls":[{"id":"TP.C01","name":"Third-Party Assurance Report Review","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that reliance on third-party service providers and vendor-operated controls is appropriately governed, monitored and evidenced.","roles":["TRM Team","System Owner / Application Owner","Tagetik Vendor"],"systems":["Tagetik SOC 1 Type II report"],"railLabel":"Assurance review cycle","steps":[{"actor":"Tagetik vendor","text":"Provides a SOC 1 Type II report as part of the assurance documentation supporting reliance over vendor-managed infrastructure and platform controls.","sys":"SOC 1 Type II"},{"actor":"TRM Team","text":"Reviews the report through the centrally managed TPRM process, assessing reporting period, service-auditor opinion and scope.","sys":"TPRM process"},{"actor":"TRM Team","text":"Assesses bridge-letter or other gap-coverage evidence where the report period does not align with Intact's reporting period.","sys":"Bridge coverage","type":"dec"},{"actor":"TRM Team","text":"Maps vendor controls and subservice organisations, identifies control exceptions and assesses their impact.","sys":"Control + subservice mapping"},{"actor":"TRM Team","text":"Maps Complementary User Entity Controls and confirms customer-side ownership and operation.","sys":"CUEC mapping","type":"dec"},{"actor":"TRM Team","text":"Records mitigation actions, the reliance conclusion, preparer and reviewer sign-off, and evidence of closure for outstanding actions.","sys":"Reliance conclusion","type":"out"}],"exception":"NA","limits":["Period of coverage is recorded as TBC.","Bridge letter is recorded as TBC.","Vendor-specific SOC 1 Type II analysis is held as separate TPRM documentation rather than within this control narrative."],"future":"NA","tod":"Validate the report period, opinion, scope, bridge coverage, subservice organisations, CUEC ownership, exceptions, management responses, remediation and the documented reliance conclusion."},{"id":"TP.C02","name":"Complementary User Entity Controls (CUECs)","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that controls the vendor expects Intact to operate are identified, owned and operating.","roles":["TRM Team","System Owner / Application Owner","UK&I Finance Systems Team"],"systems":["Tagetik SOC 1 Type II report"],"railLabel":"From vendor expectation to Intact control","steps":[{"actor":"TRM Team","text":"Extracts the CUECs listed in the Tagetik SOC 1 Type II report.","sys":"SOC 1 Type II · CUEC section"},{"actor":"TRM Team","text":"Maps each CUEC to an Intact control owner and to the Tagetik control narrative where an equivalent control exists.","sys":"CUEC → control mapping","type":"dec"},{"actor":"Control owners","text":"Confirm customer-side ownership and operation of each mapped CUEC.","sys":"Owner confirmation"},{"actor":"TRM Team","text":"Where a CUEC has no operating Intact control, records the residual risk and tracks mitigation to closure.","sys":"Residual-risk assessment","type":"out"}],"exception":"NA","limits":["CUEC mapping outcomes for Tagetik are held within the separate TPRM documentation and are not evidenced inside this control narrative.","Vendor support activity is not explicitly included within the quarterly privileged-activity review (APD.C09), which may itself be a CUEC expectation."],"future":"NA","tod":"Validate CUEC identification, mapping to Intact control owners, evidence of operation, residual-risk assessment and tracking of unresolved matters to closure."}]}],"gaps":[{"id":"APD.C06","sev":"H","gap":"No periodic reconciliation of terminated and transferred personnel against the active Tagetik user population. Active records belonging to terminated or transferred users are not independently reconciled to an authoritative population, and no review covers vendor support IDs, the SailPoint service account or other non-SSO accounts.","why":"A key control with no operating activity. SSO disablement covers ordinary users, but the non-SSO account classes — precisely those outside the OPD leaver process — have no compensating review at all."},{"id":"APD.C11","sev":"H","gap":"No periodic review identifying each user holding a defined SoD conflict or sensitive-access combination. Quarterly administrator-activity monitoring reviews activity but does not test against an approved ruleset.","why":"A key control with no operating activity. The known administrator conflict — develop, promote, administer access and execute Production — is risk accepted rather than detected."},{"id":"APD.C12","sev":"H","gap":"No formal Tagetik SoD and sensitive-access ruleset is maintained or periodically reviewed. Existing access, recertification, administrator-monitoring and Change Management controls do not constitute one.","why":"A key control with no operating activity and the precondition for APD.C11 and CM.C07."},{"id":"CM.C06","sev":"H","gap":"The same administrator population develops or configures changes, promotes them to Production, maintains user access and executes the calculation engine in Production. An administrator who develops a change is not technically prevented from promoting it. No CI/CD pipeline is used.","why":"Complete IT segregation of duties is absent by design. Risk accepted, but the compensating controls must all be tested for operating effectiveness to support the acceptance."},{"id":"CM.C09","sev":"H","gap":"The PIR does not reconcile the complete population of Production deployments or direct Production configuration changes to approved change tickets, and population completeness and accuracy are not formally certified before the review.","why":"The control cannot establish that every Production deployment, emergency change or direct Production change was included in the review population — so authorisation of all changes is unproven."},{"id":"CM.C05","sev":"H","gap":"No system-enforced restriction prevents administrators with development responsibilities from directly amending Production configuration, and the quarterly review does not reconcile every Production change to an approved change ticket.","why":"Direct Production change capability exists with no complete detective control confirming that all such changes were authorised."},{"id":"CO.C01","sev":"M","gap":"No formal Computer Operations policy or procedure specific to Tagetik IFRS17 CE exists, and no annual review or approval is evidenced. Process ownership, incident-intake, vendor-escalation and evidence-retention requirements are undefined.","why":"CO.C05 operates without a documented procedure beneath it, so incident handling cannot be tested against a defined standard."},{"id":"APD.C08","sev":"M","gap":"Privileged access is standing rather than Just-In-Time and is not managed through an identified PAM solution. Ownership, authorised-user population, approved access duration and internal periodic validation of vendor support IDs are all unevidenced.","why":"Standing administrator access with seven elevated capabilities and no PAM broker, plus vendor support IDs with no documented ownership or duration."},{"id":"APD.C07","sev":"M","gap":"No formal reconciliation of the SailPoint campaign population to the complete active Tagetik user population per campaign. Inclusion of vendor support IDs and the SailPoint service account is unconfirmed, no remediation SLA exists, independent validation of remediation is not evidenced, and no look-back review is performed.","why":"Population completeness is the foundation of the certification conclusion; without it the review may systematically exclude the highest-risk accounts."},{"id":"APD.C03","sev":"M","gap":"No documented SoD or sensitive-access assessment before each approval, and no post-provisioning check performed independently of the Finance Systems Team implementer. The ~5-day provisioning timeline is not an approved SLA.","why":"The same team that configures access also confirms it, with no independent check that what was configured matches what was approved."},{"id":"APD.C05","sev":"M","gap":"The ~1-day removal timeline is not a documented SLA. Overdue-removal monitoring and escalation are not evidenced, no review of user activity after the required removal date exists, and revocation requirements for vendor support IDs and the SailPoint service account are undocumented.","why":"Timeliness cannot be tested against a standard, and the account classes outside the standard leaver process have no documented revocation route."},{"id":"APD.C10","sev":"M","gap":"Password controls, MFA, credential-rotation and credential-storage requirements for the SailPoint service account and vendor support IDs are undocumented. Local, default, emergency and break-glass account arrangements are unconfirmed. No Tagetik-specific annual authentication review is evidenced.","why":"SSO covers ordinary users well, but the non-SSO identities that connect via API or under the vendor support contract have no documented authentication standard."},{"id":"APD.C02","sev":"M","gap":"No formally approved role-to-access matrix mapping the three access categories to their underlying permissions, no documented matrix of permitted entity-level and form-level restriction combinations, and no periodic review of the role-to-restriction design.","why":"Without an approved design baseline there is nothing against which configured access can be assessed for appropriateness."},{"id":"CM.C02","sev":"M","gap":"The definitive system of record for each category of change is not confirmed — the respective use of ServiceNow, ServiceDesk Plus, SharePoint and vendor repositories requires confirmation.","why":"Change population completeness cannot be established while it is unclear which system holds the authoritative record for each change type."},{"id":"CM.C08","sev":"M","gap":"Mandatory linkage between every internal emergency change and an incident ticket is not evidenced, and no defined timeframe for completing the post-deployment review is documented.","why":"Emergency changes may be applied directly in Production; without mandatory incident linkage the justification for bypassing the quarterly cycle is not consistently evidenced."},{"id":"CO.C05","sev":"M","gap":"No detailed ServiceNow incident-management process operates for Tagetik. Documented requirements for financial-reporting impact assessment, resolution validation, business validation and formal closure evidence are not evidenced.","why":"Incidents affecting quarterly IFRS 17 processing have no documented impact-assessment or closure standard."},{"id":"StAR3","sev":"M","gap":"The narrative contradicts itself on StAR3. Scope lists StAR3 extracts and reports among Tagetik's outputs; the Overview data-flow table states StAR3 has been decommissioned and is no longer part of the current-state flow.","why":"An output either exists in the current-state flow or it does not. The scope of financially relevant outputs cannot be fixed until this is resolved."},{"id":"CO.C02","sev":"M","gap":"Processing is manually initiated with no scheduler and no automated batch-failure alert, so detection of a failed or incomplete quarterly calculation depends entirely on the operator and downstream business-process controls.","why":"Scoped out as a batch control, but the underlying risk — an incomplete calculation reaching reporting undetected — still needs an evidenced home under CO.C05 or ITAC."},{"id":"APD.C09","sev":"L","gap":"Vendor support activity is not explicitly included within the quarterly privileged-activity review.","why":"The review is otherwise strong — complete population, independent System Owner review, IPE record-count check — but vendor support IDs sit outside it."},{"id":"APD.C01","sev":"L","gap":"The Blueworks Logical Access Process does not document lifecycle requirements for vendor support accounts, the SailPoint service account, generic, shared or other service accounts, and defines no evidence-retention requirements. Review frequency is TBC.","why":"Non-key, but the same non-human account classes recur as gaps in APD.C03, C05, C07, C08 and C10 — the root cause is this documentation gap."},{"id":"CM.C01","sev":"L","gap":"Document ownership, approval, effective date, version history and defined review cycle for the Tagetik Change Management Build Cycle remain subject to validation, as do documented roles and evidence-retention requirements.","why":"Non-key, but the Build Cycle is the governing document for the entire quarterly change process."},{"id":"TP.C01","sev":"M","gap":"Period of coverage and bridge letter for the Tagetik SOC 1 Type II report are both recorded as TBC.","why":"Six controls rely materially on vendor assurance; reliance cannot be concluded until report period and bridge coverage are confirmed."}]};
+document.addEventListener('DOMContentLoaded', ()=>boot(DATA_JSON));
+</script>
+</body>
+</html>

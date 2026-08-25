@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UKRIS — ITGC Control &amp; Data-Flow Explorer | Intact Insurance</title>
+<meta name="description" content="Interactive ITGC control narrative and end-to-end data flow for UKRIS, Intact Insurance UK &amp; International SOX readiness.">
+<style>
+:root{
+  --teal:#01B3BD; --teal-d:#018E96; --teal-l:#E6F7F8;
+  --red:#DF0030; --red-l:#FDEBEF; --red-d:#B00026;
+  --sand:#E8DDC8; --sand-l:#F5EFE3; --sand-d:#C9B893;
+  --ink:#001A1B; --ink-2:#0D2A2B; --slate:#5A6B6C; --slate-l:#88999A;
+  --paper:#FBF9F5; --line:#DED6C6; --white:#fff;
+  --amber:#B8860B; --amber-l:#FBF3DF;
+  --ok:#0F7A5A; --ok-l:#E7F5F0;
+  --shadow:0 1px 2px rgba(0,26,27,.06),0 8px 24px rgba(0,26,27,.07);
+  --shadow-lg:0 2px 4px rgba(0,26,27,.08),0 18px 48px rgba(0,26,27,.14);
+  --sans:"Segoe UI",Inter,-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,"Liberation Mono",monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--sand-l);
+  font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal-d)}
+h1,h2,h3,h4{margin:0; font-weight:650; letter-spacing:-.012em; line-height:1.22}
+
+/* ============ HEADER ============ */
+.hdr{background:var(--ink); color:#fff; padding:0; position:sticky; top:0; z-index:60;
+     box-shadow:0 1px 0 rgba(255,255,255,.08), 0 6px 24px rgba(0,26,27,.28)}
+.hdr-in{max-width:1680px; margin:0 auto; padding:14px 22px 0; display:flex; flex-wrap:wrap;
+        align-items:flex-start; gap:18px}
+.brand{display:flex; align-items:center; gap:12px; flex:0 0 auto}
+.brand-mark{font-family:var(--sans); font-weight:700; font-size:19px; letter-spacing:-.02em;
+  color:#fff; border-left:3px solid var(--red); border-right:3px solid var(--red);
+  padding:2px 9px; line-height:1.3}
+.brand-mark small{display:block; font-size:8.5px; letter-spacing:.30em; font-weight:600;
+  color:var(--sand); margin-top:1px}
+.hdr-title{flex:1 1 300px; min-width:240px}
+.hdr-title h1{font-size:20px; color:#fff}
+.hdr-title .sub{font-size:12px; color:#9FBFC0; margin-top:3px; letter-spacing:.01em}
+.hdr-title .sub b{color:var(--sand); font-weight:600}
+.hdr-tools{display:flex; gap:7px; flex-wrap:wrap; align-items:center; padding-bottom:2px}
+.btn{font-family:var(--sans); font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  padding:6px 11px; border-radius:7px; border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.07); color:#DFF3F4; cursor:pointer; white-space:nowrap;
+  transition:background .15s,border-color .15s,color .15s}
+.btn:hover{background:rgba(1,179,189,.24); border-color:var(--teal); color:#fff}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal); border-color:var(--teal); color:#00282A}
+.btn.primary:hover{background:#22C7D0}
+.btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+
+/* ============ NAV ============ */
+.nav{max-width:1680px; margin:0 auto; padding:10px 22px 0; display:flex; gap:2px;
+     overflow-x:auto; scrollbar-width:thin}
+.nav button{font-family:var(--sans); background:none; border:0; color:#87A9AB; cursor:pointer;
+  padding:9px 13px 10px; font-size:12.5px; font-weight:600; letter-spacing:.01em;
+  border-bottom:2.5px solid transparent; white-space:nowrap; transition:color .15s}
+.nav button .n{font-family:var(--mono); font-size:10px; opacity:.65; margin-left:5px}
+.nav button:hover{color:#fff}
+.nav button.on{color:#fff; border-bottom-color:var(--teal)}
+.nav button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:1680px; margin:0 auto; padding:22px}
+.pane{display:none} .pane.on{display:block}
+.pane-head{margin-bottom:16px; padding-bottom:13px; border-bottom:1px solid var(--line)}
+.pane-head h2{font-size:22px; letter-spacing:-.022em}
+.pane-head .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.19em;
+  color:var(--teal-d); font-weight:600; text-transform:uppercase; margin-bottom:5px}
+.pane-head p{margin:7px 0 0; color:var(--slate); font-size:13.5px; max-width:105ch}
+
+/* ============ CARDS / GRID ============ */
+.grid{display:grid; gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      padding:16px 18px; box-shadow:var(--shadow)}
+.card h3{font-size:13px; letter-spacing:.01em; margin-bottom:9px; color:var(--ink)}
+.card h3 .ic{color:var(--teal-d); margin-right:6px; font-family:var(--mono)}
+
+.kpi{background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--teal);
+     border-radius:var(--r); padding:13px 15px; box-shadow:var(--shadow)}
+.kpi .lab{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600}
+.kpi .val{font-size:23px; font-weight:700; letter-spacing:-.03em; margin-top:3px; line-height:1.1}
+.kpi .note{font-size:11.5px; color:var(--slate); margin-top:3px; line-height:1.4}
+.kpi.red{border-left-color:var(--red)} .kpi.red .val{color:var(--red-d)}
+.kpi.amber{border-left-color:var(--amber)} .kpi.amber .val{color:var(--amber)}
+.kpi.ok{border-left-color:var(--ok)} .kpi.ok .val{color:var(--ok)}
+
+/* ============ BADGES ============ */
+.b{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9.5px;
+   font-weight:600; letter-spacing:.09em; text-transform:uppercase; padding:3px 7px;
+   border-radius:5px; white-space:nowrap; border:1px solid transparent; line-height:1.35}
+.b-key{background:var(--red); color:#fff}
+.b-non{background:var(--sand); color:#6B5B3A; border-color:var(--sand-d)}
+.b-freq{background:var(--teal-l); color:var(--teal-d); border-color:#B9E7EA}
+.b-ok{background:var(--ok-l); color:var(--ok); border-color:#BEE3D6}
+.b-part{background:var(--amber-l); color:var(--amber); border-color:#E8D5A2}
+.b-gap{background:var(--red-l); color:var(--red-d); border-color:#F6C4CF}
+.b-na{background:#EEEAE2; color:var(--slate); border-color:var(--line)}
+.b-vend{background:#EDE7F6; color:#5B3E9B; border-color:#D3C4EC}
+
+/* chips */
+.chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:5px}
+.chip{font-size:11px; padding:2.5px 8px; border-radius:20px; background:var(--sand-l);
+  border:1px solid var(--line); color:#4A5C5D; white-space:nowrap}
+.chip.sys{font-family:var(--mono); font-size:10px; background:var(--teal-l);
+  border-color:#B9E7EA; color:var(--teal-d); font-weight:600}
+.chip.actor{background:#fff; border-color:var(--sand-d); color:#6B5B3A; font-weight:600; font-size:10.5px}
+
+/* ============ CONTROL CARD ============ */
+.ctrl{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      margin-bottom:14px; box-shadow:var(--shadow); overflow:hidden; scroll-margin-top:130px}
+.ctrl.gap{border-left:3px solid var(--red)}
+.ctrl.part{border-left:3px solid var(--amber)}
+.ctrl.ok{border-left:3px solid var(--ok)}
+.ctrl.vend{border-left:3px solid #7E5BC4}
+.ctrl.na{border-left:3px solid var(--sand-d)}
+.ctrl-h{display:flex; flex-wrap:wrap; align-items:center; gap:9px; padding:13px 17px;
+  background:linear-gradient(180deg,#fff,var(--paper)); border-bottom:1px solid var(--line);
+  cursor:pointer; user-select:none}
+.ctrl-h:hover{background:linear-gradient(180deg,#fff,var(--teal-l))}
+.ctrl-id{font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--teal-d);
+  background:var(--teal-l); border:1px solid #B9E7EA; padding:3px 8px; border-radius:6px}
+.ctrl-n{font-size:14px; font-weight:650; flex:1 1 230px; letter-spacing:-.008em}
+.ctrl-tw{display:flex; gap:5px; flex-wrap:wrap; align-items:center}
+.ctrl-cx{font-family:var(--mono); font-size:14px; color:var(--slate); transition:transform .2s;
+  width:16px; text-align:center}
+.ctrl.open .ctrl-cx{transform:rotate(90deg)}
+.ctrl-b{display:none; padding:17px} .ctrl.open .ctrl-b{display:block}
+
+.obj{background:#fff; border:1px solid var(--line); border-left:3px solid var(--teal);
+  border-radius:7px; padding:10px 13px; margin-bottom:14px; font-size:13px}
+.obj .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:600; display:block; margin-bottom:3px}
+
+.meta{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:15px}
+.meta > div{background:#fff; border:1px solid var(--line); border-radius:7px; padding:9px 12px}
+.meta .l{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; display:block; margin-bottom:3px}
+.meta .v{font-size:12.5px; line-height:1.45}
+
+/* ============ STEP RAIL (the process visual) ============ */
+.rail-l{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; margin:16px 0 8px; display:flex; align-items:center; gap:9px}
+.rail-l::after{content:''; flex:1; height:1px; background:var(--line)}
+.rail{display:flex; gap:0; overflow-x:auto; padding:3px 3px 12px; scrollbar-width:thin}
+.step{flex:0 0 auto; width:206px; background:#fff; border:1px solid var(--line);
+  border-radius:9px; padding:11px 12px 12px; position:relative; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; gap:6px}
+.step + .step{margin-left:26px}
+.step + .step::before{content:''; position:absolute; left:-26px; top:50%; width:26px; height:2px;
+  background:linear-gradient(90deg,var(--sand-d),var(--teal)); transform:translateY(-50%)}
+.step + .step::after{content:''; position:absolute; left:-8px; top:50%; width:0; height:0;
+  border-left:7px solid var(--teal); border-top:5px solid transparent;
+  border-bottom:5px solid transparent; transform:translateY(-50%)}
+.step-n{position:absolute; top:-9px; left:11px; font-family:var(--mono); font-size:9.5px;
+  font-weight:700; background:var(--ink); color:var(--sand); width:19px; height:19px;
+  border-radius:50%; display:grid; place-items:center; letter-spacing:0}
+.step-a{font-family:var(--mono); font-size:9px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:700; margin-top:4px; line-height:1.4}
+.step-t{font-size:12.2px; line-height:1.48; flex:1}
+.step-s{font-family:var(--mono); font-size:9.5px; color:#6B5B3A; background:var(--sand-l);
+  border:1px solid var(--line); border-radius:5px; padding:3px 6px; align-self:flex-start;
+  max-width:100%; word-break:break-word; line-height:1.4}
+.step.dec{border-color:var(--amber); background:var(--amber-l)}
+.step.dec .step-n{background:var(--amber); color:#fff}
+.step.dec .step-a{color:var(--amber)}
+.step.out{border-color:var(--teal); background:var(--teal-l)}
+.step.out .step-n{background:var(--teal-d); color:#fff}
+.step.stop{border-color:var(--red); background:var(--red-l)}
+.step.stop .step-n{background:var(--red); color:#fff}
+.step.stop .step-a{color:var(--red-d)}
+
+/* alt branch rail */
+.rail.alt .step{background:var(--amber-l); border-color:#E8D5A2}
+.rail.alt .step + .step::before{background:linear-gradient(90deg,#E8D5A2,var(--amber))}
+.rail.alt .step + .step::after{border-left-color:var(--amber)}
+.rail.alt .step-n{background:var(--amber); color:#fff}
+.rail.alt .step-a{color:var(--amber)}
+
+/* ============ NOTE BANDS ============ */
+.band{border-radius:8px; padding:11px 14px; margin-top:12px; font-size:12.6px; line-height:1.55}
+.band .bt{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:5px}
+.band ul{margin:4px 0 0; padding-left:17px} .band li{margin:3px 0}
+.band.limit{background:var(--red-l); border:1px solid #F6C4CF; color:#5C1220}
+.band.limit .bt{color:var(--red-d)}
+.band.exc{background:var(--amber-l); border:1px solid #E8D5A2; color:#5C4A12}
+.band.exc .bt{color:var(--amber)}
+.band.ev{background:var(--sand-l); border:1px solid var(--line); color:#4A4335}
+.band.ev .bt{color:#6B5B3A}
+.band.fut{background:var(--teal-l); border:1px solid #B9E7EA; color:#0A4548}
+.band.fut .bt{color:var(--teal-d)}
+.band.risk{background:#EDE7F6; border:1px solid #D3C4EC; color:#3B2A66}
+.band.risk .bt{color:#5B3E9B}
+.band.tod{background:#fff; border:1px dashed var(--sand-d); color:var(--slate); font-style:italic}
+.band.tod .bt{color:#6B5B3A; font-style:normal}
+
+/* ============ FLOW CANVAS ============ */
+.flow-tools{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:11px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r); padding:9px 12px;
+  box-shadow:var(--shadow)}
+.flow-tools .btn{border-color:var(--line); background:#fff; color:var(--ink)}
+.flow-tools .btn:hover{background:var(--teal-l); border-color:var(--teal); color:var(--teal-d)}
+.zlvl{font-family:var(--mono); font-size:11px; color:var(--slate); font-weight:600;
+  min-width:42px; text-align:center}
+.flow-tools .hint{font-size:11.5px; color:var(--slate); margin-left:auto; text-align:right}
+.flow-tools .hint kbd{font-family:var(--mono); font-size:10px; background:var(--sand-l);
+  border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 5px}
+
+.canvas-outer{background:
+    linear-gradient(var(--paper),var(--paper)) padding-box,
+    var(--line) border-box;
+  border:1px solid var(--line); border-radius:var(--r); overflow:auto; position:relative;
+  box-shadow:var(--shadow); max-height:78vh}
+.canvas-shim{position:relative}
+.canvas{position:relative; transform-origin:0 0;
+  background-image:radial-gradient(circle, #DED6C6 1px, transparent 1px);
+  background-size:22px 22px; background-color:var(--paper)}
+.bands{position:absolute; inset:0; z-index:0; pointer-events:none}
+.bandzone{position:absolute; top:0; bottom:0; border-right:1px dashed var(--sand-d)}
+.bandzone:nth-child(odd){background:rgba(232,221,200,.28)}
+.divider{position:absolute; left:0; right:0; height:0; border-top:1.5px dashed var(--sand-d)}
+.divider span{position:absolute; top:-9px; left:26px; background:var(--paper);
+  padding:0 12px; font-family:var(--mono); font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:#9A8C6E; font-weight:700}
+.bandzone .bl{position:absolute; top:12px; left:0; right:0; text-align:center;
+  font-family:var(--mono); font-size:10px; letter-spacing:.19em; text-transform:uppercase;
+  color:#9A8C6E; font-weight:700}
+.bandzone .bl small{display:block; font-size:9px; letter-spacing:.09em; color:#B2A488;
+  text-transform:none; margin-top:2px; font-weight:600}
+svg.edges{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:visible}
+.edge{fill:none; stroke:var(--slate); stroke-width:1.7; opacity:.72}
+.edge.batch{stroke-dasharray:7 4}
+.edge.manual{stroke-dasharray:2 3; stroke:var(--amber); opacity:.9}
+.edge.api{stroke:var(--teal); opacity:.95}
+.edge.unk{stroke:var(--red); stroke-dasharray:4 4; opacity:.9}
+.edge.hi{stroke:var(--teal); stroke-width:3.2; opacity:1}
+.elab{font-family:var(--mono); font-size:9.5px; fill:#3E4E4F; font-weight:600}
+.elab-bg{fill:var(--paper); stroke:var(--line); stroke-width:1; rx:4}
+
+.node{position:absolute; z-index:2; width:184px; background:#fff; border:1.5px solid var(--line);
+  border-radius:9px; padding:9px 11px 10px; box-shadow:var(--shadow); cursor:grab;
+  user-select:none; transition:box-shadow .15s, border-color .15s}
+.node:hover{box-shadow:var(--shadow-lg); border-color:var(--teal)}
+.node.dragging{cursor:grabbing; box-shadow:var(--shadow-lg); z-index:40; border-color:var(--teal)}
+.node.sel{border-color:var(--teal); box-shadow:0 0 0 3px rgba(1,179,189,.24),var(--shadow-lg)}
+.node .nk{font-family:var(--mono); font-size:8.5px; letter-spacing:.14em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:3px}
+.node .nt{font-size:12.6px; font-weight:650; line-height:1.3; letter-spacing:-.008em}
+.node .ns{font-size:10.5px; color:var(--slate); margin-top:3px; line-height:1.38; padding-right:16px}
+.node[data-k="source"]{border-color:var(--sand-d); background:#FFFDF8}
+.node[data-k="source"] .nk{color:#9A7B2E}
+.node[data-k="process"]{border-color:var(--teal)}
+.node[data-k="process"] .nk{color:var(--teal-d)}
+.node[data-k="store"]{border-color:#7E5BC4; background:#FBF9FF}
+.node[data-k="store"] .nk{color:#5B3E9B}
+.node[data-k="gl"]{border-color:var(--red); background:#FFF7F9}
+.node[data-k="gl"] .nk{color:var(--red-d)}
+.node[data-k="report"]{border-color:var(--ok); background:#F7FCFA}
+.node[data-k="report"] .nk{color:var(--ok)}
+.node[data-k="ctrl"]{border-color:var(--amber); background:var(--amber-l); border-style:dashed}
+.node[data-k="ctrl"] .nk{color:var(--amber)}
+.node[data-k="tool"]{border-color:#88999A; background:#F7F9F9}
+.node[data-k="tool"] .nk{color:#5A6B6C}
+.node .ninfo{position:absolute; bottom:6px; right:6px; width:17px; height:17px;
+  border-radius:50%; border:1px solid var(--line); background:#fff; color:var(--slate);
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:1; cursor:pointer;
+  display:grid; place-items:center; padding:0; opacity:.55; transition:opacity .15s,background .15s}
+.node:hover .ninfo{opacity:1}
+.node .ninfo:hover{background:var(--teal); border-color:var(--teal); color:#00282A}
+.node .ninfo:focus-visible{outline:2px solid var(--teal); outline-offset:1px; opacity:1}
+.node .ctag{position:absolute; top:-8px; right:8px; display:flex; gap:3px}
+.node .ctag span{font-family:var(--mono); font-size:8px; font-weight:700; background:var(--ink);
+  color:var(--sand); padding:2px 5px; border-radius:4px; letter-spacing:.05em}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:11px; background:var(--paper);
+  border:1px solid var(--line); border-radius:var(--r); padding:11px 14px; box-shadow:var(--shadow)}
+.legend .lg{display:flex; align-items:center; gap:6px; font-size:11.5px; color:#3E4E4F}
+.legend .sw{width:15px; height:15px; border-radius:4px; border:1.5px solid; flex:0 0 auto}
+.legend .ln{width:26px; height:0; border-top:2px solid; flex:0 0 auto}
+
+/* detail drawer */
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(430px,92vw); background:var(--paper);
+  border-left:1px solid var(--line); box-shadow:-14px 0 46px rgba(0,26,27,.20); z-index:80;
+  transform:translateX(102%); transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column}
+.drawer.on{transform:none}
+.drawer-h{padding:15px 18px; border-bottom:1px solid var(--line); background:var(--ink); color:#fff;
+  display:flex; align-items:flex-start; gap:11px}
+.drawer-h h3{font-size:15px; flex:1; color:#fff}
+.drawer-h .k{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal); font-weight:700; display:block; margin-bottom:3px}
+.drawer-h button{background:none; border:0; color:#9FBFC0; font-size:21px; cursor:pointer;
+  line-height:1; padding:0 3px}
+.drawer-h button:hover{color:#fff}
+.drawer-b{padding:17px 18px; overflow-y:auto; flex:1}
+.drawer-b h4{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); margin:16px 0 6px; font-weight:700}
+.drawer-b h4:first-child{margin-top:0}
+.drawer-b p{margin:0 0 8px; font-size:12.8px}
+.drawer-b ul{margin:0; padding-left:17px; font-size:12.6px} .drawer-b li{margin:4px 0}
+.scrim{position:fixed; inset:0; background:rgba(0,26,27,.34); z-index:79; opacity:0;
+  pointer-events:none; transition:opacity .26s}
+.scrim.on{opacity:1; pointer-events:auto}
+
+/* ============ TABLES ============ */
+.tbl-w{overflow-x:auto; background:var(--paper); border:1px solid var(--line);
+  border-radius:var(--r); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; font-size:12.5px; min-width:640px}
+th{background:var(--ink); color:var(--sand); font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.13em; text-transform:uppercase; text-align:left; padding:9px 12px;
+  font-weight:600; position:sticky; top:0; z-index:2}
+td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.5}
+tbody tr:hover{background:var(--teal-l)}
+tbody tr:last-child td{border-bottom:0}
+td.mono,th.mono{font-family:var(--mono); font-size:11px; white-space:nowrap}
+.rmark{display:inline-block; width:17px; height:17px; border-radius:4px; text-align:center;
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:17px}
+.rmark.x{background:var(--teal); color:#00282A}
+.rmark.o{background:var(--sand); color:#9A8C6E}
+
+/* search / filter */
+.filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+  padding:9px 12px; box-shadow:var(--shadow); position:sticky; top:104px; z-index:30}
+.filters input[type=search]{flex:1 1 210px; min-width:150px; font-family:var(--sans); font-size:12.5px;
+  padding:6px 11px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink)}
+.filters input[type=search]:focus{outline:2px solid var(--teal); outline-offset:-1px; border-color:var(--teal)}
+.fbtn{font-family:var(--mono); font-size:9.5px; font-weight:600; letter-spacing:.09em;
+  text-transform:uppercase; padding:5px 9px; border-radius:6px; border:1px solid var(--line);
+  background:#fff; color:var(--slate); cursor:pointer}
+.fbtn.on{background:var(--ink); color:var(--sand); border-color:var(--ink)}
+.fbtn:hover:not(.on){background:var(--sand-l); color:var(--ink)}
+
+/* editable */
+[contenteditable="true"]{outline:none; border-radius:3px; transition:background .12s}
+[contenteditable="true"]:hover{background:rgba(1,179,189,.10); box-shadow:0 0 0 2px rgba(1,179,189,.10)}
+[contenteditable="true"]:focus{background:#fff; box-shadow:0 0 0 2px var(--teal)}
+.editing-off [contenteditable="true"]:hover{background:none; box-shadow:none}
+
+.toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px);
+  background:var(--ink); color:var(--sand); padding:10px 20px; border-radius:8px; font-size:12.5px;
+  box-shadow:var(--shadow-lg); z-index:200; transition:transform .3s cubic-bezier(.2,1.2,.4,1);
+  font-weight:500}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+.foot{max-width:1680px; margin:26px auto 0; padding:16px 22px 34px; border-top:1px solid var(--line);
+  color:var(--slate); font-size:11.5px; line-height:1.65}
+.foot b{color:var(--ink)}
+
+/* ============ PRINT ============ */
+@media print{
+  body{background:#fff; font-size:10pt}
+  .hdr{position:static; background:#fff; color:var(--ink); box-shadow:none;
+       border-bottom:2.5px solid var(--red)}
+  .hdr-title h1{color:var(--ink)} .hdr-title .sub{color:var(--slate)}
+  .hdr-title .sub b{color:var(--ink)}
+  .brand-mark{color:var(--ink)} .brand-mark small{color:var(--slate)}
+  .hdr-tools,.nav,.filters,.flow-tools,.drawer,.scrim,.toast{display:none!important}
+  .pane{display:block!important; page-break-before:always}
+  .pane:first-of-type{page-break-before:avoid}
+  .ctrl-b{display:block!important}
+  .ctrl,.card,.kpi,.tbl-w{box-shadow:none; break-inside:avoid}
+  .rail{overflow:visible; flex-wrap:wrap; gap:20px}
+  .step{width:172px; margin-left:0!important; break-inside:avoid}
+  .step + .step::before,.step + .step::after{display:none}
+  .canvas-outer{max-height:none; overflow:visible}
+  th{position:static}
+  a{text-decoration:none; color:var(--ink)}
+}
+@media (max-width:760px){
+  .wrap{padding:14px} .hdr-in{padding:12px 14px 0} .nav{padding:8px 14px 0}
+  .hdr-title h1{font-size:17px} .filters{top:0; position:static}
+  .node{width:158px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important; animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-mark">intact<small>insurance</small></div>
+    </div>
+    <div class="hdr-title">
+      <h1>UKRIS &mdash; ITGC Control &amp; Data-Flow Explorer</h1>
+      <div class="sub">Mainframe premium, claims & reinsurance processing · z/OS v2.5 · Wipro + Kyndryl operated &nbsp;&middot;&nbsp; <b>SOX / ICOFR readiness</b> &nbsp;&middot;&nbsp; Current-state view, draft for validation</div>
+    </div>
+    <div class="hdr-tools">
+      <button class="btn" id="btnExpand">Editing on</button>
+      <button class="btn" id="btnImport">Load edits</button>
+      <button class="btn" id="btnExport">Save edits</button>
+      <button class="btn primary" id="btnPrint">Print / PDF</button>
+      <input type="file" id="fileIn" accept="application/json,.json" hidden>
+    </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer class="foot">
+  <b>How to use this file.</b> Every heading, step description and box label is editable &mdash; click it and type.
+  Drag boxes on the Data flow tab to rearrange the picture; click a box to open its detail panel.
+  Use <b>Save edits</b> to download your changes as a JSON file, and <b>Load edits</b> to bring them back later
+  or share them with a colleague. Nothing is stored automatically, so save before you close the tab.
+  <br><br>
+  <b>Source and status.</b> Content is drawn from the UKRIS Control Narrative Document
+  (Intact Insurance UK &amp; International, draft). Control statuses and gap severities are an indicative
+  readiness view derived from the narrative alone &mdash; they are not tested conclusions. Confirm each item
+  through SOX test of design and test of operating effectiveness before reporting.
+  Items marked TBC in the source document are shown as TBC here rather than inferred.
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Node detail">
+  <div class="drawer-h">
+    <div style="flex:1">
+      <span class="k" id="drawerKind"></span>
+      <h3 id="drawerTitle"></h3>
+    </div>
+    <button id="drawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-b" id="drawerBody"></div>
+</aside>
+
+<script>
+/* ============================================================
+   Intact ITGC Control & Data-Flow Explorer  —  runtime
+   No external dependencies. Works offline.
+   ============================================================ */
+const esc = s => String(s==null?'':s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+
+const STATUS = {
+  ok:   {cls:'ok',   badge:'b-ok',   label:'Operating'},
+  part: {cls:'part', badge:'b-part', label:'Design gap'},
+  gap:  {cls:'gap',  badge:'b-gap',  label:'Not performed'},
+  vend: {cls:'vend', badge:'b-vend', label:'Vendor reliance'},
+  na:   {cls:'na',   badge:'b-na',   label:'Not applicable'}
+};
+
+let toastT;
+function toast(msg){
+  let t=$('#toast'); if(!t){t=el('div','toast'); t.id='toast'; document.body.appendChild(t);}
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2100);
+}
+
+/* ---------------- editable helper ---------------- */
+function ed(tag, cls, txt, path){
+  return `<${tag} class="${cls}" contenteditable="true" spellcheck="false" data-p="${esc(path)}">${esc(txt)}</${tag}>`;
+}
+
+/* ============================================================
+   1. CONTROL CARDS
+   ============================================================ */
+function renderControl(c, di, ci){
+  const st = STATUS[c.status] || STATUS.na;
+  const card = el('div','ctrl '+st.cls);
+  card.id = c.id.replace(/\./g,'-');
+  card.dataset.search = (c.id+' '+c.name+' '+c.objective+' '+(c.roles||[]).join(' ')+' '+
+      (c.steps||[]).map(s=>s.actor+' '+s.text+' '+(s.sys||'')).join(' ')+' '+
+      (c.limits||[]).join(' ')).toLowerCase();
+  card.dataset.status = c.status;
+  card.dataset.key = c.key ? 'key':'non';
+
+  /* --- header --- */
+  const h = el('div','ctrl-h');
+  h.innerHTML = `<span class="ctrl-cx">&#9656;</span>
+    <span class="ctrl-id">${esc(c.id)}</span>
+    <span class="ctrl-n">${esc(c.name)}</span>
+    <span class="ctrl-tw">
+      <span class="b ${c.key?'b-key':'b-non'}">${c.key?'Key':'Non-key'}</span>
+      <span class="b b-freq">${esc(c.freq)}</span>
+      <span class="b ${st.badge}">${esc(c.statusLabel||st.label)}</span>
+    </span>`;
+  h.addEventListener('click', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    card.classList.toggle('open');
+  });
+  card.appendChild(h);
+
+  /* --- body --- */
+  const b = el('div','ctrl-b');
+  let html = `<div class="obj"><span class="l">Control objective</span>
+      ${ed('span','', c.objective, `d.${di}.controls.${ci}.objective`)}</div>`;
+
+  html += `<div class="meta">
+      <div><span class="l">Frequency</span><span class="v">${ed('span','',c.freq,`d.${di}.controls.${ci}.freq`)}</span></div>
+      <div><span class="l">Roles involved</span><div class="chips">${
+        (c.roles||[]).map(r=>`<span class="chip actor">${esc(r)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+      <div><span class="l">Systems &amp; tools</span><div class="chips">${
+        (c.systems||[]).map(s=>`<span class="chip sys">${esc(s)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+    </div>`;
+
+  if(c.steps && c.steps.length){
+    html += `<div class="rail-l">${esc(c.railLabel||'How the control operates')}</div><div class="rail">`;
+    c.steps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${i+1}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.steps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if(c.altSteps && c.altSteps.length){
+    html += `<div class="rail-l">${esc(c.altLabel||'Exception / alternate route')}</div><div class="rail alt">`;
+    c.altSteps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${String.fromCharCode(65+i)}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.altSteps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  const has = v => v && String(v).trim() && String(v).trim().toUpperCase() !== 'NA';
+  if(has(c.exception)) html += band('exc','Exception handling', c.exception);
+  if(c.limits && c.limits.length) html += bandList('limit','Limitations / identified gaps', c.limits);
+  if(has(c.risk)) html += band('risk','Risk acceptance', c.risk);
+  if(c.evidence && c.evidence.length) html += bandList('ev','Evidence retained', c.evidence);
+  if(has(c.future)) html += band('fut','Future state', c.future);
+  if(has(c.tod)) html += band('tod','SOX test-of-design focus', c.tod);
+
+  b.innerHTML = html;
+  card.appendChild(b);
+  return card;
+}
+const band = (k,t,txt)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span>${esc(txt)}</div>`;
+const bandList=(k,t,arr)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span><ul>${
+  arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+
+/* ============================================================
+   2. FLOW CANVAS
+   ============================================================ */
+const FLOW = {zoom:1, sel:null};
+
+function renderFlow(f){
+  const outer = $('#canvasOuter');
+  const cv = $('#canvas');
+  cv.innerHTML='';
+  cv.style.width = f.w+'px';
+  cv.style.height = f.h+'px';
+
+  /* bands */
+  const bz = el('div','bands');
+  (f.bands||[]).forEach(b=>{
+    const z = el('div','bandzone');
+    z.style.left=b.x+'px'; z.style.width=b.w+'px';
+    z.innerHTML = `<div class="bl">${esc(b.label)}${b.sub?`<small>${esc(b.sub)}</small>`:''}</div>`;
+    bz.appendChild(z);
+  });
+  (f.dividers||[]).forEach(d=>{
+    const dv = el('div','divider');
+    dv.style.top = d.y+'px';
+    dv.innerHTML = `<span>${esc(d.label)}</span>`;
+    bz.appendChild(dv);
+  });
+  cv.appendChild(bz);
+
+  /* svg */
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','edges');
+  svg.setAttribute('width',f.w); svg.setAttribute('height',f.h);
+  svg.id='edges';
+  cv.appendChild(svg);
+
+  /* nodes */
+  f.nodes.forEach((n,i)=>{
+    const d = el('div','node');
+    d.dataset.k = n.k; d.dataset.id = n.id; d.dataset.i = i;
+    d.style.left = n.x+'px'; d.style.top = n.y+'px';
+    d.innerHTML = `${n.tags?`<div class="ctag">${n.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
+      <button class="ninfo" title="Show detail for this box" aria-label="Show detail">i</button>
+      <span class="nk">${esc(n.kind||n.k)}</span>
+      <div class="nt" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.t">${esc(n.t)}</div>
+      ${n.s?`<div class="ns" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.s">${esc(n.s)}</div>`:''}`;
+    cv.appendChild(d);
+    makeDraggable(d, n, f);
+    d.querySelector('.ninfo').addEventListener('pointerdown', e=>e.stopPropagation());
+    d.querySelector('.ninfo').addEventListener('click', e=>{
+      e.stopPropagation(); openDrawer(n, f);
+    });
+    d.addEventListener('click', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      if(d.dataset.moved==='1'){d.dataset.moved='0'; return;}
+      openDrawer(n, f);
+    });
+    d.addEventListener('dblclick', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      openDrawer(n, f);
+    });
+  });
+
+  drawEdges(f);
+  outer.scrollLeft = 0;
+}
+
+function nodeRect(f, id){
+  const d = $(`#canvas .node[data-id="${CSS.escape(id)}"]`);
+  const n = f.nodes.find(x=>x.id===id);
+  if(!d||!n) return null;
+  return {x:n.x, y:n.y, w:d.offsetWidth, h:d.offsetHeight};
+}
+
+function drawEdges(f){
+  const svg = $('#edges'); if(!svg) return;
+  svg.innerHTML='';
+  const NS='http://www.w3.org/2000/svg';
+  const labels=[];
+  (f.edges||[]).forEach((e,i)=>{
+    const a = nodeRect(f,e.from), b = nodeRect(f,e.to);
+    if(!a||!b) return;
+    let x1,y1,x2,y2,c1x,c1y,c2x,c2y;
+    const ac={x:a.x+a.w/2,y:a.y+a.h/2}, bc={x:b.x+b.w/2,y:b.y+b.h/2};
+    const dx=bc.x-ac.x, dy=bc.y-ac.y;
+    if(Math.abs(dx) >= Math.abs(dy)*0.72){          /* mostly horizontal */
+      const dir = dx>=0?1:-1;
+      x1 = dir>0? a.x+a.w : a.x;  y1 = ac.y;
+      x2 = dir>0? b.x     : b.x+b.w; y2 = bc.y;
+      const k = Math.max(34, Math.abs(x2-x1)*0.44);
+      c1x=x1+k*dir; c1y=y1; c2x=x2-k*dir; c2y=y2;
+    } else {                                         /* mostly vertical */
+      const dir = dy>=0?1:-1;
+      x1 = ac.x; y1 = dir>0? a.y+a.h : a.y;
+      x2 = bc.x; y2 = dir>0? b.y     : b.y+b.h;
+      const k = Math.max(28, Math.abs(y2-y1)*0.46);
+      c1x=x1; c1y=y1+k*dir; c2x=x2; c2y=y2-k*dir;
+    }
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d',`M${x1},${y1} C${c1x},${c1y} ${c2x},${c2y} ${x2},${y2}`);
+    p.setAttribute('class','edge '+(e.k||''));
+    p.setAttribute('marker-end','url(#ah'+(e.k||'d')+')');
+    p.dataset.i=i;
+    svg.appendChild(p);
+
+    if(e.l){
+      const t=.5, mt=1-t;
+      const mx = mt*mt*mt*x1 + 3*mt*mt*t*c1x + 3*mt*t*t*c2x + t*t*t*x2;
+      const my = mt*mt*mt*y1 + 3*mt*mt*t*c1y + 3*mt*t*t*c2y + t*t*t*y2;
+      const lines = String(e.l).split('|');
+      const wpx = Math.max(...lines.map(s=>s.length))*5.35 + 12;
+      const hpx = lines.length*11 + 7;
+      labels.push({x:mx, y:my, w:wpx, h:hpx, lines});
+    }
+  });
+
+  /* place labels, nudging vertically to avoid other labels AND node boxes */
+  const placed = f.nodes.map(n=>{
+    const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`);
+    const w=d?d.offsetWidth:184, h=d?d.offsetHeight:80;
+    return {x:n.x+w/2, y:n.y+h/2, w:w, h:h};
+  });
+  const hit=(a,b)=> a.x-a.w/2 < b.x+b.w/2+4 && a.x+a.w/2+4 > b.x-b.w/2 &&
+                    a.y-a.h/2 < b.y+b.h/2+3 && a.y+a.h/2+3 > b.y-b.h/2;
+  labels.forEach(L=>{
+    const y0=L.y;
+    for(let k=0; k<9; k++){
+      const off = Math.ceil(k/2)*(L.h+5)*(k%2?1:-1);
+      L.y = y0+off;
+      if(!placed.some(q=>hit(L,q))) break;
+    }
+    placed.push(L);
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('class','elab-bg');
+    r.setAttribute('x',L.x-L.w/2); r.setAttribute('y',L.y-L.h/2);
+    r.setAttribute('width',L.w); r.setAttribute('height',L.h);
+    r.setAttribute('rx',4);
+    svg.appendChild(r);
+    const tx=document.createElementNS(NS,'text');
+    tx.setAttribute('class','elab');
+    tx.setAttribute('x',L.x); tx.setAttribute('y',L.y-L.h/2+11.5);
+    tx.setAttribute('text-anchor','middle');
+    L.lines.forEach((ln,j)=>{
+      const ts=document.createElementNS(NS,'tspan');
+      ts.setAttribute('x',L.x); if(j)ts.setAttribute('dy','11');
+      ts.textContent=ln; tx.appendChild(ts);
+    });
+    svg.appendChild(tx);
+  });
+  /* arrowheads */
+  const defs=document.createElementNS(NS,'defs');
+  [['d','#5A6B6C'],['batch','#5A6B6C'],['manual','#B8860B'],['api','#01B3BD'],['unk','#DF0030']]
+    .forEach(([k,col])=>{
+      const m=document.createElementNS(NS,'marker');
+      m.setAttribute('id','ah'+k); m.setAttribute('markerWidth','8');
+      m.setAttribute('markerHeight','8'); m.setAttribute('refX','7');
+      m.setAttribute('refY','3'); m.setAttribute('orient','auto');
+      m.setAttribute('markerUnits','userSpaceOnUse');
+      const pp=document.createElementNS(NS,'path');
+      pp.setAttribute('d','M0,0 L7,3 L0,6 z'); pp.setAttribute('fill',col);
+      m.appendChild(pp); defs.appendChild(m);
+    });
+  svg.insertBefore(defs, svg.firstChild);
+}
+
+function makeDraggable(d, n, f){
+  let sx,sy,ox,oy,drag=false;
+  d.addEventListener('pointerdown', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    drag=true; d.dataset.moved='0';
+    d.setPointerCapture(e.pointerId);
+    sx=e.clientX; sy=e.clientY; ox=n.x; oy=n.y;
+    d.classList.add('dragging');
+  });
+  d.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    const z=FLOW.zoom;
+    const nx = Math.max(4, ox + (e.clientX-sx)/z);
+    const ny = Math.max(4, oy + (e.clientY-sy)/z);
+    if(Math.abs(nx-ox)>3||Math.abs(ny-oy)>3) d.dataset.moved='1';
+    n.x = Math.round(nx); n.y = Math.round(ny);
+    d.style.left=n.x+'px'; d.style.top=n.y+'px';
+    drawEdges(f);
+  });
+  const up=e=>{ if(!drag)return; drag=false; d.classList.remove('dragging');
+    try{d.releasePointerCapture(e.pointerId);}catch(_){} drawEdges(f); };
+  d.addEventListener('pointerup',up); d.addEventListener('pointercancel',up);
+}
+
+/* ---------- drawer ---------- */
+function openDrawer(n, f){
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+  const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`); if(d)d.classList.add('sel');
+  const dw=$('#drawer');
+  const ins=(f.edges||[]).filter(e=>e.to===n.id);
+  const outs=(f.edges||[]).filter(e=>e.from===n.id);
+  const nm=id=>{const x=f.nodes.find(v=>v.id===id); return x?x.t:id;};
+  $('#drawerKind').textContent = n.kind||n.k;
+  $('#drawerTitle').textContent = n.t;
+  let h='';
+  if(n.s) h+=`<p><b>${esc(n.s)}</b></p>`;
+  if(n.desc) h+=`<h4>What it does</h4><p>${esc(n.desc)}</p>`;
+  if(ins.length) h+=`<h4>Data in (${ins.length})</h4><ul>${ins.map(e=>
+    `<li><b>${esc(nm(e.from))}</b> &rarr; ${esc(String(e.l||'').replace(/\|/g,' &middot; '))}${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(outs.length) h+=`<h4>Data out (${outs.length})</h4><ul>${outs.map(e=>
+    `<li>${esc(String(e.l||'').replace(/\|/g,' &middot; '))} &rarr; <b>${esc(nm(e.to))}</b>${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(n.controls&&n.controls.length) h+=`<h4>ITGC control points</h4><div class="chips">${
+    n.controls.map(c=>`<span class="chip sys">${esc(c)}</span>`).join('')}</div>`;
+  if(n.owner) h+=`<h4>Owner / operator</h4><p>${esc(n.owner)}</p>`;
+  if(n.note) h+=`<h4>Audit note</h4><div class="band limit" style="margin-top:0">${esc(n.note)}</div>`;
+  $('#drawerBody').innerHTML=h||'<p style="color:#5A6B6C">No further detail recorded.</p>';
+  dw.classList.add('on'); $('#scrim').classList.add('on');
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on');
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+}
+
+/* ============================================================
+   3. BOOT
+   ============================================================ */
+let DATA;
+function boot(data){
+  DATA = data;
+  document.title = data.app + ' — ITGC Control & Data-Flow Explorer | Intact Insurance';
+
+  /* ---- nav + panes ---- */
+  const nav=$('#nav'), main=$('#main');
+
+  const addPane=(id,build)=>{
+    const p=el('div','pane'); p.id='pane-'+id;
+    main.appendChild(p);          // must be in the DOM before build() queries it
+    build(p); return p;
+  };
+  const addTab=(id,label,n)=>{
+    const b=el('button',null,esc(label)+(n?`<span class="n">${n}</span>`:''));
+    b.dataset.t=id; nav.appendChild(b);
+    b.addEventListener('click',()=>go(id));
+    return b;
+  };
+
+  /* OVERVIEW */
+  addTab('overview','Overview');
+  addPane('overview', p=>{
+    const o=data.overview;
+    let h=`<div class="pane-head"><div class="eyebrow">System profile</div>
+      <h2>${esc(data.app)}</h2><p>${esc(o.purpose)}</p></div>`;
+    h+=`<div class="grid g4" style="margin-bottom:16px">${o.kpis.map(k=>
+      `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div>
+       <div class="val">${esc(k.val)}</div>${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+    h+=`<div class="grid g2" style="margin-bottom:16px">${o.facts.map(f=>
+      `<div class="card"><h3><span class="ic">&#9642;</span>${esc(f.t)}</h3>
+       <div style="font-size:12.8px;line-height:1.6">${f.v}</div></div>`).join('')}</div>`;
+    /* RACI */
+    h+=`<div class="pane-head" style="margin-top:26px"><div class="eyebrow">Accountability</div>
+      <h2>Roles &amp; responsibility ownership</h2>
+      <p><span class="rmark x">X</span> primary responsibility &nbsp;
+         <span class="rmark o">&ndash;</span> supporting involvement</p></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th style="min-width:200px">Role</th>
+      <th>Responsibility summary</th><th class="mono">APD</th><th class="mono">CM</th>
+      <th class="mono">PD</th><th class="mono">CO</th><th class="mono">TPRM</th></tr></thead><tbody>`;
+    o.raci.forEach(r=>{
+      h+=`<tr><td><b>${esc(r.role)}</b></td><td>${esc(r.sum)}</td>`;
+      r.m.forEach(v=>{h+=`<td style="text-align:center"><span class="rmark ${v?'x':'o'}">${v?'X':'–'}</span></td>`;});
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+    if(o.sources) h+=`<div class="card" style="margin-top:16px"><h3><span class="ic">&#9642;</span>Source documents referenced</h3>
+      <ul style="margin:0;padding-left:18px;font-size:12.5px">${o.sources.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`;
+    p.innerHTML=h;
+  });
+
+  /* FLOW */
+  addTab('flow','Data flow', (data.flow.nodes||[]).length);
+  addPane('flow', p=>{
+    const f=data.flow;
+    p.innerHTML=`<div class="pane-head"><div class="eyebrow">End-to-end data movement</div>
+      <h2>${esc(f.title)}</h2><p>${esc(f.intro)}</p></div>
+      <div class="flow-tools">
+        <button class="btn" id="zIn">Zoom in</button>
+        <button class="btn" id="zOut">Zoom out</button>
+        <span class="zlvl" id="zLvl">100%</span>
+        <button class="btn" id="zFit">Fit width</button>
+        <button class="btn" id="zReset">Reset layout</button>
+        <span class="hint">Drag any box to move it &middot; click a box for detail &middot;
+          double-click a label to rename &middot; <kbd>Ctrl</kbd>+<kbd>P</kbd> to print</span>
+      </div>
+      <div class="canvas-outer" id="canvasOuter"><div class="canvas-shim" id="canvasShim"><div class="canvas" id="canvas"></div></div></div>
+      <div class="legend" id="legend"></div>
+      ${f.notes?`<div class="band limit" style="margin-top:14px"><span class="bt">Documented gaps in the data-flow record</span><ul>${
+        f.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
+      ${f.tableTitle?`<div class="pane-head" style="margin-top:28px"><div class="eyebrow">Interface register</div>
+        <h2>${esc(f.tableTitle)}</h2></div>
+        <div class="tbl-w"><table><thead><tr><th>Source</th><th>Processing layer</th>
+        <th>Destination</th><th>Data / business purpose</th></tr></thead><tbody>${
+        f.table.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td></tr>`).join('')
+      }</tbody></table></div>`:''}`;
+
+    renderFlow(f);
+    /* legend */
+    const K=[['source','Source system'],['process','Processing / application'],['store','Data store / staging'],
+             ['gl','General ledger'],['report','Reporting output'],['ctrl','Control / monitoring'],['tool','Supporting tool']];
+    const cols={source:'#C9B893',process:'#01B3BD',store:'#7E5BC4',gl:'#DF0030',report:'#0F7A5A',ctrl:'#B8860B',tool:'#88999A'};
+    let lg = K.map(([k,l])=>`<div class="lg"><span class="sw" style="border-color:${cols[k]};background:${cols[k]}22"></span>${l}</div>`).join('');
+    lg += `<div class="lg"><span class="ln" style="border-color:#5A6B6C"></span>System interface</div>
+      <div class="lg"><span class="ln" style="border-color:#5A6B6C;border-top-style:dashed"></span>Scheduled / batch file</div>
+      <div class="lg"><span class="ln" style="border-color:#B8860B;border-top-style:dotted"></span>Manual / human hand-off</div>
+      <div class="lg"><span class="ln" style="border-color:#01B3BD"></span>API / real-time</div>
+      <div class="lg"><span class="ln" style="border-color:#DF0030;border-top-style:dashed"></span>Mechanism not evidenced</div>`;
+    $('#legend').innerHTML=lg;
+
+    const setZoom=z=>{
+      FLOW.zoom=Math.min(1.6,Math.max(0.30,z));
+      const cv=$('#canvas'), shim=$('#canvasShim');
+      cv.style.transform=`scale(${FLOW.zoom})`;
+      shim.style.width=(f.w*FLOW.zoom)+'px';
+      shim.style.height=(f.h*FLOW.zoom)+'px';
+      $('#zLvl').textContent=Math.round(FLOW.zoom*100)+'%';
+    };
+    $('#zIn').onclick=()=>setZoom(FLOW.zoom+0.14);
+    $('#zOut').onclick=()=>setZoom(FLOW.zoom-0.14);
+    $('#zFit').onclick=()=>FLOW.fit();
+    $('#zReset').onclick=()=>{f.nodes.forEach((n,i)=>{n.x=f.home[i][0]; n.y=f.home[i][1];});
+      renderFlow(f); setZoom(FLOW.zoom); toast('Layout reset to default positions');};
+    FLOW.fit = ()=>setZoom(($('#canvasOuter').clientWidth-26)/f.w);
+    setTimeout(()=>setZoom(1),50);
+  });
+
+  /* DOMAINS */
+  data.domains.forEach((d,di)=>{
+    addTab('d'+di, d.short, d.controls.length);
+    addPane('d'+di, p=>{
+      let h=`<div class="pane-head"><div class="eyebrow">${esc(d.code)} &middot; ITGC domain</div>
+        <h2>${esc(d.name)}</h2><p>${esc(d.intro)}</p></div>`;
+      if(d.summary) h+=`<div class="grid g4" style="margin-bottom:16px">${d.summary.map(k=>
+        `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div><div class="val">${esc(k.val)}</div>
+         ${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+      h+=`<div class="filters">
+        <input type="search" placeholder="Filter ${esc(d.short)} controls — try a role, system or keyword…" data-f="${di}">
+        <button class="fbtn on" data-s="all" data-d="${di}">All</button>
+        <button class="fbtn" data-s="key" data-d="${di}">Key only</button>
+        <button class="fbtn" data-s="gap" data-d="${di}">Gaps</button>
+        <button class="fbtn" data-s="part" data-d="${di}">Design gaps</button>
+        <button class="fbtn" data-s="vend" data-d="${di}">Vendor reliance</button>
+        <button class="fbtn" data-x="open" data-d="${di}">Expand all</button>
+        <button class="fbtn" data-x="close" data-d="${di}">Collapse all</button>
+      </div><div id="list${di}"></div>`;
+      p.innerHTML=h;
+      const list=p.querySelector('#list'+di);
+      d.controls.forEach((c,ci)=>list.appendChild(renderControl(c,di,ci)));
+      if(d.outro) list.insertAdjacentHTML('afterend',
+        `<div class="band tod" style="margin-top:18px"><span class="bt">Domain note</span>${esc(d.outro)}</div>`);
+
+      /* filters */
+      const apply=()=>{
+        const q=(p.querySelector('input[type=search]').value||'').toLowerCase().trim();
+        const s=p.querySelector('.fbtn.on[data-s]')?.dataset.s||'all';
+        let shown=0;
+        Array.from(list.children).forEach(c=>{
+          if(!c.classList.contains('ctrl')) return;
+          const okQ = !q || c.dataset.search.includes(q);
+          const okS = s==='all' || (s==='key'? c.dataset.key==='key' : c.dataset.status===s);
+          const vis = okQ&&okS; c.style.display = vis?'':'none'; if(vis)shown++;
+        });
+        let m=p.querySelector('.nores');
+        if(!shown){ if(!m){m=el('div','nores card'); m.style.textAlign='center';
+          m.innerHTML='<b>No controls match that filter.</b><br><span style="color:#5A6B6C">Clear the search box or choose “All”.</span>';
+          list.appendChild(m);} }
+        else if(m) m.remove();
+      };
+      p.querySelector('input[type=search]').addEventListener('input',apply);
+      p.querySelectorAll('.fbtn[data-s]').forEach(b=>b.addEventListener('click',()=>{
+        p.querySelectorAll('.fbtn[data-s]').forEach(x=>x.classList.remove('on'));
+        b.classList.add('on'); apply();
+      }));
+      p.querySelector('.fbtn[data-x="open"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.add('open')));
+      p.querySelector('.fbtn[data-x="close"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.remove('open')));
+    });
+  });
+
+  /* GAP REGISTER */
+  addTab('gaps','Gap register', data.gaps.length);
+  addPane('gaps', p=>{
+    const sev={H:'b-gap',M:'b-part',L:'b-na'};
+    const sevL={H:'High',M:'Medium',L:'Low'};
+    let h=`<div class="pane-head"><div class="eyebrow">Consolidated exceptions</div>
+      <h2>Gap register — ${esc(data.app)}</h2>
+      <p>Every limitation recorded across the control narrative, in one list. Severity is an
+      indicative SOX readiness view based on whether the control is Key and whether any control
+      activity currently operates.</p></div>`;
+    const cnt=k=>data.gaps.filter(g=>g.sev===k).length;
+    h+=`<div class="grid g4" style="margin-bottom:16px">
+      <div class="kpi red"><div class="lab">High</div><div class="val">${cnt('H')}</div>
+        <div class="note">Key control not operating, or no evidenced activity</div></div>
+      <div class="kpi amber"><div class="lab">Medium</div><div class="val">${cnt('M')}</div>
+        <div class="note">Control operates but design or evidence is incomplete</div></div>
+      <div class="kpi"><div class="lab">Low</div><div class="val">${cnt('L')}</div>
+        <div class="note">Documentation, SLA or housekeeping matters</div></div>
+      <div class="kpi ok"><div class="lab">Total logged</div><div class="val">${data.gaps.length}</div>
+        <div class="note">Across APD, CM, CO, PD and TPRM</div></div></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th class="mono" style="width:78px">Control</th>
+      <th style="width:82px">Severity</th><th style="min-width:280px">Gap identified</th>
+      <th style="min-width:250px">Why it matters for SOX</th></tr></thead><tbody>`;
+    data.gaps.forEach(g=>{
+      h+=`<tr><td class="mono"><b>${esc(g.id)}</b></td>
+        <td><span class="b ${sev[g.sev]}">${sevL[g.sev]}</span></td>
+        <td>${esc(g.gap)}</td><td style="color:#4A5C5D">${esc(g.why)}</td></tr>`;
+    });
+    h+='</tbody></table></div>';
+    h+=`<div class="band tod" style="margin-top:16px"><span class="bt">How to read this</span>
+      Severity is an indicative view derived from the control narrative only. It is not a tested
+      conclusion — confirm each item through SOX test of design and test of operating effectiveness
+      before reporting.</div>`;
+    p.innerHTML=h;
+  });
+
+  go('overview');
+
+  /* ---- toolbar ---- */
+  $('#btnExport').onclick=()=>{
+    harvestEdits();
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+    const a=el('a'); a.href=URL.createObjectURL(blob);
+    a.download=(DATA.app.replace(/[^A-Za-z0-9]+/g,'_'))+'_ITGC_edits.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Exported your edits as JSON');
+  };
+  $('#btnImport').onclick=()=>$('#fileIn').click();
+  $('#fileIn').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      if(!d.app||!d.domains) throw new Error('not a valid file');
+      main.innerHTML=''; nav.innerHTML=''; boot(d); toast('Loaded '+f.name);
+    }catch(err){ toast('That file could not be read: '+err.message); } };
+    r.readAsText(f); e.target.value='';
+  };
+  $('#btnPrint').onclick=()=>{$$('.ctrl').forEach(c=>c.classList.add('open')); setTimeout(()=>window.print(),120);};
+  $('#btnExpand').onclick=()=>{
+    const on=document.body.classList.toggle('editing-off');
+    $('#btnExpand').textContent = on?'Editing off':'Editing on';
+    $$('[contenteditable]').forEach(n=>n.setAttribute('contenteditable', on?'false':'true'));
+    toast(on?'Editing locked — click again to unlock':'Editing unlocked — click any text to change it');
+  };
+  $('#scrim').onclick=closeDrawer;
+  $('#drawerClose').onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+  window.addEventListener('resize',()=>{ if(DATA&&DATA.flow&&$('#edges')) drawEdges(DATA.flow); });
+}
+
+function go(id){
+  $$('.pane').forEach(p=>p.classList.toggle('on', p.id==='pane-'+id));
+  $$('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.t===id));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='flow'&&DATA) setTimeout(()=>drawEdges(DATA.flow),40);
+}
+
+/* write contenteditable values back into DATA before export */
+function harvestEdits(){
+  $$('[data-p]').forEach(n=>{
+    const path=n.dataset.p.split('.');
+    let o=DATA, key=path.pop();
+    if(path[0]==='d'){ path.shift(); o=DATA.domains; }
+    else if(path[0]==='flow'){ path.shift(); o=DATA.flow; }
+    for(const k of path){ if(o==null) return; o=o[/^\d+$/.test(k)?Number(k):k]; }
+    if(o) o[/^\d+$/.test(key)?Number(key):key]=n.textContent.trim();
+  });
+}
+
+const DATA_JSON = {"app":"UKRIS","tagline":"Mainframe premium, claims & reinsurance processing · z/OS v2.5 · Wipro + Kyndryl operated","overview":{"purpose":"UKRIS is a mainframe application supporting premium, claims and reinsurance processing. It generates financially relevant files from the NHP1 and NOR1 environments for transfer to the SIL landing area, where the information is validated, enriched and processed through SIL, TDS and FDS to support downstream SAP accounting and financial reporting. UKRIS is the transaction origination point of this reporting chain.","kpis":[{"lab":"Users in scope","val":"TBC","tone":"amber","note":"Intact, Wipro, Kyndryl, Accenture and other approved third parties; numbers not recorded"},{"lab":"Interfaces to SIL","val":"10","note":"Premium, claims and reinsurance files across NHP1 and NOR1"},{"lab":"Service providers","val":"2","note":"Wipro (application, RACF, ADM) and Kyndryl (DB2, mainframe, promotion)"},{"lab":"Access layers","val":"5","tone":"amber","note":"Application, RACF, DB2, OPC and CyberArk privileged"}],"facts":[{"t":"System type","v":"Mainframe application operating on <b>z/OS v2.5</b>. UKRIS does not use corporate Single Sign-On. Application and RACF access are administered by <b>Wipro UAM</b>; database access is administered by the <b>Kyndryl DB2 Team</b>."},{"t":"Environments","v":"UKRIS operates across the <b>NHP1</b> and <b>NOR1</b> mainframe environments, supporting application processing, file generation, access administration and backup monitoring. The complete Development, Test, UAT and Production structure and the purpose of each environment <b>remain to be confirmed</b>."},{"t":"Environment inconsistency to resolve","v":"The Scope section states NHP1 and NOR1 both support processing, access administration, file generation and backup monitoring. CM.C03 and CM.C04 instead state <b>NHP1 and NHP2 support testing while NOR1 supports Production</b>. Both statements appear in the same narrative and cannot both be correct — resolve before SOX test of design."},{"t":"Geographical scope","v":"Supports the applicable UK and Ireland business and operational user population. The complete geographical distribution, including any users operating from India, Europe or other locations, <b>remains to be confirmed</b>."},{"t":"Access model","v":"Access is structured through application entitlements, <b>RACF groups and connections</b>, update-access definitions, linked <b>secondary IDs</b>, DB2 access profiles, OPC access and privileged-access groups. Account creation uses an approved <b>Copy ID</b> as the technical reference."},{"t":"The Copy ID mechanism","v":"An existing approved user ID is used as the reference when assigning RACF connections and UKRIS access. Wipro UAM checks the Copy ID in <b>LAMS</b> before fulfilment. If the Copy ID carries <b>update entitlements</b>, the request is diverted to the enhanced approval route. A change to the approved Copy ID requires a new approved RITM."},{"t":"Change lifecycle","v":"Wipro develops and progresses approved changes through <b>ICM up to Stage 3</b>, then hands Kyndryl the change reference, system, subsystem, <b>CCID</b> and promotion instructions. Kyndryl uses <b>PLC</b> to promote the approved element to Stage 4 and Production. Wipro cannot deploy to Production; Kyndryl does not amend the source element."},{"t":"Batch & monitoring","v":"UKRIS jobs are scheduled and monitored through <b>OPC</b>. Failed jobs appear in the OPC error queue, generate an alert and <b>automatically create a ServiceNow incident</b> assigned to System Operations. Each job carries a <b>User Document</b> naming the owning team, required action and escalation route. <b>SiteScope</b> separately monitors UKRIS file arrival against the SIL cut-off."}],"raci":[{"role":"Intact Business / Application Oversight","sum":"Confirms business requirements and continued access needs, assesses the business impact of changes and incidents, provides requirements and acceptance for qualifying initiatives, and oversees the UKRIS service and third-party reliance.","m":[1,1,1,1,1]},{"role":"Line Manager","sum":"Approves standard UKRIS access and supports mover, leaver and access-review decisions. Provides business input, testing or acceptance where changes affect the relevant business area and raises operational issues affecting business processing.","m":[1,0,0,0,0]},{"role":"Wipro UAM Team","sum":"Validates the approved Copy ID in LAMS; creates, modifies and removes UKRIS application and RACF access through the TSOT administration process; identifies update access requiring enhanced approval; and completes access-review remediation.","m":[1,0,0,0,0]},{"role":"Wipro Application / ADM Team","sum":"Uses approved application and privileged access to perform UKRIS development and earlier-stage change activities, provides technical and testing evidence, and investigates application, batch and interface failures including rerun and remediation.","m":[0,1,1,1,0]},{"role":"Kyndryl DB2 Team","sum":"Creates, modifies, reviews and removes UKRIS DB2 human and service accounts; performs approved database activities; and supports DB2 operations, recovery, incidents and database changes or migration activity where applicable.","m":[1,1,1,1,0]},{"role":"Kyndryl Mainframe / Production Promotion Team","sum":"Holds approved privileged access for mainframe infrastructure and Production-promotion activities, performs authorised UKRIS Production promotion following approved instructions, and supports mainframe Production operations, recovery and incident resolution.","m":[1,1,0,1,0]},{"role":"IAM / SailPoint Team","sum":"Maintains the common access-recertification framework, campaign configuration, reviewer assignments and certification workflow; retains certification evidence; and coordinates failed certifications and access remediation through the applicable RITM route.","m":[1,0,0,0,0]},{"role":"CyberArk / PAM Team","sum":"Maintains the privileged-access platform used for controlled mainframe administrative access, account governance and session recording; supports approved privileged access for Production implementation and operational activities; and retains privileged-session and monitoring evidence.","m":[1,0,0,1,0]},{"role":"Wipro Compliance Manager / Privileged-Access Approvers","sum":"Approves time-bound privileged UKRIS Production access for Wipro personnel through the special-access route, including access required for authorised change or operational activities, and supports oversight of the approved duration, use and automatic revocation.","m":[1,0,0,0,0]},{"role":"Change Enablement Team","sum":"Maintains the common Change Management workflow and coordinates Change Management QA, Service Manager, CAB, emergency-change and failed-change governance, including controlled changes required to resolve operational incidents.","m":[0,1,0,0,0]},{"role":"Service Manager / CAB","sum":"Reviews change risk, service impact, scheduling, dependencies and implementation readiness; provides approval according to the change classification; and supports significant implementation, service-restoration and change-related decisions.","m":[0,1,0,0,0]},{"role":"OPC / Mainframe Operations Team","sum":"Holds approved scheduler access for assigned UKRIS batch responsibilities, performs privileged scheduler administration through CyberArk, implements approved scheduler changes, and operates or supports scheduled jobs, failure investigation, rerun and recovery.","m":[1,1,0,1,0]},{"role":"SIL / FDS Operations and Support Teams","sum":"Implements approved downstream processing changes, monitors receipt and processing of UKRIS premium, claims and reinsurance files, performs downstream validation and reconciliation, and coordinates identified processing exceptions.","m":[0,1,0,1,0]},{"role":"Globalscape / Wipro File-Transfer Support","sum":"Holds approved technical access to operate and support the file-transfer service, implements approved changes to the UKRIS Globalscape route, and monitors and resolves failed or missing Sale of Claims transfers from NHP1 to SAP.","m":[1,1,0,1,0]},{"role":"Incident and Service Management Teams","sum":"Records, classifies, prioritises, assigns, escalates and monitors UKRIS incidents; provides SLA, escalation, root-cause and closure oversight; and coordinates controlled changes where incident resolution requires one.","m":[0,0,0,1,0]},{"role":"TRM / TPRM Team","sum":"Assesses third-party assurance over Wipro and Kyndryl access, development, Production promotion, mainframe, database, backup, recovery and operational controls, including scope, bridge coverage, CUECs, exceptions, remediation and reliance conclusions.","m":[0,0,0,0,1]}],"sources":["UKRIS Control Narrative Document — Intact Insurance UK & International","UKRIS ID Creation and Linking of Secondary IDs procedure, version 1.3 dated 24 January 2025","RACF ID Creation procedure","Intact Insurance UK Incident Management Process v1.8; Major Incident Management Process v7.0","Intact Insurance UK Escalation Process v0.8; SLA Master Analysis dated 29 September 2023","Common APD, Change Management, Computer Operations, Incident Management, Program Development and TPRM Control Narratives","Wipro SOC 1 Type II report (identifies UKRIS within application scope); applicable Kyndryl assurance reports"]},"flow":{"title":"UKRIS to the general ledger — how premium, claims and reinsurance data reaches SAP","intro":"UKRIS originates the transactions. Ten scheduled file interfaces leave the NHP1 and NOR1 mainframe environments and land in SIL, where records are validated and enriched and a Reconciliation Identifier is attached so every TDS transaction can be traced to its SAP accounting entry. A separate monthly Sale of Claims file takes a different route entirely — FTPS to Globalscape, then SFTP into the SAP Production landing location. Drag any box to rearrange; click a box for the file names, protocols and control points.","w":2560,"h":1200,"dividers":[{"y":845,"label":"Control layer — who may change this, and how"}],"bands":[{"x":0,"w":420,"label":"Origination","sub":"Mainframe processing"},{"x":420,"w":420,"label":"Transport","sub":"File transfer & monitoring"},{"x":840,"w":520,"label":"Integration","sub":"Validate · enrich · reconcile"},{"x":1360,"w":460,"label":"Data stores","sub":"TDS & FDS"},{"x":1820,"w":740,"label":"General ledger & access","sub":"SAP and the control layer"}],"nodes":[{"id":"nhp1","k":"source","kind":"Origination · z/OS","t":"UKRIS NHP1","s":"Premium, claims & reinsurance processing","x":60,"y":140,"desc":"UKRIS mainframe environment. Generates daily premium and claims files, monthly reinsurance premium, paid reinsurance claims and outstanding reinsurance claims files, and the monthly Sale of Claims dataset. Also referenced for application access, data processing, file transfers and backup monitoring.","owner":"Wipro ADM (application) / Kyndryl (mainframe infrastructure)","controls":["CO.C02","CM.C04","APD.C08"],"note":"Scope describes NHP1 as a processing environment; CM.C03 and CM.C04 describe NHP1 and NHP2 as test environments with NOR1 as Production. This contradiction must be resolved."},{"id":"nor1","k":"source","kind":"Origination · z/OS","t":"UKRIS NOR1","s":"Second mainframe environment","x":60,"y":330,"desc":"UKRIS mainframe environment referenced in data processing, reinsurance files and backup monitoring. Generates the NOR variants of every premium, claims and reinsurance file. NOR files may be small or unpopulated depending on processing activity.","owner":"Wipro ADM / Kyndryl","controls":["CO.C02","CM.C04"],"note":"NOR files may be small or unpopulated depending on processing activity — a nil file is not necessarily a failure, which complicates missing-file monitoring."},{"id":"db2","k":"store","kind":"Origination · Database","t":"DB2","s":"UKRIS database layer","x":60,"y":520,"desc":"Database technology supporting UKRIS. Human and service-account access at the database layer is administered by the Kyndryl DB2 Team, separately from Wipro UAM's administration of application and RACF access.","owner":"Kyndryl DB2 Team","controls":["APD.C02","APD.C03","APD.C05","APD.C08","APD.C09"]},{"id":"opc","k":"ctrl","kind":"Control · Scheduler","t":"OPC scheduler","s":"Job scheduling + error queue + User Document","x":60,"y":880,"desc":"UKRIS mainframe jobs are scheduled and monitored through OPC. Production scheduling access is restricted to authorised mainframe operations personnel. Each job carries a User Document identifying the owning application or support team, the action required on failure, the escalation route and — for critical jobs — the relevant subject-matter contact.","owner":"OPC / Mainframe Operations Team","controls":["CO.C02","APD.C08","APD.C09","CM.C07"],"tags":["CO.C02"]},{"id":"soc_job","k":"source","kind":"Origination · Batch job","t":"Sale of Claims job","s":"NHP1 job YAP20079 · SAPP02.GNO001.E(0)","x":60,"y":700,"desc":"The monthly Sale of Claims interface, usually generated at month end. Uses NHP1 job YAP20079 and dataset SAPP02.GNO001.E(0). Supported by AMS L2 Globalscape, Wipro ADM UKRIS Accounts Support and Wipro SAP Application Support.","owner":"Wipro ADM UKRIS Accounts Support","controls":["CO.C02","CO.C05"]},{"id":"ftp","k":"tool","kind":"Transport · FTP","t":"FTP transfer to SIL","s":"10 scheduled file interfaces","x":500,"y":150,"desc":"Premium, claims and reinsurance files are transferred by FTP from NHP1 and NOR1 to the SIL landing area. Daily for premium and claims; monthly at month end for reinsurance premium, paid reinsurance claims and outstanding reinsurance claims.","controls":["CO.C02","CO.C05"]},{"id":"sitescope","k":"ctrl","kind":"Control · Monitoring","t":"SiteScope","s":"File arrival vs SIL cut-off","x":500,"y":390,"desc":"Monitors the arrival of expected UKRIS files against the applicable SIL cut-off. Missing or late files are identified and followed up by Wipro with the relevant application-support team. Wipro follows up missing reinsurance files with ADM.","owner":"Wipro / operational support","controls":["CO.C02","CO.C05"],"tags":["CO.C02"]},{"id":"globalscape","k":"tool","kind":"Transport · MFT","t":"Globalscape","s":"FTPS in → SFTP out","x":500,"y":700,"desc":"Secure file-transfer platform. The Sale of Claims file is transferred by FTPS from NHP1 to Globalscape, then by SFTP from Globalscape to the SAP Production landing location. This route bypasses SIL and TDS entirely.","owner":"Globalscape / Wipro File-Transfer Support","controls":["CO.C02","CO.C05","APD.C08"]},{"id":"silland","k":"store","kind":"Integration · Landing","t":"SIL landing area","s":"Receives UKRIS files","x":900,"y":150,"desc":"The landing area where UKRIS premium, claims and reinsurance files arrive before SIL validation and enrichment.","owner":"SIL / FDS Operations and Support Teams"},{"id":"sil","k":"process","kind":"Integration · Core","t":"SIL — Single Integration Layer","s":"Validate · enrich · generate outputs","x":900,"y":350,"desc":"SIL validates and enriches UKRIS information and generates the outputs for TDS and SAP processing. Processing operates daily or monthly according to the source file. Reconciliation compares incoming UKRIS records and financial amounts with outgoing TDS and SAP information, including errors, recycled records, filtering and reconciliation identifiers. Reports and metrics are date-and-time stamped for audit purposes.","owner":"SIL / FDS Operations and Support Teams","controls":["CO.C02","CO.C05","CM.C09"],"note":"Detailed controls operated within SIL, TDS, FDS and SAP are documented in their own Control Narratives. They appear here only where required to explain a UKRIS interface, dependency or failure-management responsibility."},{"id":"silrecon","k":"ctrl","kind":"Control · Reconciliation","t":"SIL reconciliation & RID","s":"Record counts · financial totals · errors","x":900,"y":580,"desc":"The reconciliation considers incoming and outgoing record counts and financial totals, errors, recycled records, filtering and reconciliation identifiers. A Reconciliation Identifier (RID) is added during SIL processing to link detailed TDS transactions to the related SAP accounting transaction. Reports and metrics are date-and-time stamped.","controls":["CO.C02"],"tags":["RID"],"note":"Business-process and IT application controls over completeness and accuracy of premium, claims and reinsurance data are outside this ITGC narrative — they are addressed through business-process, interface or ITAC assessments."},{"id":"tds","k":"store","kind":"Data store","t":"TDS — Transaction Data Store","s":"Detailed premium, claims & reinsurance transactions","x":1410,"y":160,"desc":"Used in the downstream processing and reconciliation of UKRIS premium, claims and reinsurance information. Detailed TDS transactions are linked to the related SAP accounting transaction by the Reconciliation Identifier.","owner":"SIL / FDS Operations and Support Teams"},{"id":"fds","k":"store","kind":"Data store","t":"FDS — Finance Data Store","s":"Receives UKRIS financial information","x":1410,"y":360,"desc":"Finance Data Store receiving and processing UKRIS-related financial information through the downstream integration process.","owner":"SIL / FDS Operations and Support Teams"},{"id":"sap","k":"gl","kind":"Destination · GL","t":"SAP","s":"Downstream finance system & accounting","x":1880,"y":260,"desc":"Downstream finance system receiving accounting information derived from UKRIS data through the SIL and TDS processing chain, plus the monthly Sale of Claims file through Globalscape. This is where UKRIS transactions become accounting entries.","owner":"Wipro SAP Application Support","controls":["Downstream — see SAP Control Narrative"]},{"id":"saplanding","k":"store","kind":"Destination · Staging","t":"SAP Production landing location","s":"Sale of Claims staging","x":1410,"y":660,"desc":"The SAP staging location that receives the monthly UKRIS Sale of Claims file by SFTP from Globalscape, for downstream SAP processing.","owner":"Wipro SAP Application Support"},{"id":"finrep","k":"report","kind":"Reporting","t":"Financial reporting","s":"Premium, claims & reinsurance accounting","x":2300,"y":260,"desc":"UKRIS is financially relevant because its processing and data outputs contribute to the accounting of premium, claims and reinsurance transactions. Record counts, financial totals, error metrics and Reconciliation Identifiers support reconciliation between UKRIS source data, TDS records and SAP transactions.","controls":["All key controls"]},{"id":"snow","k":"tool","kind":"Tool · ITSM","t":"ServiceNow","s":"RITM access requests · incidents · changes","x":380,"y":1030,"desc":"The System Access Request Catalogue records UKRIS access requests as a ServiceNow RITM. ServiceNow also records incidents (including those auto-created from the OPC error queue) and the formal change-approval trail.","controls":["APD.C03","APD.C04","APD.C05","APD.C07","CM.C02","CM.C08","CO.C02","CO.C05"],"owner":"Change Enablement / Incident and Service Management Teams"},{"id":"uam","k":"ctrl","kind":"Control · Access","t":"Wipro UAM + LAMS + TSOT","s":"Copy ID check → RACF connections","x":700,"y":880,"desc":"Wipro UAM validates the approved Copy ID in LAMS to identify the RACF connections and update entitlements held by the reference user, then creates or amends UKRIS application access and RACF connections through the TSOT administration function. Update entitlements divert to the enhanced approval route.","owner":"Wipro UAM Team","controls":["APD.C02","APD.C03","APD.C04","APD.C05","APD.C11"],"tags":["APD.C03"]},{"id":"cyberark","k":"ctrl","kind":"Control · PAM","t":"CyberArk","s":"OPD + MFA → time-bound mainframe admin","x":2050,"y":880,"desc":"Authorised administrators authenticate using their OPD identity and MFA before launching a controlled mainframe administrative account. The privileged credential is managed within CyberArk and is not provided directly to the administrator. Privileged UKRIS Production access is provisioned for the approved duration and automatically revoked when it expires. The Wipro ADM Team reviews CyberArk logs for mainframe applications biannually.","owner":"CyberArk / PAM Team","controls":["APD.C08","APD.C09","APD.C10"],"tags":["APD.C08"]},{"id":"sailpoint","k":"tool","kind":"Tool · IGA","t":"SailPoint","s":"Certification only — does not remove access","x":1050,"y":1030,"desc":"Supports the common access review and records the access decision. SailPoint does NOT directly remove or modify the UKRIS application entitlement — required changes are routed through a related RITM to Wipro UAM or the Kyndryl DB2 Team.","owner":"IAM / SailPoint Team","controls":["APD.C06","APD.C07"],"note":"Certification and remediation are decoupled: a revoke decision in SailPoint does nothing until the related RITM is fulfilled. Remediation completeness must be tested separately from certification completeness."},{"id":"icmplc","k":"ctrl","kind":"Control · Change","t":"ICM → PLC promotion","s":"Wipro to Stage 3 · Kyndryl to Stage 4 + Prod","x":1400,"y":880,"desc":"Wipro develops and progresses the application element through ICM up to Stage 3, then provides Kyndryl with the approved change reference, affected system and subsystem, CCID and detailed implementation instructions. Kyndryl uses PLC to promote the approved element to Stage 4 and Production. Wipro cannot promote to Production; Kyndryl does not amend the source element.","owner":"Wipro ADM (development) / Kyndryl (promotion)","controls":["CM.C01","CM.C02","CM.C03","CM.C04","CM.C05","CM.C06","CM.C09"],"tags":["CM.C06"]}],"edges":[{"from":"nhp1","to":"ftp","k":"batch","l":"PREM daily | CLMS daily","detail":"UKRIS_TDS_PREM_NHP_*.txt and UKRIS_TDS_CLMS_NHP_*.txt generated daily."},{"from":"nhp1","to":"ftp","k":"batch","l":"REINS · RICP · RICO|monthly","detail":"UKRIS_TDS_REINS_NHP_*.txt (reinsurance premium, month end), UKRIS_TDS_RICP_NHP_*.txt (paid reinsurance claims), UKRIS_TDS_RICO_NHP_*.txt (outstanding reinsurance claims)."},{"from":"nor1","to":"ftp","k":"batch","l":"NOR variants|of all 5 file types","detail":"UKRIS_TDS_PREM_NOR_*.txt, CLMS_NOR, REINS_NOR, RICP_NOR, RICO_NOR. NOR files may be small or unpopulated depending on processing activity."},{"from":"db2","to":"nor1","k":"api","l":"Database layer|underpins both"},{"from":"opc","to":"snow","k":"api","l":"Failed job →|auto incident","detail":"Failure appears in the OPC error queue, an alert is generated and a ServiceNow incident is automatically created and assigned to System Operations."},{"from":"ftp","to":"silland","k":"batch","l":"FTP"},{"from":"sitescope","to":"ftp","k":"manual","l":"Monitors arrival|vs SIL cut-off"},{"from":"silland","to":"sil","k":"batch","l":"Files received"},{"from":"sil","to":"silrecon","k":"batch","l":"Counts · totals|errors · recycled"},{"from":"sil","to":"tds","k":"batch","l":"SIFF premium|CIFF claims","detail":"Single Interface File Format for premium and reinsurance; Claim Interface File Format for claims."},{"from":"sil","to":"fds","k":"batch","l":"Financial|information"},{"from":"silrecon","to":"tds","k":"api","l":"RID attached","detail":"Reconciliation Identifier links detailed TDS transactions to the related SAP accounting transaction."},{"from":"tds","to":"sap","k":"batch","l":"Validated &|enriched transactions"},{"from":"fds","to":"sap","k":"batch","l":"Finance data"},{"from":"sil","to":"sap","k":"batch","l":"SAP outputs"},{"from":"sap","to":"finrep","k":"batch","l":"Accounting|entries"},{"from":"soc_job","to":"globalscape","k":"batch","l":"FTPS","detail":"NHP1 job YAP20079, dataset SAPP02.GNO001.E(0), usually generated at month end."},{"from":"globalscape","to":"saplanding","k":"batch","l":"SFTP monthly","detail":"Sale of Claims file transferred to the SAP Production landing location for downstream SAP processing."},{"from":"saplanding","to":"sap","k":"batch","l":"Loaded into SAP"},{"from":"snow","to":"uam","k":"manual","l":"Approved RITM|+ Copy ID"},{"from":"sailpoint","to":"snow","k":"manual","l":"Revoke decision|→ RITM"},{"from":"snow","to":"icmplc","k":"manual","l":"Approved change|+ CCID"},{"from":"cyberark","to":"icmplc","k":"api","l":"Time-bound privileged|access for Production"}],"notes":["The complete Development, Test, UAT and Production environment structure and the purpose of each environment remain to be confirmed. Scope describes NHP1 and NOR1 as processing environments while CM.C03 and CM.C04 describe NHP1 and NHP2 as test with NOR1 as Production.","The complete Production interface inventory is not yet validated — file ownership, schedule, expected arrival time, transfer protocol, file sequence, header and trailer controls, record-count and financial-total checks, late or missing-file escalation, rejection handling, rerun or retransmission and reconciliation ownership all remain open.","NOR files may be small or unpopulated depending on processing activity, which makes a nil file indistinguishable from a missing file without an expected-volume baseline.","The complete geographical distribution of UKRIS users, including any users operating from India, Europe or other locations, remains to be confirmed.","Detailed validation and reconciliation of UKRIS data processed through SIL, TDS, FDS and SAP is outside this ITGC narrative and is addressed through business-process, interface or IT Application Control assessments."],"tableTitle":"Interface and processing register as documented","table":[["System Access Request Catalogue","UKRIS access request submitted through the catalogue and recorded as a ServiceNow RITM. Standard access requires Line Manager approval. Update or elevated access is subject to additional approval and Special Access Request requirements.","Wipro UAM / Kyndryl DB2 Team","Provides the approved instruction for account creation, modification or removal. Wipro UAM administers application and RACF access; the Kyndryl DB2 Team administers database human and service accounts."],["Approved ServiceNow RITM and Copy ID","Wipro UAM uses the approved Copy ID as the reference for selecting the required RACF connections and UKRIS application access. A change to the approved Copy ID requires a new approved RITM.","UKRIS application and RACF access on z/OS v2.5","Establishes or amends UKRIS access in accordance with the approved reference account and requested access. UKRIS does not use corporate SSO and follows the RACF-based mainframe authentication model."],["Approved privileged-access request","Authorised administrators launch controlled mainframe administrative IDs through CyberArk. Privileged Production access is provisioned for the approved duration and automatically revoked when it expires.","UKRIS Production access on NHP1 and NOR1","Provides time-bound privileged access for authorised mainframe administration. CyberArk activity relating to mainframe applications is reviewed by the Wipro ADM Team."],["SailPoint common access-recertification process","SailPoint supports the common access review and records the access decision. It does not directly remove or modify the UKRIS application entitlement — required changes are routed through the related RITM.","Wipro UAM or Kyndryl DB2 Team","Communicates approved retain, modify or revoke decisions for implementation. The responsible application or database access team completes the required UKRIS or DB2 remediation through the RITM."],["UKRIS NHP1","Daily premium transactions generated as UKRIS_TDS_PREM_NHP_*.txt and transferred by FTP to the SIL landing area. SiteScope monitors file arrival against the SIL cut-off. File-generation failures are raised to UKRIS application support.","SIL landing area, then TDS and SAP","Provides daily NHP1 premium transactions for SIL validation and enrichment and subsequent TDS and SAP financial processing."],["UKRIS NOR1","Daily premium transactions generated as UKRIS_TDS_PREM_NOR_*.txt and transferred by FTP to the SIL landing area. SiteScope monitors arrival. NOR files may be small or unpopulated depending on processing activity.","SIL landing area, then TDS and SAP","Provides daily NOR1 premium transactions for SIL validation and enrichment and subsequent TDS and SAP financial processing."],["UKRIS NHP1","Daily claims transactions generated as UKRIS_TDS_CLMS_NHP_*.txt and transferred by FTP. SIL and TDS processing monitor file receipt, validation and downstream completion. Failures are routed through the incident process.","SIL and downstream TDS processing","Provides daily NHP1 claims transactions for validation, transformation and downstream financial processing."],["UKRIS NOR1","Daily claims transactions generated as UKRIS_TDS_CLMS_NOR_*.txt and transferred by FTP. SIL and TDS processing monitor file receipt, validation and downstream completion.","SIL and downstream TDS processing","Provides daily NOR1 claims transactions for validation, transformation and downstream financial processing."],["UKRIS NHP1","Reinsurance premium data generated monthly at month end as UKRIS_TDS_REINS_NHP_*.txt and transferred by FTP to the SIL landing area. SiteScope monitors arrival against the SIL cut-off. Wipro follows up missing files with ADM.","SIL landing area, then TDS and SAP","Provides monthly NHP1 reinsurance premium transactions for SIL validation and enrichment and subsequent TDS and SAP financial processing."],["UKRIS NOR1","Reinsurance premium data generated monthly at month end as UKRIS_TDS_REINS_NOR_*.txt and transferred by FTP to the SIL landing area. SiteScope monitors arrival.","SIL landing area, then TDS and SAP","Provides monthly NOR1 reinsurance premium transactions for SIL validation and enrichment and subsequent TDS and SAP financial processing."],["UKRIS NHP1 and NOR1","Paid reinsurance claims generated monthly as UKRIS_TDS_RICP_NHP_*.txt and UKRIS_TDS_RICP_NOR_*.txt and transferred by FTP. Arrival and downstream processing monitored through SIL and operational-support processes.","SIL and downstream TDS processing","Provides monthly paid reinsurance claims from both mainframe environments for validation, transformation and downstream financial processing."],["UKRIS NHP1 and NOR1","Outstanding reinsurance claims generated monthly as UKRIS_TDS_RICO_NHP_*.txt and UKRIS_TDS_RICO_NOR_*.txt and transferred by FTP. Arrival and downstream processing monitored through SIL and operational-support processes.","SIL and downstream TDS processing","Provides monthly outstanding reinsurance claims from both mainframe environments for validation, transformation and downstream financial processing."],["UKRIS premium, claims and reinsurance files received in SIL","SIL validates and enriches UKRIS data and generates downstream outputs. Processing operates daily or monthly according to the source file. Reconciliation compares incoming UKRIS records and financial amounts with outgoing TDS and SAP information, including errors, recycled records, filtering and reconciliation identifiers. Reports and metrics are date-and-time stamped.","TDS and SAP","Produces validated and enriched premium, claims and reinsurance transactions for downstream financial processing. The reconciliation supports traceability between incoming UKRIS information and outgoing TDS and SAP outputs."],["UKRIS NHP1 job YAP20079 and dataset SAPP02.GNO001.E(0)","The monthly Sale of Claims file, usually generated at month end, is transferred by FTPS from NHP1 to Globalscape and subsequently by SFTP from Globalscape to the SAP Production landing location. Supported by AMS L2 Globalscape, Wipro ADM UKRIS Accounts Support and Wipro SAP Application Support.","SAP Production landing location","Transfers the monthly Sale of Claims file to the SAP staging location for downstream SAP processing."],["SiteScope monitoring","SiteScope monitors the arrival of UKRIS files against the applicable SIL cut-off. Missing or late files are identified and followed up by Wipro with the relevant application-support team.","Wipro and relevant UKRIS, SIL or downstream support team","Supports timely identification and escalation of missing or late premium, claims and reinsurance files."],["UKRIS, mainframe, database, file-transfer or downstream processing failure","The operational failure is recorded through ServiceNow and assigned to the relevant UKRIS, mainframe, DB2, file-transfer or downstream support team. Investigation and resolution are performed by the team responsible for the affected processing stage.","Responsible application or infrastructure support team","Supports investigation, escalation and resolution of failures affecting UKRIS processing, file generation, transfer, SIL validation or downstream completion."]],"home":[[60,140],[60,330],[60,520],[60,880],[60,700],[500,150],[500,390],[500,700],[900,150],[900,350],[900,580],[1410,160],[1410,360],[1880,260],[1410,660],[2300,260],[380,1030],[700,880],[2050,880],[1050,1030],[1400,880]]},"domains":[{"code":"APD","short":"APD","name":"Access to Programs and Data","intro":"UKRIS follows the common APD framework, but fulfilment is split across three separate technology layers: Wipro UAM administers application and RACF access, the Kyndryl DB2 Team administers database access, and privileged mainframe access runs through CyberArk. Requests are recorded in ServiceNow; account creation and modification use an approved Copy ID as the technical reference, checked in LAMS before fulfilment, with an enhanced approval route wherever update entitlements are identified.","summary":[{"lab":"Controls","val":"12","note":"11 key, 1 non-key"},{"lab":"Operating","val":"6","tone":"ok","note":"C01–C05 plus C08"},{"lab":"Design gaps","val":"4","tone":"amber","note":"C06, C07, C09, C10"},{"lab":"Not performed","val":"2","tone":"red","note":"C11, C12"}],"outro":"The provisioning chain itself is strong — approved RITM, Copy ID, LAMS validation and an enhanced route for update access is a well-designed control. The weaknesses are around it: review frequencies recorded as TBC (C06, C07), privileged-activity monitoring that covers only CyberArk-routed sessions and not RACF, DB2 or OPC activity (C09), undocumented password configurations (C10), and no SoD conflict definition at all (C11, C12).","controls":[{"id":"APD.C01","name":"AM Policies & Procedures","key":false,"status":"ok","freq":"Annual","objective":"To confirm that access management policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Intact Business / Application Oversight","Wipro UAM Team","Kyndryl DB2 Team"],"systems":["UKRIS ID Creation procedure v1.3","RACF ID Creation procedure","Common APD CN"],"railLabel":"The documented procedure stack","steps":[{"actor":"Enterprise layer","text":"UKRIS follows the enterprise Access Management Policy and common APD procedures.","sys":"Common APD CN"},{"actor":"Application procedure","text":"The UKRIS ID Creation and Linking of Secondary IDs procedure covers creation of UKRIS IDs and linking of secondary IDs, Copy ID validation, standard and update access, ServiceNow request requirements and Wipro UAM responsibilities.","sys":"v1.3 · 24 Jan 2025"},{"actor":"RACF procedure","text":"The RACF ID Creation procedure defines the additional checks and approval route applied where the requested access — or the access held by the approved Copy ID — includes update entitlements.","sys":"RACF ID Creation","type":"dec"},{"actor":"Version control","text":"The UKRIS procedure is maintained as version 1.3 dated 24 January 2025 and records its review and approval history. It was updated to reflect the requirement for a Special Access Request where update access requires additional approval.","sys":"Review history recorded","type":"out"},{"actor":"Separate layers","text":"Database-access administration is performed separately by the Kyndryl DB2 Team. Privileged mainframe access follows the common CyberArk and PAM framework.","sys":"DB2 · CyberArk"}],"exception":"NA","limits":[],"evidence":["UKRIS ID Creation and Linking of Secondary IDs procedure, version 1.3 dated 24 January 2025","RACF ID Creation procedure","Applicable enterprise Access Management Policy and common APD procedures"],"future":"NA","tod":"Validate the approved enterprise APD policy and UKRIS access procedures — document ownership, approval, effective date, version history, review cycle, authoritative repository, evidence-retention requirements and alignment with the current Wipro UAM and Kyndryl DB2 operating model."},{"id":"APD.C02","name":"User Profile / Roles Management","key":true,"status":"ok","freq":"Ad-hoc","objective":"To ensure that user access is granted, modified, and revoked in alignment with role-based access principles and organizational policies, minimizing unauthorized access risks.","roles":["Wipro UAM Team","Kyndryl DB2 Team","Line Manager"],"systems":["UKRIS application entitlements","RACF","LAMS","DB2","ServiceNow"],"railLabel":"How a UKRIS profile is assembled","steps":[{"actor":"Access structure","text":"UKRIS access is structured through application entitlements, RACF groups and connections, update-access definitions, secondary IDs and DB2 access profiles.","sys":"5 access constructs"},{"actor":"ServiceNow request","text":"The approved request identifies the access required and the Copy ID to be used as the reference for configuring the user's application and RACF access.","sys":"ServiceNow RITM"},{"actor":"Wipro UAM","text":"Checks the approved Copy ID in LAMS to identify the RACF connections and update entitlements held by the reference user.","sys":"LAMS validation","type":"dec"},{"actor":"Wipro UAM","text":"Where the Copy ID does NOT contain update access, proceeds with the approved standard-access request.","sys":"Standard route"},{"actor":"Wipro UAM","text":"Where update access IS identified, validates the requirement and directs the request through the enhanced approval route before fulfilment.","sys":"Enhanced approval","type":"dec"},{"actor":"Kyndryl DB2 Team","text":"Separately administers UKRIS database profiles where DB2 access is included within the approved request.","sys":"DB2 profiles"},{"actor":"Boundary","text":"The Copy ID provides the technical reference only. It does not replace the documented business justification, Line Manager approval, or assessment of whether the requested access is appropriate to the user.","sys":"Copy ID ≠ authorisation","type":"out"}],"exception":"Where the approved Copy ID includes update access, the request is subject to the applicable enhanced approval route before fulfilment.","limits":[],"future":"NA","tod":"Validate the available application roles, RACF groups, update entitlements, secondary-ID relationships, DB2 profiles and service-account access — including profile ownership, Copy ID selection, LAMS validation, least-privilege assessment, sensitive-access identification and review of copied access before fulfilment."},{"id":"APD.C03","name":"Access Provisioning / Joiners","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that access creation of user accounts is in line with user's roles and responsibilities.","roles":["Line Manager","Wipro UAM Team","Wipro Compliance Manager / Privileged-Access Approvers","Kyndryl DB2 Team"],"systems":["System Access Request Catalogue","ServiceNow RITM","LAMS","TSOT","RACF","DB2"],"railLabel":"Joiner journey — catalogue request to working mainframe access","steps":[{"actor":"Requestor","text":"Access is submitted through the System Access Request Catalogue and recorded as a ServiceNow RITM.","sys":"System Access Request Catalogue"},{"actor":"Request record","text":"The request identifies the user, the business requirement, the required access and the approved Copy ID.","sys":"4 mandatory fields"},{"actor":"Line Manager","text":"Approves the request. Standard access requires Line Manager approval.","sys":"ServiceNow approval","type":"dec"},{"actor":"Wipro UAM","text":"Before provisioning, checks the approved Copy ID in LAMS to identify the RACF connections and update entitlements associated with the reference account.","sys":"LAMS check","type":"dec"},{"actor":"Wipro UAM","text":"Where the Copy ID does not contain update access, creates the UKRIS ID and assigns the approved application access and RACF connections through the authorised administration process.","sys":"TSOT · RACF"},{"actor":"Wipro UAM","text":"Links any approved secondary IDs and assigns the approved UKRIS application and RACF access.","sys":"Secondary ID linkage","type":"out"},{"actor":"Kyndryl DB2 Team","text":"Where the request includes database access, separately creates the approved DB2 account or profile.","sys":"DB2 account","type":"out"}],"altLabel":"Enhanced approval route where update access is required","altSteps":[{"actor":"Wipro UAM","text":"Identifies that the requested access, or the Copy ID's access, includes update entitlements.","sys":"LAMS check","type":"dec"},{"actor":"Wipro user","text":"The applicable Wipro and Intact approvals are obtained and attached to a Special Access Request (SAR).","sys":"SAR"},{"actor":"Non-Wipro user","text":"The applicable System Access Request for update-entitlement access is submitted instead.","sys":"System Access Request"},{"actor":"Wipro UAM","text":"Provisions the update entitlement ONLY after the required approval route has been completed.","sys":"Blocked until approved","type":"stop"}],"exception":"Update access follows an enhanced approval route. Wipro users require the applicable Wipro and Intact approvals and a Special Access Request; non-Wipro users submit the applicable System Access Request for update-entitlement access.","limits":[],"future":"NA","tod":"Review selected provisioning requests to validate the business requirement, Line Manager approval, Copy ID, LAMS check, enhanced approval or SAR where applicable, UKRIS and RACF fulfilment, secondary-ID linkage, DB2 fulfilment, fulfiller identity, completion date and agreement of the implemented access to the approved request."},{"id":"APD.C04","name":"Access Modification / Movers","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that access modifications to user accounts is in line with changes to user's roles and responsibilities.","roles":["Line Manager","Wipro UAM Team","Wipro Compliance Manager / Privileged-Access Approvers","Kyndryl DB2 Team"],"systems":["ServiceNow","LAMS","RACF","DB2"],"railLabel":"Mover journey across all access layers","steps":[{"actor":"Trigger","text":"A change to the user's role, responsibilities or access requirements.","sys":"Role / responsibility change"},{"actor":"Requestor","text":"Submitted through the approved access-request process and recorded in ServiceNow.","sys":"ServiceNow RITM"},{"actor":"Scope of change","text":"A modification may affect UKRIS application access, RACF connections, update entitlements, secondary IDs and DB2 access.","sys":"5 possible layers"},{"actor":"Line Manager","text":"The request identifies the access to be added, amended or removed and includes Line Manager approval.","sys":"ServiceNow approval","type":"dec"},{"actor":"Wipro UAM","text":"Checks the approved Copy ID in LAMS and determines whether the requested access includes update entitlements requiring the enhanced approval route.","sys":"LAMS check","type":"dec"},{"actor":"Wipro UAM","text":"Following approvals, updates the user's UKRIS application access and RACF connections. Access no longer appropriate to the revised duties is removed as part of the modification.","sys":"TSOT · RACF"},{"actor":"Kyndryl DB2 Team","text":"Where the modification affects database access, completes the corresponding DB2 change.","sys":"DB2","type":"out"}],"exception":"Modifications involving update entitlements follow the applicable enhanced approval route. A change to the approved Copy ID requires an updated access request before implementation, so the revised access can be reassessed.","limits":[],"future":"NA","tod":"Review selected mover and modification requests to validate the lifecycle trigger, existing and revised access, Line Manager approval, Copy ID and LAMS checks, enhanced approval where required, removal of inappropriate access, UKRIS and RACF updates, DB2 updates, fulfiller identity and completion evidence."},{"id":"APD.C05","name":"Access Deprovisioning / Leavers","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm access right revocation is performed on a timely basis upon the user's last working day.","roles":["Wipro UAM Team","Kyndryl DB2 Team","IAM / SailPoint Team","Line Manager"],"systems":["ServiceNow","RACF","DB2"],"railLabel":"Leaver journey — removal across three layers","steps":[{"actor":"Trigger","text":"Removal is initiated through the applicable lifecycle notification, access-removal request or access-review decision, and recorded through ServiceNow.","sys":"ServiceNow"},{"actor":"Wipro UAM","text":"Removes or disables the user's UKRIS application access, linked secondary IDs and RACF connections assigned through the application-access process.","sys":"Application · secondary IDs · RACF"},{"actor":"Kyndryl DB2 Team","text":"Where the individual holds UKRIS database access, removes the corresponding DB2 account or permissions.","sys":"DB2"},{"actor":"Fulfilment team","text":"Updates the assigned request after completing the removal activity.","sys":"ServiceNow update"},{"actor":"Critical principle","text":"Closure of a corporate identity, or of one technical account, does NOT by itself evidence removal of all UKRIS-related access. Removal must be addressed across application, RACF and DB2 layers according to the access held.","sys":"3-layer removal required","type":"stop"}],"altLabel":"Where the leaver owns a service account","altSteps":[{"actor":"Identification","text":"The departing user owns or supports a service account.","sys":"Service-account register","type":"dec"},{"actor":"Service-account process","text":"The required ownership transfer is completed through the applicable service-account process BEFORE the individual's responsibilities cease.","sys":"Ownership transfer","type":"out"}],"exception":"Where a departing user owns or supports a service account, the required ownership transfer is completed through the applicable service-account process before the individual's responsibilities cease.","limits":[],"future":"NA","tod":"Review selected leaver and access-removal records to validate the authoritative trigger, ServiceNow request, UKRIS and RACF removal, linked secondary-ID treatment, DB2 removal, service-account ownership transfer, fulfiller identity, removal timing, delayed or failed removals, escalation, remediation and closure."},{"id":"APD.C06","name":"Periodic Review of Terminated and Transferred Users","key":true,"status":"part","freq":"TBC","objective":"To confirm that access to non-SSO in-scope financially relevant systems is periodically reviewed to ensure that all terminated or transferred users have their access disabled.","roles":["Wipro UAM Team","Kyndryl DB2 Team","IAM / SailPoint Team","Line Manager"],"systems":["ServiceNow","RACF","DB2","SailPoint"],"railLabel":"How terminated and transferred users are addressed","steps":[{"actor":"Leaver path","text":"Where a user leaves the organisation, the lifecycle process initiates removal of access assigned to the individual.","sys":"Lifecycle process"},{"actor":"Wipro UAM","text":"Removes or disables UKRIS application access, RACF connections and linked secondary IDs.","sys":"Application · RACF · secondary IDs"},{"actor":"Kyndryl DB2 Team","text":"Removes database-level access where applicable.","sys":"DB2"},{"actor":"Transfer path","text":"Where a user transfers role or changes responsibilities, the continuing requirement for UKRIS access is reassessed — reconsidering the approved Copy ID, RACF connections, update entitlements and DB2 access.","sys":"4 reconsidered elements","type":"dec"},{"actor":"Wipro UAM / Kyndryl","text":"Access no longer appropriate to the revised responsibilities is removed through the relevant ServiceNow fulfilment request.","sys":"ServiceNow RITM"},{"actor":"Scope of review","text":"The review considers residual access across the UKRIS application, RACF, linked secondary IDs and DB2. It does not rely solely on the status of the user's corporate identity.","sys":"Residual access across 4 layers","type":"out"}],"exception":"NA","limits":["The specific review frequency is not confirmed in the current UKRIS narrative.","The authoritative population for the review is not confirmed.","Inactivity criteria are not confirmed and remain subject to TOD validation."],"future":"NA","tod":"Validate the terminated, transferred and inactive-user populations — authoritative source, population completeness and accuracy, review frequency, reviewer responsibility, inactivity criteria, residual UKRIS, RACF, secondary-ID and DB2 access, identified exceptions, remediation and closure evidence."},{"id":"APD.C07","name":"User Access Reviews","key":true,"status":"part","freq":"TBC","objective":"To confirm underlying access of users is authorized.","roles":["IAM / SailPoint Team","Assigned Access Reviewers","Line Managers","Wipro UAM Team","Kyndryl DB2 Team","Intact Business / Application Oversight"],"systems":["SailPoint","ServiceNow RITM","RACF","DB2"],"railLabel":"Certification cycle — and why certification alone is not enough","steps":[{"actor":"IAM / SailPoint Team","text":"UKRIS is included within the common access-recertification framework. The UKRIS user and entitlement population is presented to assigned reviewers.","sys":"SailPoint campaign"},{"actor":"Population check","text":"Application-level aggregation, record-count and reconciliation checks support the completeness and accuracy of the population before the review is launched.","sys":"Aggregation + record count","type":"dec"},{"actor":"Reviewer assignment","text":"Internal employee reviews use the relevant manager information. Third-party and other user populations are assigned to the designated reviewer configured for the population.","sys":"2 assignment rules","type":"dec"},{"actor":"Reviewers","text":"Record whether access should be retained, modified or removed.","sys":"Retain / modify / remove"},{"actor":"The decoupling","text":"SailPoint supports certification but does NOT directly modify UKRIS, RACF or DB2 access. Access identified for remediation is routed through a ServiceNow RITM.","sys":"Decision ≠ removal","type":"stop"},{"actor":"Wipro UAM / Kyndryl DB2","text":"The responsible team implements the required change through the related RITM, according to whether the decision affects application access, RACF connections or DB2 access.","sys":"RITM fulfilment","type":"out"}],"exception":"Third-party and other user populations are assigned to the designated reviewer configured for the relevant population rather than relying on the internal employee manager assignment.","limits":["The review frequency is not confirmed in the current UKRIS narrative.","The precise inclusion of update access, privileged access, service accounts and high-risk access within the review population is not confirmed and remains subject to validation.","Certification and remediation are decoupled — a revoke decision has no effect until the related RITM is fulfilled, so remediation completeness must be tested separately."],"future":"NA","tod":"Validate the review frequency, source population, completeness and accuracy, reviewer assignment, UKRIS, RACF and DB2 coverage, inclusion of update, privileged, service-account and high-risk access, review decisions, remediation RITMs, removal evidence, four-week remediation requirement, overdue escalation, exception closure and final certification sign-off."},{"id":"APD.C08","name":"Privileged Accounts Access Management","key":true,"status":"ok","freq":"Ad-hoc","objective":"To confirm no unauthorized and inappropriate user has administrator access in the system.","roles":["CyberArk / PAM Team","Wipro Compliance Manager / Privileged-Access Approvers","Wipro UAM Team","Kyndryl DB2 Team","OPC / Mainframe Operations Team","IAM / SailPoint Team"],"systems":["CyberArk","RACF","DB2","OPC","SailPoint"],"railLabel":"Privileged access — request to automatic revocation","steps":[{"actor":"Population","text":"UKRIS privileged access includes elevated application, RACF, DB2, OPC and mainframe operational access required to administer or support the application and its supporting technology.","sys":"5 privileged layers"},{"actor":"Approval","text":"Privileged Production access for Wipro personnel follows the applicable special-access and compliance-approval process.","sys":"Special access + compliance approval","type":"dec"},{"actor":"Administrator","text":"Authenticates to CyberArk using their OPD identity and the applicable MFA requirements before launching a controlled mainframe administrative account.","sys":"OPD + MFA"},{"actor":"CyberArk","text":"The privileged credential is managed within CyberArk rather than being provided directly to the administrator.","sys":"Credential vaulted","type":"dec"},{"actor":"Time-bound","text":"Approved access is provisioned for a defined duration and AUTOMATICALLY revoked when the approved access period expires.","sys":"Auto-revocation","type":"out"},{"actor":"Kyndryl DB2 Team","text":"Manages privileged database access within its assigned responsibilities.","sys":"DB2 privileged"},{"actor":"Service accounts","text":"Wipro UAM or the Kyndryl DB2 Team administers service accounts according to whether the account operates at application, RACF or database layer. Mainframe service accounts are generally operated as non-interactive accounts.","sys":"Non-interactive","type":"out"}],"exception":"Privileged Production access for Wipro personnel follows the applicable special-access and compliance-approval process. Access is provisioned for the approved duration and automatically revoked when that period expires.","limits":[],"future":"NA","tod":"Validate the complete application, RACF, DB2, OPC and service-account privileged populations — role capability, account ownership, business justification, approval, CyberArk coverage, MFA, access duration, automatic revocation, periodic review, interactive-logon restrictions, password management, temporary or emergency access and removal evidence."},{"id":"APD.C09","name":"Privileged and Sensitive Activities Monitoring","key":true,"status":"part","freq":"Semi-annual","objective":"To confirm that elevated privileged accounts are not misused.","roles":["Wipro Application / ADM Team","CyberArk / PAM Team","Kyndryl DB2 Team","OPC / Mainframe Operations Team"],"systems":["CyberArk logs"],"railLabel":"What is monitored — and what is not","steps":[{"actor":"CyberArk","text":"Records privileged-account usage and session activity where configured.","sys":"Session recording"},{"actor":"Wipro ADM Team","text":"Performs a biannual review of CyberArk logs for mainframe applications.","sys":"Biannual review","type":"dec"},{"actor":"Wipro ADM Team","text":"Follows up discrepancies identified through the review. Corrective action is taken where inappropriate or unexplained activity is identified.","sys":"Discrepancy follow-up"},{"actor":"The coverage gap","text":"The wider privileged-activity population also includes activity performed through UKRIS application-administration access, RACF privileges, DB2 administrative access and OPC scheduler access.","sys":"4 uncovered layers","type":"stop"},{"actor":"Distributed evidence","text":"The relevant Wipro, Kyndryl or PAM process retains review evidence and corrective actions for the technology layer under its responsibility — no single consolidated view exists.","sys":"Fragmented ownership","type":"stop"}],"exception":"NA","limits":["CyberArk monitoring covers privileged sessions routed through CyberArk but does not by itself demonstrate complete monitoring across all UKRIS application-administration, RACF, DB2 and OPC privileged activity.","The completeness of the overall privileged-activity population, and coverage across each supporting technology layer, are not confirmed within the current UKRIS narrative.","Any privileged activity performed outside a CyberArk-brokered session would not be captured by the biannual review."],"future":"NA","tod":"Validate the complete privileged-activity population and monitoring coverage — CyberArk session records, UKRIS application administration, RACF, DB2 and OPC activity, review frequency, reviewer, population completeness, discrepancies, investigation, remediation, bypass activity, access to monitoring configurations and evidence retention. Any privileged activity not covered by an operating monitoring control will be assessed through the SOX gap assessment."},{"id":"APD.C10","name":"Access Authentication","key":true,"status":"part","freq":"Annual","objective":"To confirm that password complexity and account management practices, including the handling of default user accounts, comply with the organization's security policy.","roles":["Wipro UAM Team","Kyndryl DB2 Team","CyberArk / PAM Team"],"systems":["RACF","DB2","CyberArk","MFA"],"railLabel":"Two authentication paths","steps":[{"actor":"Standard users","text":"UKRIS operates on the mainframe and does not use corporate Single Sign-On. Standard users authenticate through the applicable mainframe and RACF authentication process.","sys":"RACF · no SSO"},{"actor":"Privileged administrators","text":"Authenticate to CyberArk using their OPD identity and MFA before launching a controlled mainframe administrative account.","sys":"OPD + MFA","type":"dec"},{"actor":"CyberArk","text":"The privileged credential is managed within CyberArk and is not directly provided to the administrator.","sys":"Credential vaulted","type":"out"},{"actor":"DB2 & service accounts","text":"Authentication for DB2 and service accounts is administered within the relevant database or technical process.","sys":"DB2 / technical process"},{"actor":"Configuration changes","text":"Changes to authentication settings follow the applicable controlled access or Change Management route.","sys":"CM.C07 route"}],"exception":"Privileged administrators authenticate through CyberArk using their OPD identity and MFA before launching a controlled mainframe administrative account. The privileged credential is managed within CyberArk and is not provided directly to the administrator.","limits":["The detailed RACF and DB2 password length, complexity, history, expiry, lockout and reset configurations are not confirmed in the current narrative.","Service-account authentication arrangements and credential ownership remain subject to validation.","Approved exceptions and the periodic authentication-configuration review are not evidenced."],"future":"NA","tod":"Validate the RACF and DB2 password length, complexity, history, expiry, lockout and reset configurations, together with CyberArk and MFA enforcement, service-account authentication, credential ownership, authorised configuration access, approved exceptions and periodic configuration review."},{"id":"APD.C11","name":"Segregation of Duties — periodic detective checks","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not performed as a separate UKRIS control","objective":"To confirm segregation of duties violations are identified periodically.","roles":[],"systems":["LAMS","RACF","DB2","OPC","CyberArk"],"railLabel":"Separation that exists — and the review that does not","steps":[{"actor":"Pre-provisioning check","text":"Before access is provisioned or modified, Wipro UAM reviews the approved Copy ID in LAMS to identify the access and update entitlements assigned to the reference user.","sys":"LAMS"},{"actor":"Enhanced approval","text":"Where update access is identified, the request follows the enhanced approval route before fulfilment. This provides additional review over elevated access.","sys":"SAR route","type":"dec"},{"actor":"Layer separation","text":"Wipro UAM administers application and RACF access; the Kyndryl DB2 Team administers database access; privileged mainframe activity runs through CyberArk; OPC access is administered through the mainframe operational process.","sys":"4 separated layers"},{"actor":"What is missing","text":"These arrangements separate fulfilment and technology responsibilities. They do not constitute a periodic review of the complete population of incompatible access combinations across application, RACF, DB2, OPC and privileged access.","sys":"No conflict population","type":"stop"},{"actor":"Not established","text":"A separate periodic UKRIS control that identifies and reviews the complete SoD-conflict population is not established within the current process documentation.","sys":"No operating control","type":"stop"}],"exception":"NA","limits":["A formal periodic detective review of the complete UKRIS SoD-conflict population is not currently established.","Existing Copy ID checks, LAMS validation, enhanced approval, recertification and division of technology responsibilities do not constitute a comprehensive review against formally defined incompatible or sensitive-access combinations."],"future":"NA","tod":"Validate the existence of formally defined incompatible and sensitive-access combinations, including conflicts across standard, update, privileged, RACF, DB2, OPC and service-account access. Assess the conflict population, review method, reviewer, frequency, identified conflicts, mitigation approval, remediation, risk acceptance and retained evidence."},{"id":"APD.C12","name":"Segregation of Duties Ruleset Review","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm that the appropriateness of the Segregation of duties ruleset is periodically confirmed by management / information owners.","roles":[],"systems":["UKRIS entitlements","RACF","DB2","OPC"],"railLabel":"The access model in place of a ruleset","steps":[{"actor":"Access structure","text":"UKRIS access is structured through application entitlements, RACF groups and connections, update-access definitions, linked secondary IDs, DB2 profiles, OPC access and privileged-access groups.","sys":"7 access constructs"},{"actor":"Existing checks","text":"Copy ID and LAMS checks identify the access held by the selected reference user before access is provisioned or amended. Update entitlements are separately identified and follow the enhanced approval route.","sys":"Copy ID · LAMS · SAR"},{"actor":"Change route","text":"Changes to entitlements, RACF groups, DB2 permissions, OPC access or privileged-access arrangements follow the applicable Access Management or Change Management process.","sys":"APD / CM route"},{"actor":"What is missing","text":"A separate UKRIS SoD and Sensitive Access ruleset containing formally defined incompatible combinations, documented ownership, approval and a periodic review process is not established.","sys":"No ruleset","type":"stop"},{"actor":"Important caveat","text":"The existing application role, RACF, DB2 and privileged-access structures do NOT constitute a formal SoD ruleset unless the corresponding incompatibility definitions and governance requirements are evidenced — they should not be presented as one.","sys":"Structure ≠ ruleset","type":"stop"}],"exception":"NA","limits":["No formally defined incompatible-access combinations.","No sensitive-access definitions.","No documented ruleset ownership and approval.","No defined review frequency.","No controlled ruleset maintenance and change history."],"future":"NA","tod":"Validate the UKRIS access model — application entitlements, RACF groups, update-access definitions, linked secondary IDs, DB2 profiles, OPC access, privileged and service-account definitions, incompatible-access criteria, ruleset ownership, approval, review frequency, change history, testing and controlled maintenance. Any confirmed ruleset-design deficiency will be recorded through the SOX gap assessment."}]},{"code":"CM","short":"Change","name":"Change Management","intro":"UKRIS follows the enterprise Change Management framework and common ServiceNow workflow. The defining feature is the enforced split between two providers: Wipro develops and progresses approved application changes through ICM up to Stage 3, then hands Kyndryl the change reference, system, subsystem, CCID and promotion instructions. Kyndryl uses PLC to promote the approved element to Stage 4 and Production. Wipro does not perform Production deployment; Kyndryl does not amend the source element.","summary":[{"lab":"Controls","val":"9","note":"8 key, 1 non-key"},{"lab":"Operating","val":"7","tone":"ok","note":"Strong two-provider segregation"},{"lab":"Design gaps","val":"2","tone":"amber","note":"CM.C05 population reconciliation, CM.C07 ruleset"},{"lab":"Environments","val":"TBC","tone":"amber","note":"NHP1/NHP2/NOR1 usage contradicts the Scope section"}],"outro":"The Wipro-develops / Kyndryl-promotes model is the strongest IT segregation of duties design across the three applications reviewed. The open item is completeness: there is no evidenced population-based reconciliation of Production deployments to approved ServiceNow changes, so the design holds but the detective backstop does not.","controls":[{"id":"CM.C01","name":"CM Policies & Procedures","key":false,"status":"ok","freq":"Annual","objective":"To confirm that change management policies and standard operating procedures (SOPs) are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Change Enablement Team","Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Service Manager / CAB"],"systems":["ServiceNow","ICM","PLC"],"railLabel":"The two-provider change model","steps":[{"actor":"Enterprise layer","text":"UKRIS follows the enterprise Change Management Policy and the common ServiceNow process for application changes.","sys":"ServiceNow"},{"actor":"Wipro","text":"Performs development and progresses approved changes through the earlier ICM stages.","sys":"ICM Stages 1–3"},{"actor":"Hand-off","text":"Kyndryl receives the approved change reference and detailed implementation instructions from Wipro.","sys":"Change ref + instructions","type":"dec"},{"actor":"Kyndryl","text":"Performs the authorised Production promotion through PLC.","sys":"PLC Stage 4 + Prod"},{"actor":"Change record","text":"The UKRIS change record comprises the approved ServiceNow change, Wipro implementation instructions and Kyndryl Production-promotion activity.","sys":"3-part record","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Validate the current ICM and PLC procedures — process ownership, approval, review cycle, lifecycle stages, roles and responsibilities, evidence retention and alignment with the Wipro development and Kyndryl Production-promotion model."},{"id":"CM.C02","name":"Change Request Approval","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that all changes are supported by documented and approved business or IT requirements.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Change Enablement Team","Service Manager / CAB"],"systems":["ServiceNow","ICM","PLC"],"railLabel":"Change request to approved Production instruction","steps":[{"actor":"ServiceNow","text":"Changes progressing to Production are recorded in ServiceNow.","sys":"ServiceNow change"},{"actor":"Change record captures","text":"The proposed activity, affected application or technical component, risk and impact, implementation requirements, testing information, assigned implementation tasks and rollback or backout arrangements.","sys":"7 recorded elements"},{"actor":"Service Manager / CAB","text":"Provides approval according to the change classification, reviewing risk, service impact, scheduling, dependencies and implementation readiness.","sys":"CAB approval","type":"dec"},{"actor":"Wipro","text":"Prepares the UKRIS technical change and progresses it through the applicable ICM stages.","sys":"ICM"},{"actor":"Wipro → Kyndryl","text":"For Production promotion, provides the approved change reference, the affected system and subsystem, the CCID and the detailed instructions required to perform the PLC promotion.","sys":"4-part hand-off","type":"dec"},{"actor":"Kyndryl","text":"Performs the Production activity ONLY after receiving the approved change and implementation instructions.","sys":"Gated on approval","type":"stop"},{"actor":"Traceability","text":"ServiceNow provides the formal change-approval trail; ICM and PLC provide application-specific traceability from development through to Production promotion.","sys":"ServiceNow + ICM + PLC","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Review selected changes to validate the originating requirement, change classification, risk and impact assessment, required approvals, approval timing, implementation and rollback plans, Wipro instructions, system and subsystem details, CCID, assigned Kyndryl task and traceability to the Production implementation."},{"id":"CM.C03","name":"Change Development & Testing Approval","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that changes are developed by authorized personnel and validated by QA and/or UAT in a separate non-production environment before deployment.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Intact Business / Application Oversight","Service Manager / CAB"],"systems":["ICM","PLC","NHP1","NHP2","NOR1","ServiceNow"],"railLabel":"Development through to promotion hand-off","steps":[{"actor":"Risk-based scoping","text":"The testing performed is determined by the nature, complexity, risk and potential financial-reporting impact of the change.","sys":"Risk-based testing"},{"actor":"Wipro","text":"Develops UKRIS application changes and progresses the related application element through ICM up to Stage 3.","sys":"ICM Stage 3"},{"actor":"Environments","text":"NHP1 and NHP2 support UKRIS testing activity. NOR1 supports Production processing.","sys":"NHP1/NHP2 test · NOR1 prod","type":"dec"},{"actor":"Testing gate","text":"Testing is completed before the change is released for Production promotion. Evidence, results and the applicable approval are retained within, attached to or traceable from the ServiceNow and technical change records.","sys":"Evidence retained"},{"actor":"Defect loop","text":"Defects or unsuccessful test results are addressed and retested before the change progresses.","sys":"Retest required","type":"dec"},{"actor":"Wipro → Kyndryl","text":"Following completion of development, testing and approval, provides Kyndryl with the promotion instructions and CCID.","sys":"CCID hand-off"},{"actor":"Kyndryl","text":"Uses PLC to promote the approved application element to Stage 4 and Production, linking the approved and tested element and its CCID to the version promoted.","sys":"PLC · CCID traceability","type":"out"}],"exception":"NA","limits":["The environment description here (NHP1 and NHP2 test, NOR1 Production) contradicts the Scope section, which describes NHP1 and NOR1 as processing environments. This must be resolved before testing."],"future":"NA","tod":"Review selected changes to validate the ICM lifecycle stages, development evidence, test environment, testing performed, expected and actual results, defect resolution, retesting, technical and business approval, Wipro handover and traceability of the tested element and CCID to the version promoted through PLC into Production."},{"id":"CM.C04","name":"Environment Segregation","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that logical separation exists between production and non-production environments to protect system integrity.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Change Enablement Team","Service Manager / CAB"],"systems":["NHP1","NHP2","NOR1","ICM","PLC"],"railLabel":"Separate environments, separate providers","steps":[{"actor":"Environments","text":"NHP1 and NHP2 are used for testing activity. NOR1 supports Production processing.","sys":"Test vs Production"},{"actor":"Lifecycle control","text":"ICM and PLC control the progression of UKRIS application elements through the relevant lifecycle stages.","sys":"ICM · PLC"},{"actor":"Wipro","text":"Performs development and earlier-stage change activity and can progress application elements through ICM up to Stage 3. Wipro does NOT promote changes into Production.","sys":"Stage 3 ceiling","type":"stop"},{"actor":"Kyndryl","text":"Performs Stage 4 and Production promotion through PLC using the approved change and instructions provided by Wipro.","sys":"PLC Stage 4"},{"actor":"The design","text":"The separation between Wipro development and Kyndryl Production promotion supports segregation between change preparation and Production implementation.","sys":"Two-provider segregation","type":"out"}],"exception":"NA","limits":["The environment structure stated here contradicts the Scope section. The complete Development, Test, UAT and Production structure and the purpose of each environment remain to be confirmed."],"future":"NA","tod":"Validate the purpose and access populations for NHP1, NHP2 and NOR1 — Wipro development access, Kyndryl PLC access, movement between environments, Production-promotion restrictions, temporary and emergency access and periodic environment-access review. Confirm that Wipro cannot promote changes to Production and that Kyndryl cannot amend the source element developed and tested by Wipro."},{"id":"CM.C05","name":"Direct Production Changes","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that direct changes to production are restricted and the changes are logged, monitored and reviewed for their appropriateness by an authorized user.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Change Enablement Team"],"systems":["ServiceNow","ICM","PLC"],"railLabel":"The only authorised route into Production","steps":[{"actor":"Standard route","text":"The UKRIS application-change route requires an approved ServiceNow change, Wipro development and progression through ICM, followed by Kyndryl Production promotion through PLC.","sys":"3-stage route"},{"actor":"Wipro","text":"Does not hold the capability to deploy UKRIS application changes directly into Production.","sys":"No direct deploy","type":"stop"},{"actor":"Kyndryl","text":"Performs the Production promotion using the approved change reference, system and subsystem, CCID and detailed implementation instructions provided by Wipro.","sys":"4 required inputs"},{"actor":"Promotion variants","text":"PLC promotion steps differ according to whether the change amends an existing application element or introduces a new element. In each case the Production activity uses the authorised promotion route.","sys":"Amend vs new element","type":"dec"},{"actor":"Traceability","text":"The ServiceNow change, ICM history, Wipro handover instructions and PLC promotion record provide traceability for changes completed through the standard route.","sys":"4-part audit trail","type":"out"}],"exception":"NA","limits":["A complete population-based reconciliation of Production deployments to approved ServiceNow changes, or an equivalent detective monitoring control, is not evidenced. The route is well-controlled by design, but there is no operating check that nothing bypassed it."],"future":"NA","tod":"Assess the Production-deployment population and direct Production activity against approved ServiceNow changes, ICM records and PLC promotion evidence — authorised Production access, amendment and new-element routes, emergency activity, database or configuration changes, exception investigation and closure. Where a complete population-based reconciliation or detective monitoring control is not operating, the resulting design gap will be recorded through the SOX gap assessment."},{"id":"CM.C06","name":"Developer Access to Production and Change-Lifecycle Segregation","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that production access is restricted to authorized personnel based on job roles and segregated from development functions, and that segregation of duties exists between developers and deployment personnel who implement changes in the production environment.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team"],"systems":["ICM","PLC","RACF","ServiceNow"],"railLabel":"Segregation enforced by contract and by tooling","steps":[{"actor":"Wipro","text":"Develops UKRIS application changes and progresses the relevant application element through ICM up to Stage 3.","sys":"ICM Stage 3"},{"actor":"Kyndryl","text":"Performs the Stage 4 and Production promotion through PLC after receiving the approved change and implementation instructions.","sys":"PLC Stage 4"},{"actor":"Constraint 1","text":"Wipro development personnel do NOT perform UKRIS Production deployment.","sys":"No deploy rights","type":"stop"},{"actor":"Constraint 2","text":"Kyndryl's role is to promote the approved application element. It does NOT include changing the source element developed and tested by Wipro.","sys":"No source amendment","type":"stop"},{"actor":"Supported by","text":"ICM and PLC access, the approved ServiceNow change, Wipro handover instructions and Kyndryl implementation activity.","sys":"4 supporting mechanisms","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Validate the developer, tester, approver and Production-deployer populations — ICM and PLC access, relevant RACF groups, prevention of Wipro Production deployment, restriction of Kyndryl development and test modification access, periodic access review, temporary access and any overlap requiring independent or compensating review."},{"id":"CM.C07","name":"Changes to SoD and Sensitive-Access Rulesets","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that changes to SoD / SA ruleset are authorized and appropriate.","roles":["Wipro UAM Team","Wipro Application / ADM Team","Kyndryl DB2 Team","OPC / Mainframe Operations Team","CyberArk / PAM Team","Change Enablement Team"],"systems":["ServiceNow","RACF","DB2","OPC","CyberArk","ICM","PLC"],"railLabel":"How security-configuration changes are controlled","steps":[{"actor":"Scope","text":"Changes affecting UKRIS application entitlements, RACF groups, update-access definitions, DB2 permissions, OPC access, CyberArk arrangements and other security-sensitive configurations follow the applicable Access Management or Change Management process.","sys":"7 configuration types"},{"actor":"ServiceNow","text":"Where a security-related configuration change requires technical implementation, the activity is recorded in ServiceNow and follows the applicable assessment, approval, testing and implementation route.","sys":"ServiceNow change","type":"dec"},{"actor":"Routing","text":"Changes affecting application code or configuration follow the ICM and PLC route. Changes affecting RACF, DB2, OPC or CyberArk are performed by the authorised team responsible for that technology layer.","sys":"ICM/PLC vs layer team","type":"dec"},{"actor":"Scope clarification","text":"CM.C07 applies to controlled changes affecting the EXISTING UKRIS access and security structures, rather than changes to a standalone UKRIS SoD ruleset — because no such ruleset exists.","sys":"Structures, not ruleset","type":"stop"}],"exception":"NA","limits":["UKRIS does not maintain a separate application-specific SoD and Sensitive Access ruleset containing formally defined incompatible combinations, so the control operates over access structures rather than over a ruleset."],"future":"NA","tod":"Review selected changes to application entitlements, RACF groups, update-access definitions, DB2 permissions, OPC access and privileged-access configurations to validate the request, ownership, risk assessment, approval, testing, implementation, before-and-after configuration and post-change validation. The absence of a formally maintained ruleset will be considered together with APD.C11 and APD.C12."},{"id":"CM.C08","name":"Emergency Changes","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that expedited procedures for emergency changes are backed by incident tickets or approvals and reviewed post-deployment.","roles":["Incident and Service Management Teams","Change Enablement Team","Service Manager / CAB","Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team"],"systems":["ServiceNow","ICM","PLC"],"railLabel":"Emergency change lifecycle","steps":[{"actor":"Trigger","text":"Immediate action is required to restore service, resolve a High or Critical incident, or contain an urgent operational or security risk.","sys":"3 trigger types"},{"actor":"ServiceNow","text":"The activity remains subject to a ServiceNow emergency-change record with incident linkage, available risk and impact information, applicable approvals, implementation evidence and post-implementation validation.","sys":"Emergency change record"},{"actor":"Expedited path","text":"Where immediate implementation is required, the technical activity may occur BEFORE the full normal workflow is completed.","sys":"Act first","type":"dec"},{"actor":"Wipro","text":"Performs application-development or remediation activity as required by the affected technology layer.","sys":"Application remediation"},{"actor":"Kyndryl","text":"Performs the authorised Production promotion or relevant mainframe activity.","sys":"PLC / mainframe"},{"actor":"Retrospective completion","text":"The change details, approvals and supporting evidence are subsequently completed through the authorised retrospective route.","sys":"Retrospective approval","type":"out"}],"exception":"Where immediate implementation is required, the technical activity may occur before completion of the full normal workflow. The change details, approvals and supporting evidence are subsequently completed through the authorised retrospective route.","limits":[],"future":"NA","tod":"Validate the emergency-change population. Where emergency changes occurred, review selected records for incident linkage, emergency justification, classification, approval or retrospective approval, available testing, Wipro and Kyndryl responsibilities, Production evidence, rollback or remediation information, post-implementation review, corrective actions and closure. Where none occurred, validate the approved emergency-change design and route."},{"id":"CM.C09","name":"Post-Implementation Review or Change Review","key":true,"status":"ok","freq":"Quarterly","objective":"To confirm that all system deployments are authorized, reviewed, and traceable to approved change tickets.","roles":["Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Intact Business / Application Oversight","Change Enablement Team","Service Manager / CAB","Incident and Service Management Teams"],"systems":["ServiceNow","ICM","PLC"],"railLabel":"After Production promotion","steps":[{"actor":"ServiceNow","text":"Following Production promotion, the change record is updated with the implementation outcome and applicable closure information.","sys":"Outcome + closure"},{"actor":"ICM / PLC","text":"Records support identification of the application element progressed and promoted through the lifecycle.","sys":"Element traceability"},{"actor":"Technical / business team","text":"Completes the post-implementation validation required for the change.","sys":"PIR"},{"actor":"Financially relevant changes","text":"Where a change affects financially relevant UKRIS processing or downstream premium, claims or reinsurance interfaces, the validation considers whether the affected processing continues to operate as intended.","sys":"Interface impact check","type":"dec"},{"actor":"Failure route","text":"Where a change is unsuccessful, backed out or results in an incident, it follows the failed-change, Incident Management or Problem Management process.","sys":"3 failure routes","type":"dec"},{"actor":"Remediation","text":"Remediation or a replacement change is recorded and tracked through the relevant ServiceNow workflow.","sys":"ServiceNow","type":"out"}],"exception":"Unsuccessful, backed-out or incident-causing changes follow the applicable failed-change, Incident Management or Problem Management route.","limits":[],"future":"NA","tod":"Review selected changes to validate the implementation outcome, post-implementation checks, reviewer, evidence retained, ICM and PLC traceability, defects, failed-change treatment, incident linkage, PIR requirements, corrective actions and closure. Also assess the completeness of the change population and coverage of emergency, failed and incident-causing changes."}]},{"code":"CO","short":"Operations","name":"Computer Operations","intro":"UKRIS batch processing supports premium, claims and reinsurance processing and the generation of files for downstream SIL, TDS, FDS and SAP processing. OPC schedules and monitors mainframe jobs; SiteScope separately monitors the arrival of UKRIS files into the SIL process. Application support and incident coordination run through the UKRIS Platform Team and Wipro; Kyndryl supports mainframe operations, OPC scheduling, infrastructure, backup, restoration and recovery.","summary":[{"lab":"Controls","val":"6","note":"CO.C01 to CO.C06"},{"lab":"Intact-operated","val":"3","tone":"ok","note":"CO.C01, CO.C02, CO.C05"},{"lab":"Kyndryl-supported","val":"3","note":"CO.C03, CO.C04, CO.C06"},{"lab":"Auto incident creation","val":"Yes","tone":"ok","note":"OPC failure creates a ServiceNow incident automatically"}],"outro":"CO.C02 is the strongest operational control in this narrative: an OPC failure automatically creates a ServiceNow incident, and every job carries a User Document naming the owning team, required action and escalation route. The open item is the interface inventory — the complete Production batch and interface population has not yet been validated.","controls":[{"id":"CO.C01","name":"CO Policies & Procedures","key":false,"status":"ok","freq":"Annual","objective":"Computer Operations Policy and SOPs, describing computer operation management objective, control processes, and relevant service level agreements (SLAs), must be reviewed and approved by authorized personnel at least on an annual basis.","roles":["Intact Business / Application Oversight","Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Kyndryl DB2 Team","OPC / Mainframe Operations Team","Incident and Service Management Teams","TRM / TPRM Team"],"systems":["ServiceNow","Incident Management Process v1.8","SLA Master Analysis"],"railLabel":"Division of operational responsibility","steps":[{"actor":"UKRIS Platform Team","text":"Provides application oversight and coordinates operational issues.","sys":"Application oversight"},{"actor":"Wipro ADM","text":"Supports UKRIS application processing, batch and interface investigation, rerun and remediation activities.","sys":"Application support"},{"actor":"Kyndryl","text":"Performs the underlying mainframe operations, OPC scheduling, DB2 support, infrastructure, backup, restoration and recovery activities.","sys":"Infrastructure operations"},{"actor":"ServiceNow","text":"Used to record and route UKRIS operational incidents to the relevant application, mainframe, database, file-transfer or downstream support team.","sys":"ServiceNow routing"},{"actor":"Change linkage","text":"Where remediation requires a controlled change to the application, scheduler, database or infrastructure, a related change record is raised through the applicable Change Management process.","sys":"Linked change","type":"dec"},{"actor":"TRM Team","text":"Reliance on Computer Operations controls operated by Wipro and Kyndryl is assessed through the centrally managed TPRM process.","sys":"TPRM","type":"out"}],"exception":"NA","limits":[],"evidence":["Intact Insurance UK Incident Management Process v1.8","Intact Insurance UK Major Incident Management Process v7.0","Intact Insurance UK Escalation Process v0.8","Intact Insurance UK SLA Master Analysis dated 29 September 2023"],"future":"NA","tod":"Validate the applicable Computer Operations policies, current ownership model, evidence responsibilities and the division of application support, batch and interface investigation, OPC scheduling, DB2 administration, mainframe operations, infrastructure, backup, restoration and recovery activities between Intact, Wipro and Kyndryl."},{"id":"CO.C02","name":"Batch Job Scheduling and Failure Resolution","key":true,"status":"ok","freq":"Daily / monthly per job or interface schedule","objective":"To confirm that data flow between systems is adequately controlled and any errors identified should be resolved within a timely manner.","roles":["OPC / Mainframe Operations Team","Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Kyndryl DB2 Team","SIL / FDS Operations and Support Teams","Incident and Service Management Teams"],"systems":["OPC","ServiceNow","SiteScope","User Document"],"railLabel":"Job failure — detection to resolution","steps":[{"actor":"OPC","text":"UKRIS mainframe jobs are scheduled and monitored through OPC. Production scheduling access is restricted to authorised mainframe operations personnel; OPC administration access is managed through the mainframe privileged-access process.","sys":"OPC · restricted access"},{"actor":"User Document","text":"Each OPC job carries a User Document identifying the owning application or support team, the action required when the job fails, the applicable escalation route and — for critical jobs — the relevant subject-matter contact.","sys":"4 documented elements"},{"actor":"Failure detected","text":"When a UKRIS job fails, the failure appears in the OPC error queue and an alert is generated.","sys":"OPC error queue","type":"dec"},{"actor":"ServiceNow","text":"A ServiceNow incident is AUTOMATICALLY created and assigned to System Operations.","sys":"Auto-created incident","type":"out"},{"actor":"Operations Team","text":"Reviews the failure and the associated User Document and routes the incident to the relevant UKRIS application, mainframe, database, infrastructure or downstream support team.","sys":"User Document routing","type":"dec"},{"actor":"Assigned support team","text":"Investigates the failure and performs the required recovery, rerun or remediation.","sys":"Recovery / rerun"},{"actor":"Change route","text":"Where resolution requires a change to the job schedule, application logic, database processing or infrastructure configuration, the activity follows the applicable Change Management process.","sys":"Linked change","type":"out"}],"altLabel":"File-arrival monitoring — the parallel interface control","altSteps":[{"actor":"UKRIS generates","text":"Daily premium files, daily claims files and monthly reinsurance files supporting downstream financial processing.","sys":"3 file cadences"},{"actor":"SiteScope","text":"Monitors the arrival of expected UKRIS files against the SIL cut-off.","sys":"SiteScope · SIL cut-off","type":"dec"},{"actor":"Wipro","text":"Missing or late files are followed up with the relevant UKRIS application-support team.","sys":"Wipro follow-up"},{"actor":"SIL / TDS / FDS","text":"Downstream validation and reconciliation are performed through the SIL, TDS and FDS processing chain.","sys":"Downstream reconciliation","type":"out"}],"exception":"Job failures and missing or late files are investigated through the applicable operational-support and Incident Management processes. Where resolution requires a controlled change to the job schedule, application logic, database processing or infrastructure configuration, the Change Management process is followed.","limits":["The complete Production batch and interface population has not yet been validated — job name, business purpose, financial relevance, schedule, frequency, owner, dependencies, expected completion, criticality, User Document, monitoring and alerting all remain open for confirmation."],"future":"NA","tod":"Validate the complete Production batch and interface population. Review selected failures for OPC error-queue evidence, automatic ServiceNow incident creation, assignment, investigation, rerun or recovery, escalation, linked change and closure. Also validate OPC administrator and operational access, relevant ACF2 or RACF groups, periodic access review and changes to schedules or alert configurations."},{"id":"CO.C03","name":"Data Backup Failure Resolution","key":true,"status":"vend","freq":"Kyndryl-operated","objective":"Backup processes are continuously monitored to ensure critical financial data remains complete, accurate, and recoverable when needed.","roles":["Kyndryl Mainframe Team","TRM / TPRM Team"],"systems":["Kyndryl infrastructure and storage processes"],"railLabel":"Where backup responsibility sits","steps":[{"actor":"Kyndryl","text":"Mainframe backup execution, monitoring and failure resolution supporting UKRIS are performed through Kyndryl infrastructure and storage processes.","sys":"Kyndryl-operated"},{"actor":"Detailed operation","text":"Addressed through the common Computer Operations, mainframe and TPRM documentation rather than within this application narrative.","sys":"Common CN + TPRM","type":"dec"},{"actor":"TRM Team","text":"Assesses the applicable Kyndryl assurance reporting over backup controls.","sys":"Kyndryl assurance","type":"out"}],"exception":"NA","limits":["Applicable through Kyndryl-supported controls; Intact holds no direct evidence of backup execution or monitoring."],"future":"NA","tod":"Assess the Kyndryl backup service scope, reporting period, bridge coverage, CUECs, exceptions, management responses, remediation requirements and reliance conclusion."},{"id":"CO.C04","name":"Business Continuity and Disaster Recovery","key":true,"status":"vend","freq":"Enterprise + Kyndryl arrangements","objective":"To confirm that a documented, approved, and periodically tested Business Continuity and Disaster Recovery Plan is maintained to ensure operational readiness and timely restoration of critical operations and systems.","roles":["Kyndryl Mainframe Team","Intact Business / Application Oversight","TRM / TPRM Team"],"systems":["Enterprise continuity arrangements","Kyndryl mainframe recovery"],"railLabel":"Recovery and the Intact responsibility that remains","steps":[{"actor":"Enterprise + Kyndryl","text":"UKRIS relies on enterprise continuity arrangements and Kyndryl mainframe recovery processes.","sys":"Enterprise + Kyndryl"},{"actor":"Intact retains","text":"Responsibility for assessing the effect on UKRIS processing and downstream financial interfaces.","sys":"Impact assessment","type":"dec"},{"actor":"Intact retains","text":"Responsibility for coordinating application and business validation after recovery.","sys":"Post-recovery validation","type":"out"}],"exception":"NA","limits":["Applicable through enterprise and Kyndryl-supported arrangements. Intact does not operate the recovery environment directly."],"future":"NA","tod":"Assess recovery objectives, vendor testing, exceptions, CUECs and the retained Intact responsibilities for downstream interface impact and post-recovery business validation."},{"id":"CO.C05","name":"Incident Management","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that incidents impacting financial reporting-related system jobs, processes, and programs are identified and resolved in a timely manner.","roles":["Intact Business / Application Oversight","Incident and Service Management Teams","Wipro Application / ADM Team","Kyndryl Mainframe / Production Promotion Team","Kyndryl DB2 Team","OPC / Mainframe Operations Team","SIL / FDS Operations and Support Teams","Globalscape / Wipro File-Transfer Support"],"systems":["ServiceNow","OPC","SiteScope"],"railLabel":"Incident lifecycle and resolver routing","steps":[{"actor":"Identification","text":"Incidents may be raised by users, identified by the UKRIS Platform Team, or generated through OPC, SiteScope or other operational monitoring.","sys":"3 sources"},{"actor":"ServiceNow","text":"Records the affected service or processing activity, classification, priority, assignment, investigation, actions taken, resolution and closure.","sys":"8 recorded fields"},{"actor":"UKRIS Platform Team","text":"Provides application governance, monitors incidents and coordinates the response.","sys":"Governance layer"},{"actor":"Resolver routing","text":"Application issues → Wipro UKRIS support. Mainframe, OPC, infrastructure and recovery → Kyndryl. DB2 → Kyndryl DB2 Team. File generation or transfer → UKRIS, SIL, FDS, Globalscape or SAP support.","sys":"4 routing rules","type":"dec"},{"actor":"Assigned team","text":"Investigates and performs the required recovery, rerun, retransmission or remediation while the incident remains monitored through ServiceNow.","sys":"Recovery / retransmission"},{"actor":"Change linkage","text":"Where resolution requires a controlled change to UKRIS, RACF, DB2, OPC, file-transfer configuration or infrastructure, a related ServiceNow change is raised and LINKED to the incident.","sys":"Linked change","type":"dec"},{"actor":"Business confirmation","text":"Where the incident affects financially relevant processing or downstream interfaces, the relevant UKRIS application or business team confirms the operational outcome.","sys":"Business sign-off","type":"out"}],"exception":"Significant incidents follow the applicable escalation, Major Incident Management and root-cause-analysis requirements. Where incident resolution requires a controlled technical change, a related ServiceNow change is raised and linked to the incident.","limits":[],"future":"NA","tod":"Review selected incidents to validate the incident source, ServiceNow record, classification, priority, business and financial-reporting impact, resolver-group assignment, SLA monitoring, escalation, investigation, Wipro or Kyndryl activity, linked change, root-cause analysis, rerun or retransmission evidence, application or business validation and closure."},{"id":"CO.C06","name":"Backup Restoration Testing and Validation","key":true,"status":"vend","freq":"Kyndryl-operated","objective":"To ensure effectiveness of data recovery procedures and validate that data can be successfully recovered and used as intended.","roles":["Kyndryl Mainframe Team","Intact Business / Application Oversight","TRM / TPRM Team"],"systems":["Kyndryl infrastructure and storage processes"],"railLabel":"Restoration testing","steps":[{"actor":"Kyndryl","text":"Mainframe restoration testing supporting UKRIS is performed through Kyndryl infrastructure and storage processes.","sys":"Kyndryl-operated"},{"actor":"Intact supports","text":"UKRIS application and processing validation where recovery affects the application or its downstream interfaces.","sys":"Application validation","type":"dec"},{"actor":"TRM Team","text":"Assesses restoration procedures, testing, approval, successful-recovery evidence and exceptions through Kyndryl assurance.","sys":"Kyndryl assurance","type":"out"}],"exception":"NA","limits":["Applicable through Kyndryl-supported controls."],"future":"NA","tod":"Assess restoration procedures, testing, approval, successful-recovery evidence and exceptions through the applicable Kyndryl assurance documentation."}]},{"code":"PD","short":"Development","name":"Program Development","intro":"UKRIS application maintenance and routine enhancements are performed by Wipro and governed through Change Management. Program Development controls apply only where UKRIS is subject to a qualifying major development, material enhancement, new implementation or one-off data migration. No current initiative meeting these criteria has been identified.","summary":[{"lab":"Controls","val":"4","note":"PD.C01 to PD.C04"},{"lab":"Via common CN","val":"1","note":"PD.C01 policies"},{"lab":"Not applicable","val":"3","note":"PD.C02, C03, C04"},{"lab":"Qualifying initiative","val":"None","note":"No major development or migration identified"}],"outro":"Note the important classification point under PD.C03: the recurring premium, claims and reinsurance files transferred to SIL, TDS, FDS and SAP are operational interfaces, not a Program Development data migration. Their completeness and accuracy are addressed through interface, Computer Operations and IT Application Controls.","controls":[{"id":"PD.C01","name":"PD Policies and Procedures","key":false,"status":"na","statusLabel":"Via common CN","freq":"Per common CN","objective":"To confirm that project acquisition and development policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Common Program Development control owners"],"systems":["Common PD Control Narrative"],"railLabel":"Where the methodology lives","steps":[{"actor":"Common methodology","text":"The common Program Development methodology applies where a qualifying UKRIS development, implementation or migration is initiated.","sys":"Common PD CN"},{"actor":"Routine changes","text":"Routine UKRIS maintenance and enhancements continue to follow the Change Management process.","sys":"CM route","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Refer to the Common Program Development Control Narrative for the enterprise methodology, project governance requirements and the distinction between qualifying Program Development activity and routine Change Management."},{"id":"PD.C02","name":"Program Development and Data Migration","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To confirm program development related activities are governed, approved, and assessed for IT general control readiness prior to implementation.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No current major UKRIS development, implementation or one-off data-migration initiative has been identified.","sys":"No qualifying initiative","type":"stop"},{"actor":"Routine activity","text":"Wipro development and Kyndryl Production promotion relating to routine changes are addressed through the UKRIS Change Management controls.","sys":"CM.C01–C09","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm whether any major development, material enhancement, new implementation or one-off data migration occurred during the period."},{"id":"PD.C03","name":"Data Migration Completeness and Accuracy Validation","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that data migrated as part of program development initiatives is complete and accurate through defined data validation, reconciliation, and exception resolution procedures prior to production deployment.","roles":[],"systems":[],"railLabel":"Interfaces are not migrations","steps":[{"actor":"Classification","text":"The recurring UKRIS premium, claims and reinsurance files transferred to SIL, TDS, FDS and SAP are operational interfaces. They do NOT represent a Program Development data migration.","sys":"Interface ≠ migration","type":"stop"},{"actor":"Where they are covered","text":"Interface completeness, accuracy, monitoring and reconciliation are addressed through the applicable interface, Computer Operations and IT Application Controls.","sys":"CO.C02 · ITAC","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying migration occurred. Interface completeness and accuracy remain in scope under CO.C02 and the applicable ITAC assessment."},{"id":"PD.C04","name":"Program Development Testing and Approval","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that program development activities are executed in accordance with a documented methodology and are formally tested, documented, and approved by management prior to deployment.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No current major Program Development initiative affecting UKRIS is identified.","sys":"No qualifying initiative","type":"stop"},{"actor":"Not duplicated","text":"Testing and approval of routine UKRIS application changes are addressed under CM.C03. PD.C04 applies only to a qualifying major development, implementation or migration.","sys":"CM.C03 route","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying initiative arose; testing of routine changes is tested under CM.C03."}]},{"code":"TPRM","short":"Third party","name":"Third-Party Risk Management","intro":"UKRIS relies on two providers with clearly divided scopes. Wipro administers UKRIS and RACF access, performs application development and support, progresses changes through ICM and supports application, interface and Globalscape file-transfer incidents. Kyndryl administers DB2 access, operates OPC scheduling, performs Production promotion through PLC and supports mainframe infrastructure, backup, restoration and recovery. Intact retains application governance, business oversight and access approval.","summary":[{"lab":"Providers","val":"2","note":"Wipro and Kyndryl"},{"lab":"Wipro SOC 1 II","val":"UKRIS in scope","tone":"ok","note":"Covers development, privileged Production access and CyberArk log review"},{"lab":"Coverage period","val":"TBC","tone":"amber","note":"Not recorded in the narrative"},{"lab":"Bridge letter","val":"TBC","tone":"amber","note":"Not recorded in the narrative"}],"outro":"The Wipro SOC 1 Type II report specifically identifies UKRIS within its application scope and includes controls relating to development activities, privileged Production access and review of CyberArk logs for mainframe applications — which is directly load-bearing for CM.C06 and APD.C09.","controls":[{"id":"TP.C01","name":"Third-Party Assurance Report Review — Wipro","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that reliance on Wipro-operated controls is appropriately governed, monitored and evidenced.","roles":["TRM / TPRM Team","Intact Business / Application Oversight"],"systems":["Wipro SOC 1 Type II report"],"railLabel":"Wipro assurance review","steps":[{"actor":"Wipro scope","text":"Performs UKRIS application access administration, application support, development and operational activities within its assigned service scope.","sys":"Wipro service scope"},{"actor":"Wipro SOC 1 Type II","text":"Identifies UKRIS within its application scope and includes controls relating to development activities, privileged Production access and review of CyberArk logs for mainframe applications.","sys":"UKRIS named in scope","type":"dec"},{"actor":"TRM Team","text":"Reviews the report through the centrally managed TPRM process, confirming reporting period, service and technology layers covered and bridge-period requirements.","sys":"TPRM process"},{"actor":"TRM Team","text":"Assesses subservice organisations, Complementary User Entity Controls, reported exceptions, management responses and remediation actions.","sys":"5 assessment areas"},{"actor":"TRM Team","text":"Documents the reliance conclusion within the separate TPRM documentation.","sys":"Reliance conclusion","type":"out"}],"exception":"NA","limits":["Period of coverage is recorded as TBC.","Bridge letter is recorded as TBC.","The detailed Wipro assurance assessment is held within separate TPRM documentation rather than within this control narrative."],"future":"NA","tod":"Confirm the reporting period, the specific UKRIS services and technology layers covered, bridge-period requirements, subservice organisations, CUECs, reported exceptions, management responses, remediation actions and reliance conclusion."},{"id":"TP.C02","name":"Third-Party Assurance Report Review — Kyndryl","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that reliance on Kyndryl-operated controls is appropriately governed, monitored and evidenced.","roles":["TRM / TPRM Team","Intact Business / Application Oversight"],"systems":["Kyndryl assurance reports"],"railLabel":"Kyndryl assurance review","steps":[{"actor":"Kyndryl scope","text":"Supports the DB2 database, mainframe Production promotion, infrastructure, backup, restoration and recovery activities.","sys":"6 service areas"},{"actor":"Control dependency","text":"CM.C04, CM.C05, CM.C06, CO.C03, CO.C04 and CO.C06 all depend materially on Kyndryl-operated controls.","sys":"6 dependent controls","type":"dec"},{"actor":"TRM Team","text":"Reviews the applicable Kyndryl assurance reports through the centrally managed TPRM process.","sys":"TPRM process"},{"actor":"TRM Team","text":"Assesses scope, bridge coverage, CUECs, exceptions, remediation and the reliance conclusion.","sys":"Reliance conclusion","type":"out"}],"exception":"NA","limits":["The applicable Kyndryl assurance report, reporting period and bridge coverage are not identified within this control narrative.","Detailed assessment is maintained within the separate Common TPRM Control Narrative and supporting Kyndryl assurance assessments."],"future":"NA","tod":"Confirm the applicable Kyndryl assurance report, reporting period, service and control scope, bridge-period coverage, subservice organisations, CUECs, reported exceptions, management responses, remediation actions and reliance conclusion — particularly for Production promotion, backup, restoration and recovery."}]}],"gaps":[{"id":"APD.C11","sev":"H","gap":"No formal periodic detective review of the complete UKRIS SoD-conflict population across application, RACF, DB2, OPC and privileged access. Copy ID checks, LAMS validation, enhanced approval and recertification do not constitute a review against defined incompatible combinations.","why":"A key control with no operating activity. Conflicts spanning five separate access layers cannot be detected without a consolidated conflict definition."},{"id":"APD.C12","sev":"H","gap":"No UKRIS SoD and Sensitive Access ruleset exists — no formally defined incompatible-access combinations, sensitive-access definitions, documented ownership and approval, defined review frequency or controlled maintenance and change history.","why":"A key control with no operating activity and the precondition for APD.C11. The narrative explicitly warns that existing access structures should not be presented as a ruleset."},{"id":"APD.C09","sev":"H","gap":"Privileged-activity monitoring covers only sessions routed through CyberArk. UKRIS application-administration, RACF, DB2 and OPC privileged activity are not demonstrably covered, and the completeness of the overall privileged-activity population is not confirmed.","why":"Four of the five privileged access layers have no evidenced monitoring. Any privileged action taken outside a CyberArk-brokered session would not appear in the biannual review."},{"id":"APD.C07","sev":"H","gap":"Review frequency is TBC, and the inclusion of update access, privileged access, service accounts and high-risk access in the certification population is not confirmed.","why":"A key control whose frequency and population scope are both undefined cannot be tested for operating effectiveness."},{"id":"APD.C06","sev":"H","gap":"Review frequency, authoritative population and inactivity criteria for the terminated and transferred user review are all unconfirmed.","why":"A key control with no defined frequency or population. Without inactivity criteria there is no threshold against which residual access can be assessed."},{"id":"Environments","sev":"H","gap":"The narrative contradicts itself on environment usage. Scope describes NHP1 and NOR1 as processing environments supporting file generation and access administration; CM.C03 and CM.C04 describe NHP1 and NHP2 as test environments with NOR1 as Production.","why":"Environment segregation (CM.C04) and developer access to Production (CM.C06) cannot be tested until it is established which environment is Production. Both statements cannot be correct."},{"id":"CO.C02","sev":"M","gap":"The complete Production batch and interface population has not been validated — job name, business purpose, financial relevance, schedule, frequency, owner, dependencies, expected completion, criticality, User Document, monitoring and alerting all remain open.","why":"Without a validated interface inventory there is no defined population from which to select failures for testing, and no way to prove monitoring covers every financially relevant file."},{"id":"APD.C07","sev":"M","gap":"SailPoint records the certification decision but does not remove or modify UKRIS, RACF or DB2 access. Remediation depends on a separate RITM being raised and fulfilled.","why":"Certification and remediation are decoupled, so a complete and timely certification can still leave inappropriate access in place. Remediation completeness must be tested separately."},{"id":"APD.C10","sev":"M","gap":"RACF and DB2 password length, complexity, history, expiry, lockout and reset configurations are not confirmed. Service-account authentication arrangements, credential ownership, approved exceptions and the periodic configuration review are not evidenced.","why":"The authentication baseline for a non-SSO mainframe application is undocumented, so alignment with the enterprise password policy cannot be demonstrated."},{"id":"CM.C05","sev":"M","gap":"No evidenced population-based reconciliation of Production deployments to approved ServiceNow changes, and no equivalent detective monitoring control.","why":"The ICM/PLC route is well-designed, but there is no operating check confirming that nothing reached Production outside it."},{"id":"CM.C07","sev":"M","gap":"No application-specific SoD and Sensitive Access ruleset exists, so CM.C07 operates over access and security structures rather than over a ruleset.","why":"Ruleset change control cannot exist where no ruleset exists. Links directly to APD.C11 and APD.C12."},{"id":"Users","sev":"M","gap":"User numbers are recorded as TBC and the complete geographical distribution of UKRIS users — including any users in India, Europe or other locations — is not confirmed.","why":"Population completeness underpins APD.C07 and APD.C08. An unconfirmed user population undermines every access-review conclusion."},{"id":"TP.C01","sev":"M","gap":"Wipro SOC 1 Type II period of coverage and bridge letter are both recorded as TBC.","why":"The Wipro report is directly load-bearing for CM.C06 developer segregation and APD.C09 CyberArk log review; reliance cannot be concluded without period and bridge confirmation."},{"id":"TP.C02","sev":"M","gap":"The applicable Kyndryl assurance report, reporting period and bridge coverage are not identified within the narrative.","why":"Kyndryl operates Production promotion, DB2, backup, restoration and recovery — six controls depend on assurance that is not yet identified."},{"id":"Interfaces","sev":"M","gap":"NOR files may be small or unpopulated depending on processing activity, with no documented expected-volume baseline.","why":"A nil file is indistinguishable from a missing file, weakening the SiteScope missing-file control for the NOR variants of all five interface types."},{"id":"CO.C03","sev":"L","gap":"Mainframe backup execution, monitoring and failure resolution are performed entirely through Kyndryl infrastructure and storage processes; Intact holds no direct evidence.","why":"Reliance is appropriate for an outsourced mainframe, but the reliance conclusion depends on Kyndryl assurance that is not yet identified."},{"id":"CO.C06","sev":"L","gap":"Mainframe restoration testing is performed through Kyndryl processes; Intact supports only application and processing validation.","why":"Same reliance dependency as CO.C03."},{"id":"CO.C04","sev":"L","gap":"UKRIS relies on enterprise continuity arrangements and Kyndryl mainframe recovery. Intact retains responsibility for downstream interface impact assessment and post-recovery business validation, which is not separately evidenced.","why":"The retained Intact responsibilities are stated but no operating evidence of them is described."}]};
+document.addEventListener('DOMContentLoaded', ()=>boot(DATA_JSON));
+</script>
+</body>
+</html>

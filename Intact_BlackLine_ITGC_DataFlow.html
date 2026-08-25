@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlackLine — ITGC Control &amp; Data-Flow Explorer | Intact Insurance</title>
+<meta name="description" content="Interactive ITGC control narrative and end-to-end data flow for BlackLine, Intact Insurance UK &amp; International SOX readiness.">
+<style>
+:root{
+  --teal:#01B3BD; --teal-d:#018E96; --teal-l:#E6F7F8;
+  --red:#DF0030; --red-l:#FDEBEF; --red-d:#B00026;
+  --sand:#E8DDC8; --sand-l:#F5EFE3; --sand-d:#C9B893;
+  --ink:#001A1B; --ink-2:#0D2A2B; --slate:#5A6B6C; --slate-l:#88999A;
+  --paper:#FBF9F5; --line:#DED6C6; --white:#fff;
+  --amber:#B8860B; --amber-l:#FBF3DF;
+  --ok:#0F7A5A; --ok-l:#E7F5F0;
+  --shadow:0 1px 2px rgba(0,26,27,.06),0 8px 24px rgba(0,26,27,.07);
+  --shadow-lg:0 2px 4px rgba(0,26,27,.08),0 18px 48px rgba(0,26,27,.14);
+  --sans:"Segoe UI",Inter,-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,"Liberation Mono",monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--sand-l);
+  font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--teal-d)}
+h1,h2,h3,h4{margin:0; font-weight:650; letter-spacing:-.012em; line-height:1.22}
+
+/* ============ HEADER ============ */
+.hdr{background:var(--ink); color:#fff; padding:0; position:sticky; top:0; z-index:60;
+     box-shadow:0 1px 0 rgba(255,255,255,.08), 0 6px 24px rgba(0,26,27,.28)}
+.hdr-in{max-width:1680px; margin:0 auto; padding:14px 22px 0; display:flex; flex-wrap:wrap;
+        align-items:flex-start; gap:18px}
+.brand{display:flex; align-items:center; gap:12px; flex:0 0 auto}
+.brand-mark{font-family:var(--sans); font-weight:700; font-size:19px; letter-spacing:-.02em;
+  color:#fff; border-left:3px solid var(--red); border-right:3px solid var(--red);
+  padding:2px 9px; line-height:1.3}
+.brand-mark small{display:block; font-size:8.5px; letter-spacing:.30em; font-weight:600;
+  color:var(--sand); margin-top:1px}
+.hdr-title{flex:1 1 300px; min-width:240px}
+.hdr-title h1{font-size:20px; color:#fff}
+.hdr-title .sub{font-size:12px; color:#9FBFC0; margin-top:3px; letter-spacing:.01em}
+.hdr-title .sub b{color:var(--sand); font-weight:600}
+.hdr-tools{display:flex; gap:7px; flex-wrap:wrap; align-items:center; padding-bottom:2px}
+.btn{font-family:var(--sans); font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  padding:6px 11px; border-radius:7px; border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.07); color:#DFF3F4; cursor:pointer; white-space:nowrap;
+  transition:background .15s,border-color .15s,color .15s}
+.btn:hover{background:rgba(1,179,189,.24); border-color:var(--teal); color:#fff}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--teal); border-color:var(--teal); color:#00282A}
+.btn.primary:hover{background:#22C7D0}
+.btn:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+
+/* ============ NAV ============ */
+.nav{max-width:1680px; margin:0 auto; padding:10px 22px 0; display:flex; gap:2px;
+     overflow-x:auto; scrollbar-width:thin}
+.nav button{font-family:var(--sans); background:none; border:0; color:#87A9AB; cursor:pointer;
+  padding:9px 13px 10px; font-size:12.5px; font-weight:600; letter-spacing:.01em;
+  border-bottom:2.5px solid transparent; white-space:nowrap; transition:color .15s}
+.nav button .n{font-family:var(--mono); font-size:10px; opacity:.65; margin-left:5px}
+.nav button:hover{color:#fff}
+.nav button.on{color:#fff; border-bottom-color:var(--teal)}
+.nav button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:1680px; margin:0 auto; padding:22px}
+.pane{display:none} .pane.on{display:block}
+.pane-head{margin-bottom:16px; padding-bottom:13px; border-bottom:1px solid var(--line)}
+.pane-head h2{font-size:22px; letter-spacing:-.022em}
+.pane-head .eyebrow{font-family:var(--mono); font-size:10px; letter-spacing:.19em;
+  color:var(--teal-d); font-weight:600; text-transform:uppercase; margin-bottom:5px}
+.pane-head p{margin:7px 0 0; color:var(--slate); font-size:13.5px; max-width:105ch}
+
+/* ============ CARDS / GRID ============ */
+.grid{display:grid; gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
+.card{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      padding:16px 18px; box-shadow:var(--shadow)}
+.card h3{font-size:13px; letter-spacing:.01em; margin-bottom:9px; color:var(--ink)}
+.card h3 .ic{color:var(--teal-d); margin-right:6px; font-family:var(--mono)}
+
+.kpi{background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--teal);
+     border-radius:var(--r); padding:13px 15px; box-shadow:var(--shadow)}
+.kpi .lab{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600}
+.kpi .val{font-size:23px; font-weight:700; letter-spacing:-.03em; margin-top:3px; line-height:1.1}
+.kpi .note{font-size:11.5px; color:var(--slate); margin-top:3px; line-height:1.4}
+.kpi.red{border-left-color:var(--red)} .kpi.red .val{color:var(--red-d)}
+.kpi.amber{border-left-color:var(--amber)} .kpi.amber .val{color:var(--amber)}
+.kpi.ok{border-left-color:var(--ok)} .kpi.ok .val{color:var(--ok)}
+
+/* ============ BADGES ============ */
+.b{display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9.5px;
+   font-weight:600; letter-spacing:.09em; text-transform:uppercase; padding:3px 7px;
+   border-radius:5px; white-space:nowrap; border:1px solid transparent; line-height:1.35}
+.b-key{background:var(--red); color:#fff}
+.b-non{background:var(--sand); color:#6B5B3A; border-color:var(--sand-d)}
+.b-freq{background:var(--teal-l); color:var(--teal-d); border-color:#B9E7EA}
+.b-ok{background:var(--ok-l); color:var(--ok); border-color:#BEE3D6}
+.b-part{background:var(--amber-l); color:var(--amber); border-color:#E8D5A2}
+.b-gap{background:var(--red-l); color:var(--red-d); border-color:#F6C4CF}
+.b-na{background:#EEEAE2; color:var(--slate); border-color:var(--line)}
+.b-vend{background:#EDE7F6; color:#5B3E9B; border-color:#D3C4EC}
+
+/* chips */
+.chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:5px}
+.chip{font-size:11px; padding:2.5px 8px; border-radius:20px; background:var(--sand-l);
+  border:1px solid var(--line); color:#4A5C5D; white-space:nowrap}
+.chip.sys{font-family:var(--mono); font-size:10px; background:var(--teal-l);
+  border-color:#B9E7EA; color:var(--teal-d); font-weight:600}
+.chip.actor{background:#fff; border-color:var(--sand-d); color:#6B5B3A; font-weight:600; font-size:10.5px}
+
+/* ============ CONTROL CARD ============ */
+.ctrl{background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+      margin-bottom:14px; box-shadow:var(--shadow); overflow:hidden; scroll-margin-top:130px}
+.ctrl.gap{border-left:3px solid var(--red)}
+.ctrl.part{border-left:3px solid var(--amber)}
+.ctrl.ok{border-left:3px solid var(--ok)}
+.ctrl.vend{border-left:3px solid #7E5BC4}
+.ctrl.na{border-left:3px solid var(--sand-d)}
+.ctrl-h{display:flex; flex-wrap:wrap; align-items:center; gap:9px; padding:13px 17px;
+  background:linear-gradient(180deg,#fff,var(--paper)); border-bottom:1px solid var(--line);
+  cursor:pointer; user-select:none}
+.ctrl-h:hover{background:linear-gradient(180deg,#fff,var(--teal-l))}
+.ctrl-id{font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--teal-d);
+  background:var(--teal-l); border:1px solid #B9E7EA; padding:3px 8px; border-radius:6px}
+.ctrl-n{font-size:14px; font-weight:650; flex:1 1 230px; letter-spacing:-.008em}
+.ctrl-tw{display:flex; gap:5px; flex-wrap:wrap; align-items:center}
+.ctrl-cx{font-family:var(--mono); font-size:14px; color:var(--slate); transition:transform .2s;
+  width:16px; text-align:center}
+.ctrl.open .ctrl-cx{transform:rotate(90deg)}
+.ctrl-b{display:none; padding:17px} .ctrl.open .ctrl-b{display:block}
+
+.obj{background:#fff; border:1px solid var(--line); border-left:3px solid var(--teal);
+  border-radius:7px; padding:10px 13px; margin-bottom:14px; font-size:13px}
+.obj .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:600; display:block; margin-bottom:3px}
+
+.meta{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:15px}
+.meta > div{background:#fff; border:1px solid var(--line); border-radius:7px; padding:9px 12px}
+.meta .l{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; display:block; margin-bottom:3px}
+.meta .v{font-size:12.5px; line-height:1.45}
+
+/* ============ STEP RAIL (the process visual) ============ */
+.rail-l{font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--slate); font-weight:600; margin:16px 0 8px; display:flex; align-items:center; gap:9px}
+.rail-l::after{content:''; flex:1; height:1px; background:var(--line)}
+.rail{display:flex; gap:0; overflow-x:auto; padding:3px 3px 12px; scrollbar-width:thin}
+.step{flex:0 0 auto; width:206px; background:#fff; border:1px solid var(--line);
+  border-radius:9px; padding:11px 12px 12px; position:relative; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; gap:6px}
+.step + .step{margin-left:26px}
+.step + .step::before{content:''; position:absolute; left:-26px; top:50%; width:26px; height:2px;
+  background:linear-gradient(90deg,var(--sand-d),var(--teal)); transform:translateY(-50%)}
+.step + .step::after{content:''; position:absolute; left:-8px; top:50%; width:0; height:0;
+  border-left:7px solid var(--teal); border-top:5px solid transparent;
+  border-bottom:5px solid transparent; transform:translateY(-50%)}
+.step-n{position:absolute; top:-9px; left:11px; font-family:var(--mono); font-size:9.5px;
+  font-weight:700; background:var(--ink); color:var(--sand); width:19px; height:19px;
+  border-radius:50%; display:grid; place-items:center; letter-spacing:0}
+.step-a{font-family:var(--mono); font-size:9px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--teal-d); font-weight:700; margin-top:4px; line-height:1.4}
+.step-t{font-size:12.2px; line-height:1.48; flex:1}
+.step-s{font-family:var(--mono); font-size:9.5px; color:#6B5B3A; background:var(--sand-l);
+  border:1px solid var(--line); border-radius:5px; padding:3px 6px; align-self:flex-start;
+  max-width:100%; word-break:break-word; line-height:1.4}
+.step.dec{border-color:var(--amber); background:var(--amber-l)}
+.step.dec .step-n{background:var(--amber); color:#fff}
+.step.dec .step-a{color:var(--amber)}
+.step.out{border-color:var(--teal); background:var(--teal-l)}
+.step.out .step-n{background:var(--teal-d); color:#fff}
+.step.stop{border-color:var(--red); background:var(--red-l)}
+.step.stop .step-n{background:var(--red); color:#fff}
+.step.stop .step-a{color:var(--red-d)}
+
+/* alt branch rail */
+.rail.alt .step{background:var(--amber-l); border-color:#E8D5A2}
+.rail.alt .step + .step::before{background:linear-gradient(90deg,#E8D5A2,var(--amber))}
+.rail.alt .step + .step::after{border-left-color:var(--amber)}
+.rail.alt .step-n{background:var(--amber); color:#fff}
+.rail.alt .step-a{color:var(--amber)}
+
+/* ============ NOTE BANDS ============ */
+.band{border-radius:8px; padding:11px 14px; margin-top:12px; font-size:12.6px; line-height:1.55}
+.band .bt{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:5px}
+.band ul{margin:4px 0 0; padding-left:17px} .band li{margin:3px 0}
+.band.limit{background:var(--red-l); border:1px solid #F6C4CF; color:#5C1220}
+.band.limit .bt{color:var(--red-d)}
+.band.exc{background:var(--amber-l); border:1px solid #E8D5A2; color:#5C4A12}
+.band.exc .bt{color:var(--amber)}
+.band.ev{background:var(--sand-l); border:1px solid var(--line); color:#4A4335}
+.band.ev .bt{color:#6B5B3A}
+.band.fut{background:var(--teal-l); border:1px solid #B9E7EA; color:#0A4548}
+.band.fut .bt{color:var(--teal-d)}
+.band.risk{background:#EDE7F6; border:1px solid #D3C4EC; color:#3B2A66}
+.band.risk .bt{color:#5B3E9B}
+.band.tod{background:#fff; border:1px dashed var(--sand-d); color:var(--slate); font-style:italic}
+.band.tod .bt{color:#6B5B3A; font-style:normal}
+
+/* ============ FLOW CANVAS ============ */
+.flow-tools{display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:11px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r); padding:9px 12px;
+  box-shadow:var(--shadow)}
+.flow-tools .btn{border-color:var(--line); background:#fff; color:var(--ink)}
+.flow-tools .btn:hover{background:var(--teal-l); border-color:var(--teal); color:var(--teal-d)}
+.zlvl{font-family:var(--mono); font-size:11px; color:var(--slate); font-weight:600;
+  min-width:42px; text-align:center}
+.flow-tools .hint{font-size:11.5px; color:var(--slate); margin-left:auto; text-align:right}
+.flow-tools .hint kbd{font-family:var(--mono); font-size:10px; background:var(--sand-l);
+  border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 5px}
+
+.canvas-outer{background:
+    linear-gradient(var(--paper),var(--paper)) padding-box,
+    var(--line) border-box;
+  border:1px solid var(--line); border-radius:var(--r); overflow:auto; position:relative;
+  box-shadow:var(--shadow); max-height:78vh}
+.canvas-shim{position:relative}
+.canvas{position:relative; transform-origin:0 0;
+  background-image:radial-gradient(circle, #DED6C6 1px, transparent 1px);
+  background-size:22px 22px; background-color:var(--paper)}
+.bands{position:absolute; inset:0; z-index:0; pointer-events:none}
+.bandzone{position:absolute; top:0; bottom:0; border-right:1px dashed var(--sand-d)}
+.bandzone:nth-child(odd){background:rgba(232,221,200,.28)}
+.divider{position:absolute; left:0; right:0; height:0; border-top:1.5px dashed var(--sand-d)}
+.divider span{position:absolute; top:-9px; left:26px; background:var(--paper);
+  padding:0 12px; font-family:var(--mono); font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:#9A8C6E; font-weight:700}
+.bandzone .bl{position:absolute; top:12px; left:0; right:0; text-align:center;
+  font-family:var(--mono); font-size:10px; letter-spacing:.19em; text-transform:uppercase;
+  color:#9A8C6E; font-weight:700}
+.bandzone .bl small{display:block; font-size:9px; letter-spacing:.09em; color:#B2A488;
+  text-transform:none; margin-top:2px; font-weight:600}
+svg.edges{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:visible}
+.edge{fill:none; stroke:var(--slate); stroke-width:1.7; opacity:.72}
+.edge.batch{stroke-dasharray:7 4}
+.edge.manual{stroke-dasharray:2 3; stroke:var(--amber); opacity:.9}
+.edge.api{stroke:var(--teal); opacity:.95}
+.edge.unk{stroke:var(--red); stroke-dasharray:4 4; opacity:.9}
+.edge.hi{stroke:var(--teal); stroke-width:3.2; opacity:1}
+.elab{font-family:var(--mono); font-size:9.5px; fill:#3E4E4F; font-weight:600}
+.elab-bg{fill:var(--paper); stroke:var(--line); stroke-width:1; rx:4}
+
+.node{position:absolute; z-index:2; width:184px; background:#fff; border:1.5px solid var(--line);
+  border-radius:9px; padding:9px 11px 10px; box-shadow:var(--shadow); cursor:grab;
+  user-select:none; transition:box-shadow .15s, border-color .15s}
+.node:hover{box-shadow:var(--shadow-lg); border-color:var(--teal)}
+.node.dragging{cursor:grabbing; box-shadow:var(--shadow-lg); z-index:40; border-color:var(--teal)}
+.node.sel{border-color:var(--teal); box-shadow:0 0 0 3px rgba(1,179,189,.24),var(--shadow-lg)}
+.node .nk{font-family:var(--mono); font-size:8.5px; letter-spacing:.14em; text-transform:uppercase;
+  font-weight:700; display:block; margin-bottom:3px}
+.node .nt{font-size:12.6px; font-weight:650; line-height:1.3; letter-spacing:-.008em}
+.node .ns{font-size:10.5px; color:var(--slate); margin-top:3px; line-height:1.38; padding-right:16px}
+.node[data-k="source"]{border-color:var(--sand-d); background:#FFFDF8}
+.node[data-k="source"] .nk{color:#9A7B2E}
+.node[data-k="process"]{border-color:var(--teal)}
+.node[data-k="process"] .nk{color:var(--teal-d)}
+.node[data-k="store"]{border-color:#7E5BC4; background:#FBF9FF}
+.node[data-k="store"] .nk{color:#5B3E9B}
+.node[data-k="gl"]{border-color:var(--red); background:#FFF7F9}
+.node[data-k="gl"] .nk{color:var(--red-d)}
+.node[data-k="report"]{border-color:var(--ok); background:#F7FCFA}
+.node[data-k="report"] .nk{color:var(--ok)}
+.node[data-k="ctrl"]{border-color:var(--amber); background:var(--amber-l); border-style:dashed}
+.node[data-k="ctrl"] .nk{color:var(--amber)}
+.node[data-k="tool"]{border-color:#88999A; background:#F7F9F9}
+.node[data-k="tool"] .nk{color:#5A6B6C}
+.node .ninfo{position:absolute; bottom:6px; right:6px; width:17px; height:17px;
+  border-radius:50%; border:1px solid var(--line); background:#fff; color:var(--slate);
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:1; cursor:pointer;
+  display:grid; place-items:center; padding:0; opacity:.55; transition:opacity .15s,background .15s}
+.node:hover .ninfo{opacity:1}
+.node .ninfo:hover{background:var(--teal); border-color:var(--teal); color:#00282A}
+.node .ninfo:focus-visible{outline:2px solid var(--teal); outline-offset:1px; opacity:1}
+.node .ctag{position:absolute; top:-8px; right:8px; display:flex; gap:3px}
+.node .ctag span{font-family:var(--mono); font-size:8px; font-weight:700; background:var(--ink);
+  color:var(--sand); padding:2px 5px; border-radius:4px; letter-spacing:.05em}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin-top:11px; background:var(--paper);
+  border:1px solid var(--line); border-radius:var(--r); padding:11px 14px; box-shadow:var(--shadow)}
+.legend .lg{display:flex; align-items:center; gap:6px; font-size:11.5px; color:#3E4E4F}
+.legend .sw{width:15px; height:15px; border-radius:4px; border:1.5px solid; flex:0 0 auto}
+.legend .ln{width:26px; height:0; border-top:2px solid; flex:0 0 auto}
+
+/* detail drawer */
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(430px,92vw); background:var(--paper);
+  border-left:1px solid var(--line); box-shadow:-14px 0 46px rgba(0,26,27,.20); z-index:80;
+  transform:translateX(102%); transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column}
+.drawer.on{transform:none}
+.drawer-h{padding:15px 18px; border-bottom:1px solid var(--line); background:var(--ink); color:#fff;
+  display:flex; align-items:flex-start; gap:11px}
+.drawer-h h3{font-size:15px; flex:1; color:#fff}
+.drawer-h .k{font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal); font-weight:700; display:block; margin-bottom:3px}
+.drawer-h button{background:none; border:0; color:#9FBFC0; font-size:21px; cursor:pointer;
+  line-height:1; padding:0 3px}
+.drawer-h button:hover{color:#fff}
+.drawer-b{padding:17px 18px; overflow-y:auto; flex:1}
+.drawer-b h4{font-family:var(--mono); font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--teal-d); margin:16px 0 6px; font-weight:700}
+.drawer-b h4:first-child{margin-top:0}
+.drawer-b p{margin:0 0 8px; font-size:12.8px}
+.drawer-b ul{margin:0; padding-left:17px; font-size:12.6px} .drawer-b li{margin:4px 0}
+.scrim{position:fixed; inset:0; background:rgba(0,26,27,.34); z-index:79; opacity:0;
+  pointer-events:none; transition:opacity .26s}
+.scrim.on{opacity:1; pointer-events:auto}
+
+/* ============ TABLES ============ */
+.tbl-w{overflow-x:auto; background:var(--paper); border:1px solid var(--line);
+  border-radius:var(--r); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; font-size:12.5px; min-width:640px}
+th{background:var(--ink); color:var(--sand); font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.13em; text-transform:uppercase; text-align:left; padding:9px 12px;
+  font-weight:600; position:sticky; top:0; z-index:2}
+td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.5}
+tbody tr:hover{background:var(--teal-l)}
+tbody tr:last-child td{border-bottom:0}
+td.mono,th.mono{font-family:var(--mono); font-size:11px; white-space:nowrap}
+.rmark{display:inline-block; width:17px; height:17px; border-radius:4px; text-align:center;
+  font-family:var(--mono); font-size:10px; font-weight:700; line-height:17px}
+.rmark.x{background:var(--teal); color:#00282A}
+.rmark.o{background:var(--sand); color:#9A8C6E}
+
+/* search / filter */
+.filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
+  padding:9px 12px; box-shadow:var(--shadow); position:sticky; top:104px; z-index:30}
+.filters input[type=search]{flex:1 1 210px; min-width:150px; font-family:var(--sans); font-size:12.5px;
+  padding:6px 11px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink)}
+.filters input[type=search]:focus{outline:2px solid var(--teal); outline-offset:-1px; border-color:var(--teal)}
+.fbtn{font-family:var(--mono); font-size:9.5px; font-weight:600; letter-spacing:.09em;
+  text-transform:uppercase; padding:5px 9px; border-radius:6px; border:1px solid var(--line);
+  background:#fff; color:var(--slate); cursor:pointer}
+.fbtn.on{background:var(--ink); color:var(--sand); border-color:var(--ink)}
+.fbtn:hover:not(.on){background:var(--sand-l); color:var(--ink)}
+
+/* editable */
+[contenteditable="true"]{outline:none; border-radius:3px; transition:background .12s}
+[contenteditable="true"]:hover{background:rgba(1,179,189,.10); box-shadow:0 0 0 2px rgba(1,179,189,.10)}
+[contenteditable="true"]:focus{background:#fff; box-shadow:0 0 0 2px var(--teal)}
+.editing-off [contenteditable="true"]:hover{background:none; box-shadow:none}
+
+.toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px);
+  background:var(--ink); color:var(--sand); padding:10px 20px; border-radius:8px; font-size:12.5px;
+  box-shadow:var(--shadow-lg); z-index:200; transition:transform .3s cubic-bezier(.2,1.2,.4,1);
+  font-weight:500}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+.foot{max-width:1680px; margin:26px auto 0; padding:16px 22px 34px; border-top:1px solid var(--line);
+  color:var(--slate); font-size:11.5px; line-height:1.65}
+.foot b{color:var(--ink)}
+
+/* ============ PRINT ============ */
+@media print{
+  body{background:#fff; font-size:10pt}
+  .hdr{position:static; background:#fff; color:var(--ink); box-shadow:none;
+       border-bottom:2.5px solid var(--red)}
+  .hdr-title h1{color:var(--ink)} .hdr-title .sub{color:var(--slate)}
+  .hdr-title .sub b{color:var(--ink)}
+  .brand-mark{color:var(--ink)} .brand-mark small{color:var(--slate)}
+  .hdr-tools,.nav,.filters,.flow-tools,.drawer,.scrim,.toast{display:none!important}
+  .pane{display:block!important; page-break-before:always}
+  .pane:first-of-type{page-break-before:avoid}
+  .ctrl-b{display:block!important}
+  .ctrl,.card,.kpi,.tbl-w{box-shadow:none; break-inside:avoid}
+  .rail{overflow:visible; flex-wrap:wrap; gap:20px}
+  .step{width:172px; margin-left:0!important; break-inside:avoid}
+  .step + .step::before,.step + .step::after{display:none}
+  .canvas-outer{max-height:none; overflow:visible}
+  th{position:static}
+  a{text-decoration:none; color:var(--ink)}
+}
+@media (max-width:760px){
+  .wrap{padding:14px} .hdr-in{padding:12px 14px 0} .nav{padding:8px 14px 0}
+  .hdr-title h1{font-size:17px} .filters{top:0; position:static}
+  .node{width:158px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important; animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-mark">intact<small>insurance</small></div>
+    </div>
+    <div class="hdr-title">
+      <h1>BlackLine &mdash; ITGC Control &amp; Data-Flow Explorer</h1>
+      <div class="sub">Financial Close Management · Account reconciliation · Vendor-managed SaaS &nbsp;&middot;&nbsp; <b>SOX / ICOFR readiness</b> &nbsp;&middot;&nbsp; Current-state view, draft for validation</div>
+    </div>
+    <div class="hdr-tools">
+      <button class="btn" id="btnExpand">Editing on</button>
+      <button class="btn" id="btnImport">Load edits</button>
+      <button class="btn" id="btnExport">Save edits</button>
+      <button class="btn primary" id="btnPrint">Print / PDF</button>
+      <input type="file" id="fileIn" accept="application/json,.json" hidden>
+    </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<footer class="foot">
+  <b>How to use this file.</b> Every heading, step description and box label is editable &mdash; click it and type.
+  Drag boxes on the Data flow tab to rearrange the picture; click a box to open its detail panel.
+  Use <b>Save edits</b> to download your changes as a JSON file, and <b>Load edits</b> to bring them back later
+  or share them with a colleague. Nothing is stored automatically, so save before you close the tab.
+  <br><br>
+  <b>Source and status.</b> Content is drawn from the BlackLine Control Narrative Document
+  (Intact Insurance UK &amp; International, draft). Control statuses and gap severities are an indicative
+  readiness view derived from the narrative alone &mdash; they are not tested conclusions. Confirm each item
+  through SOX test of design and test of operating effectiveness before reporting.
+  Items marked TBC in the source document are shown as TBC here rather than inferred.
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Node detail">
+  <div class="drawer-h">
+    <div style="flex:1">
+      <span class="k" id="drawerKind"></span>
+      <h3 id="drawerTitle"></h3>
+    </div>
+    <button id="drawerClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-b" id="drawerBody"></div>
+</aside>
+
+<script>
+/* ============================================================
+   Intact ITGC Control & Data-Flow Explorer  —  runtime
+   No external dependencies. Works offline.
+   ============================================================ */
+const esc = s => String(s==null?'':s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+
+const STATUS = {
+  ok:   {cls:'ok',   badge:'b-ok',   label:'Operating'},
+  part: {cls:'part', badge:'b-part', label:'Design gap'},
+  gap:  {cls:'gap',  badge:'b-gap',  label:'Not performed'},
+  vend: {cls:'vend', badge:'b-vend', label:'Vendor reliance'},
+  na:   {cls:'na',   badge:'b-na',   label:'Not applicable'}
+};
+
+let toastT;
+function toast(msg){
+  let t=$('#toast'); if(!t){t=el('div','toast'); t.id='toast'; document.body.appendChild(t);}
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2100);
+}
+
+/* ---------------- editable helper ---------------- */
+function ed(tag, cls, txt, path){
+  return `<${tag} class="${cls}" contenteditable="true" spellcheck="false" data-p="${esc(path)}">${esc(txt)}</${tag}>`;
+}
+
+/* ============================================================
+   1. CONTROL CARDS
+   ============================================================ */
+function renderControl(c, di, ci){
+  const st = STATUS[c.status] || STATUS.na;
+  const card = el('div','ctrl '+st.cls);
+  card.id = c.id.replace(/\./g,'-');
+  card.dataset.search = (c.id+' '+c.name+' '+c.objective+' '+(c.roles||[]).join(' ')+' '+
+      (c.steps||[]).map(s=>s.actor+' '+s.text+' '+(s.sys||'')).join(' ')+' '+
+      (c.limits||[]).join(' ')).toLowerCase();
+  card.dataset.status = c.status;
+  card.dataset.key = c.key ? 'key':'non';
+
+  /* --- header --- */
+  const h = el('div','ctrl-h');
+  h.innerHTML = `<span class="ctrl-cx">&#9656;</span>
+    <span class="ctrl-id">${esc(c.id)}</span>
+    <span class="ctrl-n">${esc(c.name)}</span>
+    <span class="ctrl-tw">
+      <span class="b ${c.key?'b-key':'b-non'}">${c.key?'Key':'Non-key'}</span>
+      <span class="b b-freq">${esc(c.freq)}</span>
+      <span class="b ${st.badge}">${esc(c.statusLabel||st.label)}</span>
+    </span>`;
+  h.addEventListener('click', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    card.classList.toggle('open');
+  });
+  card.appendChild(h);
+
+  /* --- body --- */
+  const b = el('div','ctrl-b');
+  let html = `<div class="obj"><span class="l">Control objective</span>
+      ${ed('span','', c.objective, `d.${di}.controls.${ci}.objective`)}</div>`;
+
+  html += `<div class="meta">
+      <div><span class="l">Frequency</span><span class="v">${ed('span','',c.freq,`d.${di}.controls.${ci}.freq`)}</span></div>
+      <div><span class="l">Roles involved</span><div class="chips">${
+        (c.roles||[]).map(r=>`<span class="chip actor">${esc(r)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+      <div><span class="l">Systems &amp; tools</span><div class="chips">${
+        (c.systems||[]).map(s=>`<span class="chip sys">${esc(s)}</span>`).join('')||'<span class="chip">NA</span>'}</div></div>
+    </div>`;
+
+  if(c.steps && c.steps.length){
+    html += `<div class="rail-l">${esc(c.railLabel||'How the control operates')}</div><div class="rail">`;
+    c.steps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${i+1}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.steps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if(c.altSteps && c.altSteps.length){
+    html += `<div class="rail-l">${esc(c.altLabel||'Exception / alternate route')}</div><div class="rail alt">`;
+    c.altSteps.forEach((s,i)=>{
+      html += `<div class="step ${s.type||''}">
+        <span class="step-n">${String.fromCharCode(65+i)}</span>
+        <span class="step-a">${esc(s.actor)}</span>
+        ${ed('div','step-t', s.text, `d.${di}.controls.${ci}.altSteps.${i}.text`)}
+        ${s.sys?`<span class="step-s">${esc(s.sys)}</span>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  const has = v => v && String(v).trim() && String(v).trim().toUpperCase() !== 'NA';
+  if(has(c.exception)) html += band('exc','Exception handling', c.exception);
+  if(c.limits && c.limits.length) html += bandList('limit','Limitations / identified gaps', c.limits);
+  if(has(c.risk)) html += band('risk','Risk acceptance', c.risk);
+  if(c.evidence && c.evidence.length) html += bandList('ev','Evidence retained', c.evidence);
+  if(has(c.future)) html += band('fut','Future state', c.future);
+  if(has(c.tod)) html += band('tod','SOX test-of-design focus', c.tod);
+
+  b.innerHTML = html;
+  card.appendChild(b);
+  return card;
+}
+const band = (k,t,txt)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span>${esc(txt)}</div>`;
+const bandList=(k,t,arr)=>`<div class="band ${k}"><span class="bt">${esc(t)}</span><ul>${
+  arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+
+/* ============================================================
+   2. FLOW CANVAS
+   ============================================================ */
+const FLOW = {zoom:1, sel:null};
+
+function renderFlow(f){
+  const outer = $('#canvasOuter');
+  const cv = $('#canvas');
+  cv.innerHTML='';
+  cv.style.width = f.w+'px';
+  cv.style.height = f.h+'px';
+
+  /* bands */
+  const bz = el('div','bands');
+  (f.bands||[]).forEach(b=>{
+    const z = el('div','bandzone');
+    z.style.left=b.x+'px'; z.style.width=b.w+'px';
+    z.innerHTML = `<div class="bl">${esc(b.label)}${b.sub?`<small>${esc(b.sub)}</small>`:''}</div>`;
+    bz.appendChild(z);
+  });
+  (f.dividers||[]).forEach(d=>{
+    const dv = el('div','divider');
+    dv.style.top = d.y+'px';
+    dv.innerHTML = `<span>${esc(d.label)}</span>`;
+    bz.appendChild(dv);
+  });
+  cv.appendChild(bz);
+
+  /* svg */
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','edges');
+  svg.setAttribute('width',f.w); svg.setAttribute('height',f.h);
+  svg.id='edges';
+  cv.appendChild(svg);
+
+  /* nodes */
+  f.nodes.forEach((n,i)=>{
+    const d = el('div','node');
+    d.dataset.k = n.k; d.dataset.id = n.id; d.dataset.i = i;
+    d.style.left = n.x+'px'; d.style.top = n.y+'px';
+    d.innerHTML = `${n.tags?`<div class="ctag">${n.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
+      <button class="ninfo" title="Show detail for this box" aria-label="Show detail">i</button>
+      <span class="nk">${esc(n.kind||n.k)}</span>
+      <div class="nt" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.t">${esc(n.t)}</div>
+      ${n.s?`<div class="ns" contenteditable="true" spellcheck="false" data-p="flow.nodes.${i}.s">${esc(n.s)}</div>`:''}`;
+    cv.appendChild(d);
+    makeDraggable(d, n, f);
+    d.querySelector('.ninfo').addEventListener('pointerdown', e=>e.stopPropagation());
+    d.querySelector('.ninfo').addEventListener('click', e=>{
+      e.stopPropagation(); openDrawer(n, f);
+    });
+    d.addEventListener('click', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      if(d.dataset.moved==='1'){d.dataset.moved='0'; return;}
+      openDrawer(n, f);
+    });
+    d.addEventListener('dblclick', e=>{
+      if(e.target.closest('[contenteditable="true"]')) return;
+      openDrawer(n, f);
+    });
+  });
+
+  drawEdges(f);
+  outer.scrollLeft = 0;
+}
+
+function nodeRect(f, id){
+  const d = $(`#canvas .node[data-id="${CSS.escape(id)}"]`);
+  const n = f.nodes.find(x=>x.id===id);
+  if(!d||!n) return null;
+  return {x:n.x, y:n.y, w:d.offsetWidth, h:d.offsetHeight};
+}
+
+function drawEdges(f){
+  const svg = $('#edges'); if(!svg) return;
+  svg.innerHTML='';
+  const NS='http://www.w3.org/2000/svg';
+  const labels=[];
+  (f.edges||[]).forEach((e,i)=>{
+    const a = nodeRect(f,e.from), b = nodeRect(f,e.to);
+    if(!a||!b) return;
+    let x1,y1,x2,y2,c1x,c1y,c2x,c2y;
+    const ac={x:a.x+a.w/2,y:a.y+a.h/2}, bc={x:b.x+b.w/2,y:b.y+b.h/2};
+    const dx=bc.x-ac.x, dy=bc.y-ac.y;
+    if(Math.abs(dx) >= Math.abs(dy)*0.72){          /* mostly horizontal */
+      const dir = dx>=0?1:-1;
+      x1 = dir>0? a.x+a.w : a.x;  y1 = ac.y;
+      x2 = dir>0? b.x     : b.x+b.w; y2 = bc.y;
+      const k = Math.max(34, Math.abs(x2-x1)*0.44);
+      c1x=x1+k*dir; c1y=y1; c2x=x2-k*dir; c2y=y2;
+    } else {                                         /* mostly vertical */
+      const dir = dy>=0?1:-1;
+      x1 = ac.x; y1 = dir>0? a.y+a.h : a.y;
+      x2 = bc.x; y2 = dir>0? b.y     : b.y+b.h;
+      const k = Math.max(28, Math.abs(y2-y1)*0.46);
+      c1x=x1; c1y=y1+k*dir; c2x=x2; c2y=y2-k*dir;
+    }
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d',`M${x1},${y1} C${c1x},${c1y} ${c2x},${c2y} ${x2},${y2}`);
+    p.setAttribute('class','edge '+(e.k||''));
+    p.setAttribute('marker-end','url(#ah'+(e.k||'d')+')');
+    p.dataset.i=i;
+    svg.appendChild(p);
+
+    if(e.l){
+      const t=.5, mt=1-t;
+      const mx = mt*mt*mt*x1 + 3*mt*mt*t*c1x + 3*mt*t*t*c2x + t*t*t*x2;
+      const my = mt*mt*mt*y1 + 3*mt*mt*t*c1y + 3*mt*t*t*c2y + t*t*t*y2;
+      const lines = String(e.l).split('|');
+      const wpx = Math.max(...lines.map(s=>s.length))*5.35 + 12;
+      const hpx = lines.length*11 + 7;
+      labels.push({x:mx, y:my, w:wpx, h:hpx, lines});
+    }
+  });
+
+  /* place labels, nudging vertically to avoid other labels AND node boxes */
+  const placed = f.nodes.map(n=>{
+    const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`);
+    const w=d?d.offsetWidth:184, h=d?d.offsetHeight:80;
+    return {x:n.x+w/2, y:n.y+h/2, w:w, h:h};
+  });
+  const hit=(a,b)=> a.x-a.w/2 < b.x+b.w/2+4 && a.x+a.w/2+4 > b.x-b.w/2 &&
+                    a.y-a.h/2 < b.y+b.h/2+3 && a.y+a.h/2+3 > b.y-b.h/2;
+  labels.forEach(L=>{
+    const y0=L.y;
+    for(let k=0; k<9; k++){
+      const off = Math.ceil(k/2)*(L.h+5)*(k%2?1:-1);
+      L.y = y0+off;
+      if(!placed.some(q=>hit(L,q))) break;
+    }
+    placed.push(L);
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('class','elab-bg');
+    r.setAttribute('x',L.x-L.w/2); r.setAttribute('y',L.y-L.h/2);
+    r.setAttribute('width',L.w); r.setAttribute('height',L.h);
+    r.setAttribute('rx',4);
+    svg.appendChild(r);
+    const tx=document.createElementNS(NS,'text');
+    tx.setAttribute('class','elab');
+    tx.setAttribute('x',L.x); tx.setAttribute('y',L.y-L.h/2+11.5);
+    tx.setAttribute('text-anchor','middle');
+    L.lines.forEach((ln,j)=>{
+      const ts=document.createElementNS(NS,'tspan');
+      ts.setAttribute('x',L.x); if(j)ts.setAttribute('dy','11');
+      ts.textContent=ln; tx.appendChild(ts);
+    });
+    svg.appendChild(tx);
+  });
+  /* arrowheads */
+  const defs=document.createElementNS(NS,'defs');
+  [['d','#5A6B6C'],['batch','#5A6B6C'],['manual','#B8860B'],['api','#01B3BD'],['unk','#DF0030']]
+    .forEach(([k,col])=>{
+      const m=document.createElementNS(NS,'marker');
+      m.setAttribute('id','ah'+k); m.setAttribute('markerWidth','8');
+      m.setAttribute('markerHeight','8'); m.setAttribute('refX','7');
+      m.setAttribute('refY','3'); m.setAttribute('orient','auto');
+      m.setAttribute('markerUnits','userSpaceOnUse');
+      const pp=document.createElementNS(NS,'path');
+      pp.setAttribute('d','M0,0 L7,3 L0,6 z'); pp.setAttribute('fill',col);
+      m.appendChild(pp); defs.appendChild(m);
+    });
+  svg.insertBefore(defs, svg.firstChild);
+}
+
+function makeDraggable(d, n, f){
+  let sx,sy,ox,oy,drag=false;
+  d.addEventListener('pointerdown', e=>{
+    if(e.target.closest('[contenteditable="true"]')) return;
+    drag=true; d.dataset.moved='0';
+    d.setPointerCapture(e.pointerId);
+    sx=e.clientX; sy=e.clientY; ox=n.x; oy=n.y;
+    d.classList.add('dragging');
+  });
+  d.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    const z=FLOW.zoom;
+    const nx = Math.max(4, ox + (e.clientX-sx)/z);
+    const ny = Math.max(4, oy + (e.clientY-sy)/z);
+    if(Math.abs(nx-ox)>3||Math.abs(ny-oy)>3) d.dataset.moved='1';
+    n.x = Math.round(nx); n.y = Math.round(ny);
+    d.style.left=n.x+'px'; d.style.top=n.y+'px';
+    drawEdges(f);
+  });
+  const up=e=>{ if(!drag)return; drag=false; d.classList.remove('dragging');
+    try{d.releasePointerCapture(e.pointerId);}catch(_){} drawEdges(f); };
+  d.addEventListener('pointerup',up); d.addEventListener('pointercancel',up);
+}
+
+/* ---------- drawer ---------- */
+function openDrawer(n, f){
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+  const d=$(`#canvas .node[data-id="${CSS.escape(n.id)}"]`); if(d)d.classList.add('sel');
+  const dw=$('#drawer');
+  const ins=(f.edges||[]).filter(e=>e.to===n.id);
+  const outs=(f.edges||[]).filter(e=>e.from===n.id);
+  const nm=id=>{const x=f.nodes.find(v=>v.id===id); return x?x.t:id;};
+  $('#drawerKind').textContent = n.kind||n.k;
+  $('#drawerTitle').textContent = n.t;
+  let h='';
+  if(n.s) h+=`<p><b>${esc(n.s)}</b></p>`;
+  if(n.desc) h+=`<h4>What it does</h4><p>${esc(n.desc)}</p>`;
+  if(ins.length) h+=`<h4>Data in (${ins.length})</h4><ul>${ins.map(e=>
+    `<li><b>${esc(nm(e.from))}</b> &rarr; ${esc(String(e.l||'').replace(/\|/g,' &middot; '))}${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(outs.length) h+=`<h4>Data out (${outs.length})</h4><ul>${outs.map(e=>
+    `<li>${esc(String(e.l||'').replace(/\|/g,' &middot; '))} &rarr; <b>${esc(nm(e.to))}</b>${
+      e.detail?`<br><span style="color:#5A6B6C">${esc(e.detail)}</span>`:''}</li>`).join('')}</ul>`;
+  if(n.controls&&n.controls.length) h+=`<h4>ITGC control points</h4><div class="chips">${
+    n.controls.map(c=>`<span class="chip sys">${esc(c)}</span>`).join('')}</div>`;
+  if(n.owner) h+=`<h4>Owner / operator</h4><p>${esc(n.owner)}</p>`;
+  if(n.note) h+=`<h4>Audit note</h4><div class="band limit" style="margin-top:0">${esc(n.note)}</div>`;
+  $('#drawerBody').innerHTML=h||'<p style="color:#5A6B6C">No further detail recorded.</p>';
+  dw.classList.add('on'); $('#scrim').classList.add('on');
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on');
+  $$('#canvas .node').forEach(x=>x.classList.remove('sel'));
+}
+
+/* ============================================================
+   3. BOOT
+   ============================================================ */
+let DATA;
+function boot(data){
+  DATA = data;
+  document.title = data.app + ' — ITGC Control & Data-Flow Explorer | Intact Insurance';
+
+  /* ---- nav + panes ---- */
+  const nav=$('#nav'), main=$('#main');
+
+  const addPane=(id,build)=>{
+    const p=el('div','pane'); p.id='pane-'+id;
+    main.appendChild(p);          // must be in the DOM before build() queries it
+    build(p); return p;
+  };
+  const addTab=(id,label,n)=>{
+    const b=el('button',null,esc(label)+(n?`<span class="n">${n}</span>`:''));
+    b.dataset.t=id; nav.appendChild(b);
+    b.addEventListener('click',()=>go(id));
+    return b;
+  };
+
+  /* OVERVIEW */
+  addTab('overview','Overview');
+  addPane('overview', p=>{
+    const o=data.overview;
+    let h=`<div class="pane-head"><div class="eyebrow">System profile</div>
+      <h2>${esc(data.app)}</h2><p>${esc(o.purpose)}</p></div>`;
+    h+=`<div class="grid g4" style="margin-bottom:16px">${o.kpis.map(k=>
+      `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div>
+       <div class="val">${esc(k.val)}</div>${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+    h+=`<div class="grid g2" style="margin-bottom:16px">${o.facts.map(f=>
+      `<div class="card"><h3><span class="ic">&#9642;</span>${esc(f.t)}</h3>
+       <div style="font-size:12.8px;line-height:1.6">${f.v}</div></div>`).join('')}</div>`;
+    /* RACI */
+    h+=`<div class="pane-head" style="margin-top:26px"><div class="eyebrow">Accountability</div>
+      <h2>Roles &amp; responsibility ownership</h2>
+      <p><span class="rmark x">X</span> primary responsibility &nbsp;
+         <span class="rmark o">&ndash;</span> supporting involvement</p></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th style="min-width:200px">Role</th>
+      <th>Responsibility summary</th><th class="mono">APD</th><th class="mono">CM</th>
+      <th class="mono">PD</th><th class="mono">CO</th><th class="mono">TPRM</th></tr></thead><tbody>`;
+    o.raci.forEach(r=>{
+      h+=`<tr><td><b>${esc(r.role)}</b></td><td>${esc(r.sum)}</td>`;
+      r.m.forEach(v=>{h+=`<td style="text-align:center"><span class="rmark ${v?'x':'o'}">${v?'X':'–'}</span></td>`;});
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+    if(o.sources) h+=`<div class="card" style="margin-top:16px"><h3><span class="ic">&#9642;</span>Source documents referenced</h3>
+      <ul style="margin:0;padding-left:18px;font-size:12.5px">${o.sources.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`;
+    p.innerHTML=h;
+  });
+
+  /* FLOW */
+  addTab('flow','Data flow', (data.flow.nodes||[]).length);
+  addPane('flow', p=>{
+    const f=data.flow;
+    p.innerHTML=`<div class="pane-head"><div class="eyebrow">End-to-end data movement</div>
+      <h2>${esc(f.title)}</h2><p>${esc(f.intro)}</p></div>
+      <div class="flow-tools">
+        <button class="btn" id="zIn">Zoom in</button>
+        <button class="btn" id="zOut">Zoom out</button>
+        <span class="zlvl" id="zLvl">100%</span>
+        <button class="btn" id="zFit">Fit width</button>
+        <button class="btn" id="zReset">Reset layout</button>
+        <span class="hint">Drag any box to move it &middot; click a box for detail &middot;
+          double-click a label to rename &middot; <kbd>Ctrl</kbd>+<kbd>P</kbd> to print</span>
+      </div>
+      <div class="canvas-outer" id="canvasOuter"><div class="canvas-shim" id="canvasShim"><div class="canvas" id="canvas"></div></div></div>
+      <div class="legend" id="legend"></div>
+      ${f.notes?`<div class="band limit" style="margin-top:14px"><span class="bt">Documented gaps in the data-flow record</span><ul>${
+        f.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
+      ${f.tableTitle?`<div class="pane-head" style="margin-top:28px"><div class="eyebrow">Interface register</div>
+        <h2>${esc(f.tableTitle)}</h2></div>
+        <div class="tbl-w"><table><thead><tr><th>Source</th><th>Processing layer</th>
+        <th>Destination</th><th>Data / business purpose</th></tr></thead><tbody>${
+        f.table.map(r=>`<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[1])}</td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td></tr>`).join('')
+      }</tbody></table></div>`:''}`;
+
+    renderFlow(f);
+    /* legend */
+    const K=[['source','Source system'],['process','Processing / application'],['store','Data store / staging'],
+             ['gl','General ledger'],['report','Reporting output'],['ctrl','Control / monitoring'],['tool','Supporting tool']];
+    const cols={source:'#C9B893',process:'#01B3BD',store:'#7E5BC4',gl:'#DF0030',report:'#0F7A5A',ctrl:'#B8860B',tool:'#88999A'};
+    let lg = K.map(([k,l])=>`<div class="lg"><span class="sw" style="border-color:${cols[k]};background:${cols[k]}22"></span>${l}</div>`).join('');
+    lg += `<div class="lg"><span class="ln" style="border-color:#5A6B6C"></span>System interface</div>
+      <div class="lg"><span class="ln" style="border-color:#5A6B6C;border-top-style:dashed"></span>Scheduled / batch file</div>
+      <div class="lg"><span class="ln" style="border-color:#B8860B;border-top-style:dotted"></span>Manual / human hand-off</div>
+      <div class="lg"><span class="ln" style="border-color:#01B3BD"></span>API / real-time</div>
+      <div class="lg"><span class="ln" style="border-color:#DF0030;border-top-style:dashed"></span>Mechanism not evidenced</div>`;
+    $('#legend').innerHTML=lg;
+
+    const setZoom=z=>{
+      FLOW.zoom=Math.min(1.6,Math.max(0.30,z));
+      const cv=$('#canvas'), shim=$('#canvasShim');
+      cv.style.transform=`scale(${FLOW.zoom})`;
+      shim.style.width=(f.w*FLOW.zoom)+'px';
+      shim.style.height=(f.h*FLOW.zoom)+'px';
+      $('#zLvl').textContent=Math.round(FLOW.zoom*100)+'%';
+    };
+    $('#zIn').onclick=()=>setZoom(FLOW.zoom+0.14);
+    $('#zOut').onclick=()=>setZoom(FLOW.zoom-0.14);
+    $('#zFit').onclick=()=>FLOW.fit();
+    $('#zReset').onclick=()=>{f.nodes.forEach((n,i)=>{n.x=f.home[i][0]; n.y=f.home[i][1];});
+      renderFlow(f); setZoom(FLOW.zoom); toast('Layout reset to default positions');};
+    FLOW.fit = ()=>setZoom(($('#canvasOuter').clientWidth-26)/f.w);
+    setTimeout(()=>setZoom(1),50);
+  });
+
+  /* DOMAINS */
+  data.domains.forEach((d,di)=>{
+    addTab('d'+di, d.short, d.controls.length);
+    addPane('d'+di, p=>{
+      let h=`<div class="pane-head"><div class="eyebrow">${esc(d.code)} &middot; ITGC domain</div>
+        <h2>${esc(d.name)}</h2><p>${esc(d.intro)}</p></div>`;
+      if(d.summary) h+=`<div class="grid g4" style="margin-bottom:16px">${d.summary.map(k=>
+        `<div class="kpi ${k.tone||''}"><div class="lab">${esc(k.lab)}</div><div class="val">${esc(k.val)}</div>
+         ${k.note?`<div class="note">${esc(k.note)}</div>`:''}</div>`).join('')}</div>`;
+      h+=`<div class="filters">
+        <input type="search" placeholder="Filter ${esc(d.short)} controls — try a role, system or keyword…" data-f="${di}">
+        <button class="fbtn on" data-s="all" data-d="${di}">All</button>
+        <button class="fbtn" data-s="key" data-d="${di}">Key only</button>
+        <button class="fbtn" data-s="gap" data-d="${di}">Gaps</button>
+        <button class="fbtn" data-s="part" data-d="${di}">Design gaps</button>
+        <button class="fbtn" data-s="vend" data-d="${di}">Vendor reliance</button>
+        <button class="fbtn" data-x="open" data-d="${di}">Expand all</button>
+        <button class="fbtn" data-x="close" data-d="${di}">Collapse all</button>
+      </div><div id="list${di}"></div>`;
+      p.innerHTML=h;
+      const list=p.querySelector('#list'+di);
+      d.controls.forEach((c,ci)=>list.appendChild(renderControl(c,di,ci)));
+      if(d.outro) list.insertAdjacentHTML('afterend',
+        `<div class="band tod" style="margin-top:18px"><span class="bt">Domain note</span>${esc(d.outro)}</div>`);
+
+      /* filters */
+      const apply=()=>{
+        const q=(p.querySelector('input[type=search]').value||'').toLowerCase().trim();
+        const s=p.querySelector('.fbtn.on[data-s]')?.dataset.s||'all';
+        let shown=0;
+        Array.from(list.children).forEach(c=>{
+          if(!c.classList.contains('ctrl')) return;
+          const okQ = !q || c.dataset.search.includes(q);
+          const okS = s==='all' || (s==='key'? c.dataset.key==='key' : c.dataset.status===s);
+          const vis = okQ&&okS; c.style.display = vis?'':'none'; if(vis)shown++;
+        });
+        let m=p.querySelector('.nores');
+        if(!shown){ if(!m){m=el('div','nores card'); m.style.textAlign='center';
+          m.innerHTML='<b>No controls match that filter.</b><br><span style="color:#5A6B6C">Clear the search box or choose “All”.</span>';
+          list.appendChild(m);} }
+        else if(m) m.remove();
+      };
+      p.querySelector('input[type=search]').addEventListener('input',apply);
+      p.querySelectorAll('.fbtn[data-s]').forEach(b=>b.addEventListener('click',()=>{
+        p.querySelectorAll('.fbtn[data-s]').forEach(x=>x.classList.remove('on'));
+        b.classList.add('on'); apply();
+      }));
+      p.querySelector('.fbtn[data-x="open"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.add('open')));
+      p.querySelector('.fbtn[data-x="close"]').addEventListener('click',()=>
+        list.querySelectorAll('.ctrl').forEach(c=>c.classList.remove('open')));
+    });
+  });
+
+  /* GAP REGISTER */
+  addTab('gaps','Gap register', data.gaps.length);
+  addPane('gaps', p=>{
+    const sev={H:'b-gap',M:'b-part',L:'b-na'};
+    const sevL={H:'High',M:'Medium',L:'Low'};
+    let h=`<div class="pane-head"><div class="eyebrow">Consolidated exceptions</div>
+      <h2>Gap register — ${esc(data.app)}</h2>
+      <p>Every limitation recorded across the control narrative, in one list. Severity is an
+      indicative SOX readiness view based on whether the control is Key and whether any control
+      activity currently operates.</p></div>`;
+    const cnt=k=>data.gaps.filter(g=>g.sev===k).length;
+    h+=`<div class="grid g4" style="margin-bottom:16px">
+      <div class="kpi red"><div class="lab">High</div><div class="val">${cnt('H')}</div>
+        <div class="note">Key control not operating, or no evidenced activity</div></div>
+      <div class="kpi amber"><div class="lab">Medium</div><div class="val">${cnt('M')}</div>
+        <div class="note">Control operates but design or evidence is incomplete</div></div>
+      <div class="kpi"><div class="lab">Low</div><div class="val">${cnt('L')}</div>
+        <div class="note">Documentation, SLA or housekeeping matters</div></div>
+      <div class="kpi ok"><div class="lab">Total logged</div><div class="val">${data.gaps.length}</div>
+        <div class="note">Across APD, CM, CO, PD and TPRM</div></div></div>`;
+    h+=`<div class="tbl-w"><table><thead><tr><th class="mono" style="width:78px">Control</th>
+      <th style="width:82px">Severity</th><th style="min-width:280px">Gap identified</th>
+      <th style="min-width:250px">Why it matters for SOX</th></tr></thead><tbody>`;
+    data.gaps.forEach(g=>{
+      h+=`<tr><td class="mono"><b>${esc(g.id)}</b></td>
+        <td><span class="b ${sev[g.sev]}">${sevL[g.sev]}</span></td>
+        <td>${esc(g.gap)}</td><td style="color:#4A5C5D">${esc(g.why)}</td></tr>`;
+    });
+    h+='</tbody></table></div>';
+    h+=`<div class="band tod" style="margin-top:16px"><span class="bt">How to read this</span>
+      Severity is an indicative view derived from the control narrative only. It is not a tested
+      conclusion — confirm each item through SOX test of design and test of operating effectiveness
+      before reporting.</div>`;
+    p.innerHTML=h;
+  });
+
+  go('overview');
+
+  /* ---- toolbar ---- */
+  $('#btnExport').onclick=()=>{
+    harvestEdits();
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+    const a=el('a'); a.href=URL.createObjectURL(blob);
+    a.download=(DATA.app.replace(/[^A-Za-z0-9]+/g,'_'))+'_ITGC_edits.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Exported your edits as JSON');
+  };
+  $('#btnImport').onclick=()=>$('#fileIn').click();
+  $('#fileIn').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      if(!d.app||!d.domains) throw new Error('not a valid file');
+      main.innerHTML=''; nav.innerHTML=''; boot(d); toast('Loaded '+f.name);
+    }catch(err){ toast('That file could not be read: '+err.message); } };
+    r.readAsText(f); e.target.value='';
+  };
+  $('#btnPrint').onclick=()=>{$$('.ctrl').forEach(c=>c.classList.add('open')); setTimeout(()=>window.print(),120);};
+  $('#btnExpand').onclick=()=>{
+    const on=document.body.classList.toggle('editing-off');
+    $('#btnExpand').textContent = on?'Editing off':'Editing on';
+    $$('[contenteditable]').forEach(n=>n.setAttribute('contenteditable', on?'false':'true'));
+    toast(on?'Editing locked — click again to unlock':'Editing unlocked — click any text to change it');
+  };
+  $('#scrim').onclick=closeDrawer;
+  $('#drawerClose').onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+  window.addEventListener('resize',()=>{ if(DATA&&DATA.flow&&$('#edges')) drawEdges(DATA.flow); });
+}
+
+function go(id){
+  $$('.pane').forEach(p=>p.classList.toggle('on', p.id==='pane-'+id));
+  $$('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.t===id));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='flow'&&DATA) setTimeout(()=>drawEdges(DATA.flow),40);
+}
+
+/* write contenteditable values back into DATA before export */
+function harvestEdits(){
+  $$('[data-p]').forEach(n=>{
+    const path=n.dataset.p.split('.');
+    let o=DATA, key=path.pop();
+    if(path[0]==='d'){ path.shift(); o=DATA.domains; }
+    else if(path[0]==='flow'){ path.shift(); o=DATA.flow; }
+    for(const k of path){ if(o==null) return; o=o[/^\d+$/.test(k)?Number(k):k]; }
+    if(o) o[/^\d+$/.test(key)?Number(key):key]=n.textContent.trim();
+  });
+}
+
+const DATA_JSON = {"app":"BlackLine","tagline":"Financial Close Management · Account reconciliation · Vendor-managed SaaS","overview":{"purpose":"BlackLine is a cloud-based SaaS finance application used to perform account reconciliations and support period-end financial-close activities. It is financially relevant because it provides the workflow and status evidence Finance teams use to demonstrate that accounts feeding the general ledger and financial reporting have been reconciled, reviewed and certified to the close timetable.","kpis":[{"lab":"Users in scope","val":"~72","note":"Plus 4 System Administrators, 1 vendor support account, 1 API account"},{"lab":"Key controls","val":"22","note":"Across APD, CM and CO; 3 non-key policy controls"},{"lab":"Not operating","val":"5","tone":"red","note":"APD.C09, APD.C11, APD.C12 plus CM.C07 and PD.C02–C04 not applicable"},{"lab":"Vendor reliance","val":"SOC 1 II","tone":"amber","note":"Hosting, backup, restoration, resilience and product code all vendor-operated"}],"facts":[{"t":"System type","v":"Vendor-managed cloud SaaS, operated out of the box. Intact configures fields, accounts, reconciliation settings, user roles and entity access only. BlackLine manages the application platform, operating system, database and hosting infrastructure."},{"t":"Environments","v":"Only the BlackLine <b>Production</b> environment is financially relevant to Intact. BlackLine develops and tests core releases in vendor-managed non-production or sandbox environments. Intact administers none of the vendor's Development, Test or Production infrastructure — segregation is assessed through the SOC report and TPRM."},{"t":"Geographical scope","v":"Users and regional approval routes across the <b>UK, Ireland, Europe, Dubai and GCC Investments</b>, with a small number of users in other supported locations. <b>Canada no longer uses BlackLine.</b>"},{"t":"Authentication","v":"Accessed directly through a web URL using <b>local BlackLine credentials</b>. Corporate SSO does not operate. MFA and IP-based restrictions are not configured. Users do not need the Intact network or VPN to connect. SailPoint-integrated SSO is in progress."},{"t":"Access request tool","v":"<b>ServiceDesk Plus</b> is the formal request and approval record. Standard access is approved by the relevant Regional Local Administrator; System Administrator access follows a separate route through the Finance Systems Team Lead. Fulfilment is performed manually inside BlackLine."},{"t":"Access model","v":"Four vendor-defined access levels — <b>View Only, Standard, Edit, Administrator</b> — combined with entity-based restrictions. A user can hold Administrator access for one entity or region without equivalent access across the wider environment. Intact does not create or modify the underlying role definitions."},{"t":"Processing","v":"No Intact-managed external scheduler. A System Administrator <b>manually initiates the built-in auto-reconciliation process, normally each morning</b>; it completes in roughly five minutes and the import-status screen records success or failure. Additional runs are requested through ServiceDesk Plus."},{"t":"Future state","v":"BlackLine is likely to be affected by the wider Finance transformation, including <b>potential migration to Oracle ARCS</b> and changes to its existing SAP-related integrations. SailPoint-integrated SSO is expected to provide centralised authentication and access governance."}],"raci":[{"role":"Regional Local Administrators","sum":"Approve standard BlackLine access for the relevant region or entity, review regional users during quarterly recertification, provide business context for changes and identify issues affecting regional reconciliation activities.","m":[1,0,0,0,0]},{"role":"UK&I Finance Systems Team","sum":"Manually provisions, modifies and removes users; manages access remediation and the monthly inactive-user review; coordinates customer-side configuration and vendor releases; runs and monitors the auto-reconciliation process; performs initial incident triage; and coordinates vendor support and control evidence.","m":[1,1,0,1,0]},{"role":"Finance Systems Team Lead / Platform Owner","sum":"Approves and reviews System Administrator access, oversees significant customer-side configuration and vendor-release impacts, governs operational exceptions and provides application-owner oversight of access, vendor reliance and unresolved control matters.","m":[1,1,0,1,1]},{"role":"BlackLine System Administrators","sum":"Create, modify and remove users; assign approved roles and entity access; perform authorised tenant configuration; run and monitor the auto-reconciliation process; review import-status results; and raise vendor support cases where required.","m":[1,1,0,1,0]},{"role":"End Users / Requestors","sum":"Raise access requests where the required approval is attached, identify process issues or enhancement requirements, participate in testing where a qualifying initiative applies, perform reconciliation activities within approved access and report service or processing issues.","m":[0,0,0,0,0]},{"role":"BlackLine Vendor","sum":"Maintains vendor support access and the hosted SaaS environment; performs core product development, testing, releases and platform updates; investigates vendor support cases; and operates hosting, backup, restoration and technical-resilience activities.","m":[0,1,1,1,1]},{"role":"Business Owner / Approved Reviewer","sum":"Reviews access when assigned as Local Administrator or privileged-access reviewer, assesses business impacts of significant releases or configuration changes, confirms resolution of business-impacting incidents and provides requirements, testing and approval where a qualifying initiative applies.","m":[1,1,0,1,0]},{"role":"TRM Team","sum":"Reviews the BlackLine SOC report and assesses vendor-operated access, change, development, incident, backup, restoration and resilience controls, including bridge coverage, exceptions, subservice organisations, CUECs, mitigating actions and the vendor-reliance conclusion.","m":[0,0,0,0,1]}],"sources":["BlackLine Control Narrative Document v1.2 (DRAFT) — Intact Insurance UK & International","UK&I User Access & Password Policy Control Framework Supporting Document 2026","BlackLine logical-access process maintained in Blueworks","FSCP – UK – Group FOS – New Users Process / Leavers Process","RSA Architecture – FY24 RSAIG Finance Application Architecture","Intact Change Enablement Process v2.1 and Change Delivery Framework – Minimum Standards Guidance","Wipro-RSA Incident Management Process v1.8; IT Policy Control Framework v4"]},"flow":{"title":"How data reaches BlackLine and how close evidence reaches financial reporting","intro":"BlackLine sits on the assurance side of the finance architecture: it does not originate transactions. Account and financial data arrives from the SAP finance environment, the built-in auto-reconciliation process refreshes certification status each morning, and Finance teams then produce the reconciliation and certification evidence that supports the general ledger close. Drag any box to rearrange the picture; click a box to see what flows in and out and which ITGC controls attach to it.","w":2180,"h":1040,"dividers":[{"y":680,"label":"Control layer — access administration, review and support"}],"bands":[{"x":0,"w":400,"label":"Source","sub":"Where data originates"},{"x":400,"w":380,"label":"Ingest","sub":"How it arrives"},{"x":780,"w":540,"label":"Processing","sub":"BlackLine tenant"},{"x":1320,"w":440,"label":"Close output","sub":"Evidence produced"},{"x":1760,"w":420,"label":"Reporting","sub":"GL & financial reporting"}],"nodes":[{"id":"sap","k":"gl","kind":"Source · GL","t":"SAP (incl. SAP GL)","s":"Intact finance environment","x":60,"y":150,"desc":"The SAP finance environment, including SAP GL, is the confirmed source of financial and account data made available in BlackLine for reconciliation and period-end close.","owner":"Finance / SAP application teams","note":"The architecture confirms the direction SAP → BlackLine, but the interface mechanism, feed name, file or message format, automated or manual nature, frequency, source tables or reports, data fields and interface-monitoring arrangements are NOT identified in the reviewed architecture. This is an open item for SOX test of design."},{"id":"finproc","k":"source","kind":"Source · Business","t":"Underlying finance process","s":"New account creation","x":60,"y":340,"desc":"New accounts arising through the underlying finance process are added to the BlackLine account population and become available for reconciliation. This is treated as ongoing business activity, not a core application change.","owner":"Regional Finance teams"},{"id":"sdp","k":"tool","kind":"Tool · ITSM","t":"ServiceDesk Plus","s":"Access requests, approvals, additional-run requests","x":140,"y":900,"desc":"The formal request and approval record for BlackLine access, and the route for requesting an additional auto-reconciliation run where account or reconciliation-setting changes must take effect before the next routine run.","controls":["APD.C01","APD.C03","APD.C04","APD.C05","APD.C08","CO.C02"],"owner":"UK&I Finance Systems Team","note":"The entity-access requirement is entered as free text within the request rather than selected through a controlled dropdown."},{"id":"feed","k":"store","kind":"Ingest · Interface","t":"SAP → BlackLine data feed","s":"Mechanism not evidenced","x":440,"y":150,"desc":"The financial data feed from SAP into BlackLine. Direction is confirmed by the architecture; the technical mechanism is not.","note":"No feed name, format, frequency, protocol or monitoring arrangement is documented. Interface monitoring cannot currently be evidenced.","controls":["CO.C02"]},{"id":"acctpop","k":"store","kind":"Ingest · Population","t":"BlackLine account population","s":"Accounts + reconciliation-frequency settings","x":440,"y":340,"desc":"The account population and its reconciliation-frequency settings — configurable as monthly, quarterly or another frequency determined by the relevant reconciliation team.","owner":"Regional reconciliation teams / Finance Systems Team"},{"id":"prov","k":"ctrl","kind":"Control · Manual","t":"Manual provisioning hand-off","s":"Finance Systems Team fulfils approved request","x":560,"y":740,"desc":"An approved ServiceDesk Plus request is checked (user, approver, requested role, requested entity scope) and the Finance Systems Team then creates, modifies or removes the BlackLine user profile directly. This is a manual administrative hand-off, not an evidenced automated system interface.","controls":["APD.C02","APD.C03","APD.C04","APD.C05"]},{"id":"autorec","k":"process","kind":"Processing · Batch","t":"Auto-reconciliation process","s":"Manually initiated, ~each morning, ~5 min","x":830,"y":360,"desc":"A System Administrator selects the account process and runs auto-certification / auto-decertification based on the reconciliation-frequency settings held against the relevant accounts. Access to initiate is restricted to BlackLine System Administrators within the UK&I Finance Systems Team.","controls":["CO.C02","CM.C05"],"owner":"BlackLine System Administrators","tags":["CO.C02"]},{"id":"importst","k":"ctrl","kind":"Control · Monitoring","t":"Import-status screen","s":"Success / failure check after every run","x":1100,"y":545,"desc":"After each run the System Administrator checks the BlackLine import-status screen, which records whether the process completed successfully or failed. Failures are investigated by the Finance Systems Team and escalated to the vendor where needed.","controls":["CO.C02","CO.C05"],"tags":["CO.C02"]},{"id":"fcm","k":"process","kind":"Processing · Core","t":"BlackLine FCM","s":"Reconciliation & matching workflow","x":830,"y":150,"desc":"Financial Close Management: preparer and approver responsibilities, configurable reconciliation frequency, entity-based access, reconciliation review and certification. This is the financially relevant processing layer.","controls":["APD.C02","APD.C10","CM.C05"],"owner":"BlackLine (vendor-hosted) / Intact Finance users"},{"id":"usercfg","k":"process","kind":"Processing · Config","t":"User & entity-access configuration","s":"Roles: View Only · Standard · Edit · Administrator","x":980,"y":740,"desc":"Vendor-defined roles combined with entity-based restrictions. Entity restrictions limit the regions or entities over which a user can perform the activities the role permits.","controls":["APD.C02","APD.C08","APD.C11","APD.C12"]},{"id":"finusers","k":"process","kind":"Processing · People","t":"Finance users & regional reconciliation teams","s":"Prepare · review · approve · certify","x":1100,"y":300,"desc":"Finance users prepare, review, approve and certify account reconciliations within their assigned role and entity scope.","owner":"Regional Finance / reconciliation teams"},{"id":"recstatus","k":"report","kind":"Output · Evidence","t":"Reconciliation & certification status","s":"Workflow evidence per account","x":1360,"y":150,"desc":"BlackLine provides the reconciliation status, certification status and workflow evidence used to demonstrate that accounts have been reconciled, reviewed and certified in accordance with the applicable close timetable.","controls":["CM.C05"]},{"id":"closepack","k":"report","kind":"Output · Close","t":"Period-end close evidence","s":"Supports the close timetable","x":1360,"y":360,"desc":"Close-related outputs used by Finance to evidence completion of reconciliation activity for the period.","owner":"Regional Finance teams"},{"id":"uar","k":"ctrl","kind":"Control · Quarterly","t":"Quarterly access review","s":"BlackLine extract + Excel + email","x":760,"y":900,"desc":"The Finance Systems Team downloads the user and entitlement population and prepares the review spreadsheet. Regional Local Administrators review standard users; the Finance Systems Team Lead independently reviews System Administrators. SailPoint does NOT operate as the certification platform for BlackLine.","controls":["APD.C07","APD.C08"],"note":"The BlackLine user and entitlement report does not include a record count. Population consistency is supported by comparing screenshots or PDF output to the Excel extract using username and last-login date and time, rather than a system-generated record-count reconciliation.","tags":["APD.C07"]},{"id":"gl","k":"gl","kind":"Destination · GL","t":"General ledger & financial reporting","s":"Wider GL and financial-reporting process","x":1800,"y":150,"desc":"BlackLine supports account reconciliations and close activities over financial information used within the wider general-ledger and financial-reporting process. This is why BlackLine is in ICOFR scope.","controls":["All key controls"]},{"id":"forum","k":"tool","kind":"Tool · Vendor","t":"BlackLine Community Forum","s":"Vendor support case logging","x":1400,"y":900,"desc":"The incident-management tool for BlackLine. An authorised System Administrator raises the case and assigns priority; BlackLine investigates and resolves. A separate ServiceNow incident-management process does not operate for BlackLine application incidents.","controls":["CO.C05","CM.C08"],"owner":"BlackLine vendor"},{"id":"psm","k":"tool","kind":"Tool · Secrets","t":"Password Secret Manager","s":"API account credential · 12-month rotation","x":1750,"y":740,"desc":"Holds the BlackLine API service-account password, rotated every 12 months. The API account operates as a system or service identity and is managed separately from human-user access.","controls":["APD.C08","APD.C10"]}],"edges":[{"from":"sap","to":"feed","k":"unk","l":"Financial &|account data","detail":"Direction confirmed by architecture; mechanism, format and frequency not identified."},{"from":"feed","to":"fcm","k":"unk","l":"Loaded into|BlackLine","detail":"Made available in BlackLine to support account reconciliation and period-end close."},{"from":"finproc","to":"acctpop","k":"manual","l":"New accounts","detail":"New accounts received through the underlying finance process are added to the account population."},{"from":"acctpop","to":"autorec","k":"batch","l":"Accounts +|frequency settings"},{"from":"acctpop","to":"fcm","k":"batch","l":"Reconciliation|population"},{"from":"sdp","to":"prov","k":"manual","l":"Approved request|+ approver record"},{"from":"sdp","to":"autorec","k":"manual","l":"Additional-run|request","detail":"Raised where account or reconciliation-setting changes must take effect before the next routine run."},{"from":"prov","to":"usercfg","k":"manual","l":"Role + entity|scope assigned"},{"from":"autorec","to":"importst","k":"batch","l":"Run result"},{"from":"autorec","to":"fcm","k":"batch","l":"Certification /|decertification applied"},{"from":"importst","to":"forum","k":"manual","l":"Failed run →|vendor case"},{"from":"usercfg","to":"fcm","k":"api","l":"Entity-scoped|access"},{"from":"fcm","to":"finusers","k":"api","l":"Assigned accounts|& workflow"},{"from":"finusers","to":"recstatus","k":"manual","l":"Prepare · review|approve · certify"},{"from":"fcm","to":"recstatus","k":"api","l":"Status &|workflow data"},{"from":"recstatus","to":"closepack","k":"batch","l":"Close evidence"},{"from":"recstatus","to":"gl","k":"batch","l":"Reconciled &|certified accounts"},{"from":"closepack","to":"gl","k":"batch","l":"Close timetable|assurance"},{"from":"usercfg","to":"uar","k":"manual","l":"User & entitlement|extract"},{"from":"uar","to":"usercfg","k":"manual","l":"Remediation:|remove / modify"},{"from":"psm","to":"fcm","k":"api","l":"API service|identity"},{"from":"fcm","to":"forum","k":"manual","l":"Application|incidents"}],"notes":["The SAP → BlackLine interface mechanism, feed name, file or message format, automated or manual nature, frequency, source tables or reports, data fields and interface-monitoring arrangements are not identified in the reviewed architecture.","No substantive financially relevant batch-job population is confirmed in the current state. The nature of any auto-reconciliation or refresh process remains subject to confirmation.","The provisioning hand-off from ServiceDesk Plus into BlackLine is a manual administrative step, not an evidenced automated system interface.","SailPoint does not operate as the BlackLine access-certification platform, despite a SailPoint service account being referenced in the access population."],"tableTitle":"Interfaces and processing layers as documented","table":[["SAP, including SAP GL within the finance architecture","Financial data feed into BlackLine. Direction confirmed; interface mechanism, feed name, format, automated or manual nature, frequency, source tables, data fields and monitoring not identified.","BlackLine — Reconciliation & Matching","Financial and account data from the SAP finance environment is made available in BlackLine to support account reconciliation and period-end close. New accounts from the underlying finance process are added to the account population."],["BlackLine account population and reconciliation-setting updates","Built-in auto-reconciliation process including auto-certification / auto-decertification based on reconciliation-frequency settings. A System Administrator manually initiates the process, normally each morning. An additional run can be requested through ServiceDesk Plus.","Updated BlackLine reconciliation population and processing status","Applies the relevant certification or decertification settings and refreshes account changes. The System Administrator checks the import-status screen afterwards. Normally completes in approximately five minutes."],["ServiceDesk Plus access request and approval record","Manual review and fulfilment by the Finance Systems Team. Approved user, role and entity scope are checked before the user profile is created, modified or removed.","BlackLine user and entity-access configuration","Supports manual provisioning, modification and removal. ServiceDesk Plus retains the request and approval; BlackLine retains the resulting profile and assigned role and entity access. A manual hand-off, not an automated interface."],["BlackLine reconciliation data, account assignments and workflow configuration","BlackLine Financial Close Management and account-reconciliation workflow: preparer and approver responsibilities, configurable frequency, entity-based access, review and certification.","Finance users and regional reconciliation teams","Finance users prepare, review, approve and certify reconciliations within their assigned role and entity scope. Provides the status and workflow evidence used to demonstrate accounts were reconciled and certified to the close timetable."],["Failed auto-reconciliation run or application-processing issue","Finance Systems Team investigation and initial triage. Where vendor intervention is required, an authorised System Administrator raises a Community Forum case and monitors it to resolution.","Finance Systems Team and BlackLine vendor-support process","Supports identification, investigation, escalation and resolution of failed runs. Records include the ServiceDesk Plus request for an additional run, import-status result, investigation evidence, Community Forum case and resolution evidence."]],"home":[[60,150],[60,340],[140,900],[440,150],[440,340],[560,740],[830,360],[1100,545],[830,150],[980,740],[1100,300],[1360,150],[1360,360],[760,900],[1800,150],[1400,900],[1750,740]]},"domains":[{"code":"APD","short":"APD","name":"Access to Programs and Data","intro":"BlackLine logical access is governed by the UK&I User Access & Password Policy Control Framework 2026 together with the Finance Systems access-management process operated through ServiceDesk Plus. Standard access is approved by the relevant Regional Local Administrator; System Administrator access follows a separate route through the Finance Systems Team Lead. All fulfilment is performed manually inside BlackLine by the Finance Systems Team.","summary":[{"lab":"Controls","val":"12","note":"11 key, 1 non-key"},{"lab":"Operating","val":"6","tone":"ok","note":"C03–C07 plus C02"},{"lab":"Design gaps","val":"3","tone":"amber","note":"C01, C08, C10"},{"lab":"Not performed","val":"3","tone":"red","note":"C09, C11, C12"}],"outro":"BlackLine's access design is fundamentally sound for provisioning, modification, removal and periodic review. The exposure concentrates in three places: no monitoring of what administrators actually do (C09), no SoD conflict analysis of any kind (C11/C12), and an authentication model with no SSO, no MFA and no network dependency (C10).","controls":[{"id":"APD.C01","name":"Policies & Procedures","key":false,"status":"part","freq":"TBC","objective":"To confirm that access management policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["UK&I Finance Systems Team","Finance Systems Team Lead / Platform Owner"],"systems":["ServiceDesk Plus","Blueworks","SharePoint"],"railLabel":"What the documented access-management process covers","steps":[{"actor":"Policy framework","text":"BlackLine logical access is governed by the Intact Insurance UK&I User Access & Password Policy Control Framework Supporting Document 2026.","sys":"UK&I AM Policy 2026","type":"out"},{"actor":"Process layer","text":"The Finance Systems access-management process is operated through ServiceDesk Plus and documented in Blueworks.","sys":"Blueworks · ServiceDesk Plus"},{"actor":"Lifecycle covered","text":"Request and approval, provisioning, modification, removal, quarterly recertification and the monthly inactive-user review.","sys":"6 lifecycle stages"},{"actor":"Approval routes","text":"Standard access is approved by the relevant Regional Local Administrator. System Administrator access follows a separate route through the Finance Systems Team Lead.","sys":"Two routes"},{"actor":"Fulfilment","text":"Following approval, the Finance Systems Team performs the required access changes directly within BlackLine.","sys":"BlackLine tenant","type":"out"}],"exception":"NA","limits":["No standalone BlackLine-specific access-management policy or procedure has been established covering account classes, approval roles, role-to-entity assignment standards, access-removal timing, privileged-access monitoring or evidence-retention standards.","The Blueworks procedure does not document complete lifecycle requirements for vendor support accounts, the SailPoint service account, generic accounts, shared accounts, service accounts or other system accounts.","Detailed evidence-retention requirements are not defined for access requests, approvals, implementation, modification, revocation, recertification or remediation.","Document owner, preparer, reviewer, approver, annual approval evidence, effective date and version history for the Finance Systems access-management process are not evidenced."],"evidence":["UK&I User Access & Password Policy Control Framework Supporting Document 2026","BlackLine logical-access process maintained in Blueworks","Financial-close and reconciliation process documentation maintained by the Finance Systems Team"],"future":"NA","tod":"Validate document ownership, preparation, review and approval responsibilities, effective date, version history, annual review evidence and evidence-retention requirements. Assess whether the documented process adequately covers account classes, approval roles, role-to-entity assignment standards, access-removal timing, privileged-access monitoring and lifecycle requirements for vendor support, API, generic, shared, service and other system accounts."},{"id":"APD.C02","name":"User Profile Management","key":true,"status":"part","freq":"Ad-hoc","objective":"To ensure that user access is granted, modified, and revoked in alignment with role-based access principles and organizational policies, minimizing unauthorized access risks.","roles":["UK&I Finance Systems Team","BlackLine System Administrators","Regional Local Administrators","Finance Systems Team Lead / Platform Owner"],"systems":["BlackLine","ServiceDesk Plus"],"railLabel":"How a BlackLine profile is built","steps":[{"actor":"BlackLine (vendor)","text":"BlackLine maintains the standard role definitions and provides the role matrix describing the access available through each role. Intact uses the vendor-defined model and does not create or modify the underlying role definitions.","sys":"View Only · Standard · Edit · Administrator"},{"actor":"Requestor","text":"The ServiceDesk Plus request records the required BlackLine role and the required entity access.","sys":"ServiceDesk Plus"},{"actor":"Regional Local Administrator","text":"Approves the requested access based on the user's responsibilities.","sys":"ServiceDesk Plus approval","type":"dec"},{"actor":"Finance Systems Team","text":"Checks the approved role and entity scope before assigning the access within BlackLine.","sys":"Pre-assignment check"},{"actor":"BlackLine","text":"Entity restrictions limit the regions or entities over which the user can perform the activities the role permits — so Administrator access for one entity does not confer equivalent access elsewhere.","sys":"Role + entity restriction","type":"out"}],"altLabel":"Where the clone / copy-ID function is used","altSteps":[{"actor":"Finance Systems Team","text":"Checks the approved access request.","sys":"ServiceDesk Plus"},{"actor":"Finance Systems Team","text":"Checks the identity of the approver.","sys":"Approval record"},{"actor":"Finance Systems Team","text":"Checks the requested role and the requested entity scope.","sys":"Request detail"},{"actor":"Finance Systems Team","text":"Completes these checks before saving the new BlackLine user profile. Use of clone / copy-ID does not replace the requirement for an access request or the applicable approval.","sys":"Save profile","type":"out"}],"exception":"Where the clone or copy-ID function is used, the Finance Systems Team checks the approved request, approver, requested role and entity scope before saving the new user profile. The clone function does not replace the access-request or approval requirement.","limits":["The entity-access requirement is entered as free text within the ServiceDesk Plus request rather than selected through a controlled dropdown, creating a transcription risk between what was approved and what is configured."],"future":"NA","tod":"Validate the vendor-defined roles, underlying role permissions, entity-based restrictions and current role-to-entity configuration. Review selected ServiceDesk Plus requests to confirm the approved role and entity scope were accurately assigned in BlackLine, including where entity requirements were free text or clone / copy-ID was used, and confirm clone does not bypass request and approval."},{"id":"APD.C03","name":"Access Provisioning / Joiners","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that access creation of user accounts is in line with user's roles and responsibilities.","roles":["Regional Local Administrators","End Users / Requestors","UK&I Finance Systems Team","BlackLine System Administrators","Finance Systems Team Lead / Platform Owner"],"systems":["ServiceDesk Plus","BlackLine"],"railLabel":"Joiner journey — request to working access","steps":[{"actor":"Requestor","text":"Access is requested through ServiceDesk Plus for a new joiner, an existing user needing additional access, or a user needing temporary project access.","sys":"ServiceDesk Plus"},{"actor":"Request record","text":"The request records the user requiring access, the requested BlackLine role and the required entity access.","sys":"3 mandatory fields"},{"actor":"Regional Local Administrator","text":"May raise the request directly. Alternatively an end user raises it, provided the Regional Local Administrator's approval is attached to the ticket.","sys":"Two intake routes","type":"dec"},{"actor":"Approver","text":"Standard-user access is approved by the Regional Local Administrator for the relevant region or entity. System Administrator access requires approval from the Finance Systems Team Lead instead.","sys":"Split approval route","type":"dec"},{"actor":"Finance Systems Team","text":"Before provisioning, verifies four things: the user, the approver, the requested role and the requested entity scope.","sys":"4-point verification"},{"actor":"Finance Systems Team","text":"Manually creates the user within BlackLine with the approved role and entity access.","sys":"BlackLine tenant","type":"out"},{"actor":"Evidence","text":"Completed provisioning is evidenced by the ServiceDesk Plus ticket, the attached approval and the resulting BlackLine user setup.","sys":"3-part evidence trail","type":"out"}],"altLabel":"Where the required approval is missing","altSteps":[{"actor":"Finance Systems Team","text":"Identifies that the request arrived without the required Regional Local Administrator approval.","sys":"ServiceDesk Plus","type":"dec"},{"actor":"Finance Systems Team","text":"Either obtains approval from the appropriate Regional Local Administrator, or holds the request until the required approval is provided.","sys":"Hold / chase"},{"actor":"Finance Systems Team","text":"Access is not provisioned until approval is in place.","sys":"Blocked","type":"stop"}],"exception":"An end user may raise the access request where approval from the relevant Regional Local Administrator is attached to the ServiceDesk Plus ticket. Where the required approval is not included, the Finance Systems Team obtains the approval or holds the request until approval is provided. System Administrator access follows a separate approval route through the Finance Systems Team Lead.","limits":[],"evidence":["ServiceDesk Plus access requests","Regional Local Administrator approvals","Finance Systems Team Lead approvals for System Administrator access","BlackLine user-setup evidence showing assigned roles and entity restrictions"],"future":"NA","tod":"Review selected provisioning requests to validate the requester, user, requested role, required entity access, applicable approval, approval before provisioning, fulfilment and resulting BlackLine setup. Include requests raised directly by Regional Local Administrators, requests raised by end users with attached approval, requests held pending approval, temporary project access and the separate System Administrator route."},{"id":"APD.C04","name":"Access Modification / Movers","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that access modifications to user accounts is in line with changes to user's roles and responsibilities.","roles":["Regional Local Administrators","UK&I Finance Systems Team","BlackLine System Administrators","Finance Systems Team Lead / Platform Owner"],"systems":["ServiceDesk Plus","BlackLine"],"railLabel":"Mover journey — same route as a joiner","steps":[{"actor":"Trigger","text":"A role change, transfer between regions or entities, additional access requirement, change to entity restrictions or a temporary project requirement.","sys":"5 trigger types"},{"actor":"Requestor","text":"Changes to existing access follow the same ServiceDesk Plus request and approval process as new access.","sys":"ServiceDesk Plus"},{"actor":"Request record","text":"The request records the access to be added, amended or removed.","sys":"Add / amend / remove"},{"actor":"Approver","text":"The Regional Local Administrator approves changes to standard access. Changes to System Administrator access require Finance Systems Team Lead approval.","sys":"Split approval route","type":"dec"},{"actor":"Finance Systems Team","text":"Compares the approved request with the user's existing BlackLine profile before making any change.","sys":"Before-and-after comparison"},{"actor":"Finance Systems Team","text":"Updates the user's assigned BlackLine role, or their entity access, as approved.","sys":"BlackLine tenant","type":"out"},{"actor":"Evidence","text":"Completion is recorded through the ServiceDesk Plus ticket and the updated BlackLine user profile.","sys":"Ticket + profile","type":"out"}],"altLabel":"How obsolete access gets caught","altSteps":[{"actor":"Mover request","text":"Obsolete access is removed when identified through the mover request itself.","sys":"ServiceDesk Plus"},{"actor":"Quarterly UAR","text":"Also removed when identified through the quarterly user access review.","sys":"APD.C07"},{"actor":"Monthly review","text":"Also removed when identified through the monthly inactive-user review.","sys":"APD.C06","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Review selected modification requests to validate the trigger, access to be added, amended or removed, applicable approval, comparison of the approved request to the existing profile, accurate update of role and entity access, and retained completion evidence. Consider modifications and obsolete-access removals identified through mover requests, quarterly reviews and monthly inactive-user reviews."},{"id":"APD.C05","name":"Access Deprovisioning / Leavers","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm access right revocation is performed on a timely basis upon the user's last working day.","roles":["UK&I Finance Systems Team","BlackLine System Administrators","Regional Local Administrators","Finance Systems Team Lead / Platform Owner"],"systems":["ServiceDesk Plus","BlackLine"],"railLabel":"Leaver journey — trigger to evidenced removal","steps":[{"actor":"Trigger","text":"Termination, transfer, role change, inactive-account identification, or a removal decision arising from the quarterly user access review.","sys":"5 removal triggers"},{"actor":"Instruction route","text":"The Finance Systems Team receives the removal instruction through a leaver notification, a ServiceDesk Plus request, an access-review remediation instruction or the ongoing access-administration process.","sys":"4 instruction routes","type":"dec"},{"actor":"Finance Systems Team","text":"Identifies the affected BlackLine account and removes or disables the user's access.","sys":"BlackLine tenant"},{"actor":"Finance Systems Team","text":"Where the user retains a valid business requirement but no longer needs part of the access, removes the obsolete role or entity access rather than disabling the whole account.","sys":"Partial removal","type":"dec"},{"actor":"Evidence","text":"Records the removal trigger, the affected user, the required removal action and the completed BlackLine access update.","sys":"4 evidence points"},{"actor":"Retention","text":"Evidence is retained through the ServiceDesk Plus ticket, access-review documentation or supporting correspondence. The removal date is recorded against the applicable notification or review decision.","sys":"Removal date recorded","type":"out"}],"exception":"Where a user retains a valid business requirement but no longer requires part of the existing access, the Finance Systems Team removes the obsolete role or entity access rather than disabling the complete BlackLine account.","limits":["A formal BlackLine-specific deprovisioning SLA does not operate — there is no agreed maximum period between the leaving date and removal of access."],"future":"NA","tod":"Review selected removals to validate the trigger, the applicable notification, request, remediation instruction or correspondence, and the completed removal or disablement within BlackLine. Where the user retained a valid business requirement, confirm obsolete role or entity access was removed appropriately. Assess the recorded removal date and the absence of a formal deprovisioning SLA."},{"id":"APD.C06","name":"Periodic Review of Terminated and Transferred Users","key":true,"status":"ok","freq":"Monthly","objective":"To confirm that access to non-SSO in-scope financially relevant systems is periodically reviewed to ensure that all terminated or transferred users have their access disabled.","roles":["UK&I Finance Systems Team"],"systems":["BlackLine last-login report","ServiceDesk Plus"],"railLabel":"Monthly inactive-user review","steps":[{"actor":"Finance Systems Team","text":"Performs a monthly review of inactive BlackLine accounts using last-login information.","sys":"BlackLine last-login report"},{"actor":"Finance Systems Team","text":"Investigates accounts that have not been used for approximately 60 to 70 days to determine whether access remains required.","sys":"~60–70 day threshold","type":"dec"},{"actor":"Finance Systems Team","text":"Removes access where the account is no longer required.","sys":"BlackLine tenant"},{"actor":"Parallel identification","text":"Terminated and transferred users are also identified through leaver notifications, role-change communications, ServiceDesk Plus requests, quarterly recertification and ongoing user administration.","sys":"5 parallel sources"},{"actor":"Finance Systems Team","text":"Reviews identified users against the active BlackLine population and either removes the account or updates the assigned role and entity access.","sys":"Remove or modify","type":"dec"},{"actor":"Evidence retained","text":"User population, last-login information, reviewer, review date, review decision, identified exceptions and evidence of completed removal or modification.","sys":"7 evidence points","type":"out"}],"exception":"NA","limits":["The monthly review is based on account inactivity and last-login information. It does not replace the timely receipt and processing of leaver notifications, transfer instructions, role-change communications or other known access-removal requirements — it is a detective backstop, not the primary control."],"future":"NA","tod":"Validate the complete active-user population, last-login information, the approximately 60-to-70-day inactivity criteria, reviewer, review date, decisions, identified exceptions and completed removal or modification evidence. Also review selected terminated and transferred users to validate the applicable notification or instruction and the resulting BlackLine access update."},{"id":"APD.C07","name":"User Access Reviews (UAR)","key":true,"status":"part","freq":"Quarterly","objective":"To confirm underlying access of users is authorized.","roles":["UK&I Finance Systems Team","Regional Local Administrators","Finance Systems Team Lead / Platform Owner","Independent Reviewers"],"systems":["BlackLine user extract","Microsoft Excel","Email"],"railLabel":"Quarterly recertification cycle","steps":[{"actor":"Finance Systems Team","text":"Downloads the BlackLine user and entitlement population and prepares the access-review spreadsheet. The population includes each user's assigned access, role and entity restrictions.","sys":"BlackLine extract → Excel"},{"actor":"Population check","text":"Screenshots or PDF outputs from BlackLine are compared with the Excel extract using username and last-login date and time, to support consistency between the application output and the review population.","sys":"Screenshot ↔ Excel compare","type":"dec"},{"actor":"Regional Local Administrators","text":"Review standard users within their respective regions or entities and determine whether access should be retained, modified or removed.","sys":"Retain / modify / remove"},{"actor":"Finance Systems Team Lead","text":"Independently reviews users with System Administrator access.","sys":"Privileged review"},{"actor":"Independent reviewer","text":"Business-owner and privileged access is assigned to an independent reviewer so users do not certify their own access. The previous self-recertification issue has been remediated this way.","sys":"Self-review prevented","type":"dec"},{"actor":"Finance Systems Team","text":"Follows up outstanding responses and completes the required access removals or modifications within BlackLine.","sys":"Remediation"},{"actor":"Evidence","text":"Review file, reviewer decisions, supporting correspondence and completed remediation evidence are retained with the quarterly review.","sys":"Quarterly evidence pack","type":"out"}],"exception":"Business-owner and privileged access is assigned to an independent reviewer so that users do not certify their own access.","limits":["The BlackLine user and entitlement report does not include a record count.","Population consistency is supported by comparing screenshots or PDF outputs with the Excel extract using username and last-login date and time, rather than through a system-generated record-count reconciliation — a weaker completeness assertion over the IPE.","SailPoint does not operate as the BlackLine access-certification platform; the review runs on a manual extract, Excel and email."],"future":"NA","tod":"Validate the user and entitlement population, assigned roles and entity restrictions, reviewer allocation, Regional Local Administrator decisions, independent review of System Administrator and business-owner access, outstanding-response follow-up, remediation and closure evidence. Review the screenshot-to-Excel comparison to assess population completeness and accuracy."},{"id":"APD.C08","name":"Privileged Accounts Access Management","key":true,"status":"part","freq":"Ad-hoc","objective":"To confirm no unauthorized and inappropriate user has administrator access in the system.","roles":["Finance Systems Team Lead / Platform Owner","UK&I Finance Systems Team","BlackLine System Administrators"],"systems":["BlackLine","ServiceDesk Plus","Password Secret Manager"],"railLabel":"Privileged population and how it is governed","steps":[{"actor":"Definition","text":"Privileged access in BlackLine consists of System Administrator access. System Administrators are members of the UK&I Finance Systems Team.","sys":"1 privileged role"},{"actor":"Capability","text":"Administrators create, modify and remove users; assign role and entity access; manage customer-side password settings; run the auto-reconciliation process; and perform authorised tenant administration.","sys":"5 elevated capabilities"},{"actor":"Finance Systems Team Lead","text":"Approves System Administrator access. This route is separate from the Regional Local Administrator approval used for standard-user access.","sys":"Separate approval route","type":"dec"},{"actor":"Population","text":"Four System Administrator accounts, one vendor support account and one API account. The Finance Systems Team maintains ownership and purpose of the System Administrator and API accounts.","sys":"4 + 1 + 1"},{"actor":"API service identity","text":"Operates as a system / service identity. Its password is maintained through Password Secret Manager and rotated every 12 months. Managed by the Finance Systems Team.","sys":"Password Secret Manager · 12-month rotation"},{"actor":"Vendor support account","text":"Managed under the BlackLine vendor-support arrangement rather than through the standard Intact provisioning process, and addressed through vendor assurance.","sys":"Vendor-support arrangement","type":"dec"},{"actor":"Quarterly review","text":"System Administrators are included in the quarterly user access review and independently reviewed by the Finance Systems Team Lead.","sys":"APD.C07 linkage","type":"out"}],"exception":"Vendor support access is managed under the BlackLine vendor-support arrangement rather than through the standard Intact access-provisioning process. The API account operates as a system or service identity and is managed separately from human-user access.","limits":["A separate formal periodic review covering the complete API and vendor support-account population does not operate. Human System Administrator access is reviewed quarterly, but the non-human and vendor accounts are not subject to an equivalent periodic certification."],"future":"NA","tod":"Validate the current System Administrator population, access requests, Finance Systems Team Lead approvals, assigned permissions, quarterly independent review and remediation evidence. Assess ownership, purpose, authentication, password management and 12-month rotation of the API account, the vendor support account, and the absence of a separate periodic review covering the complete API and vendor support-account population."},{"id":"APD.C09","name":"Privileged and Sensitive Activities Monitoring","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm that elevated privileged accounts are not misused.","roles":[],"systems":["BlackLine activity logs"],"railLabel":"What exists today versus what is required","steps":[{"actor":"Capability exists","text":"BlackLine records administrative activity performed within the application. The available activity information includes actions performed by users with administrative access.","sys":"Application activity log"},{"actor":"Quarterly UAR","text":"The quarterly user access review confirms whether System Administrator access remains appropriate.","sys":"APD.C07"},{"actor":"The gap","text":"The quarterly review does not examine the activities performed through System Administrator access — only whether the access itself is still warranted.","sys":"Access ≠ activity","type":"stop"},{"actor":"Not performed","text":"Administrative activity logs are not periodically extracted and independently reviewed. No recurring review of the complete privileged-activity population operates.","sys":"No operating control","type":"stop"}],"exception":"NA","limits":["A formal recurring review of the complete System Administrator or privileged-activity population is not performed in the current state.","Administrative activity logs are not periodically extracted and independently reviewed.","No formal frequency, review criteria, independent reviewer, exception-investigation process or evidence-retention requirement has been established for privileged-activity monitoring within BlackLine."],"future":"NA","tod":"Validate the available administrative-activity logging capability — activities captured, log availability, completeness, retention and extraction capability. The absence of a formal recurring review covering the complete privileged-activity population, together with defined review criteria, independent review, exception investigation and evidence retention, will be assessed through the BlackLine gap assessment."},{"id":"APD.C10","name":"Access Authentication","key":true,"status":"part","freq":"Annual","objective":"To confirm that password complexity and account management practices, including the handling of default user accounts, comply with the organization's security policy.","roles":["BlackLine System Administrators","UK&I Finance Systems Team","Finance Systems Team Lead / Platform Owner"],"systems":["BlackLine local credentials","Password Secret Manager"],"railLabel":"How users authenticate today","steps":[{"actor":"User","text":"Accesses BlackLine directly through a web-based URL using local BlackLine credentials.","sys":"Web URL + local credentials"},{"actor":"Network","text":"Users do NOT require access to the Intact network or VPN to connect to the application — it is reachable from anywhere on the internet.","sys":"No network dependency","type":"stop"},{"actor":"Missing layers","text":"Corporate SSO does not operate. MFA is not configured. IP-based access restrictions are not configured.","sys":"No SSO · No MFA · No IP allow-list","type":"stop"},{"actor":"System Administrators","text":"Configure the password settings within the application. Settings were updated after the previous configuration was identified as not aligned with Intact password requirements.","sys":"Remediated configuration","type":"dec"},{"actor":"Governance","text":"Password requirements are governed by the UK&I User Access & Password Policy Control Framework 2026. Configured length, complexity, expiry, history and lockout parameters are retained as authentication-configuration evidence.","sys":"5 password parameters"},{"actor":"API account","text":"The API service-account password is maintained separately through Password Secret Manager and rotated every 12 months.","sys":"Password Secret Manager","type":"out"}],"exception":"The API service account is authenticated separately from ordinary users. Its password is maintained through Password Secret Manager and rotated every 12 months.","limits":["Corporate SSO does not currently operate for BlackLine.","MFA is not configured for the BlackLine authentication process.","IP-based access restrictions are not configured.","Users can access BlackLine without connecting to the Intact network or VPN — combined with the absence of MFA, a compromised credential alone is sufficient for access."],"future":"Implementation of SailPoint-integrated SSO is in progress and is expected to provide centralised authentication and access-governance capabilities.","tod":"Validate the local authentication configuration — password length, complexity, expiry, history and lockout — and alignment with the UK&I policy. Assess the absence of corporate SSO, MFA, VPN dependency and IP-based restrictions, together with the API account's Password Secret Manager configuration and 12-month rotation."},{"id":"APD.C11","name":"Segregation of Duties — periodic detective checks","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm segregation of duties violations are identified periodically.","roles":[],"systems":["BlackLine roles + entity restrictions"],"railLabel":"What currently provides separation — and where it stops","steps":[{"actor":"Structural separation","text":"Access is structured through application roles and entity-based restrictions. Standard access is approved by Regional Local Administrators and fulfilled by the Finance Systems Team — approval is separated from fulfilment.","sys":"Approval ≠ fulfilment"},{"actor":"Privileged separation","text":"System Administrator access follows a separate approval route through the Finance Systems Team Lead.","sys":"Separate privileged route"},{"actor":"Periodic check","text":"The quarterly user access review confirms whether assigned standard and privileged access remains appropriate, using an independent reviewer for System Administrator and business-owner access.","sys":"APD.C07"},{"actor":"The gap","text":"The quarterly review assesses whether access is appropriate — it does not apply a documented BlackLine SoD ruleset to identify and evaluate conflicts.","sys":"No ruleset applied","type":"stop"},{"actor":"Not performed","text":"A formal periodic detective review of incompatible roles, conflicting responsibilities or sensitive-access combinations does not operate.","sys":"No operating control","type":"stop"}],"exception":"NA","limits":["A formal periodic detective review of incompatible BlackLine roles, conflicting responsibilities or sensitive-access combinations does not operate.","The quarterly user access review assesses the appropriateness of assigned access but does not apply a documented SoD ruleset to identify and evaluate conflicts."],"future":"NA","tod":"Validate the vendor-defined roles, entity restrictions, separation between standard-access approval and fulfilment, the separate System Administrator approval route and the independent quarterly access review. The absence of a documented SoD ruleset-based conflict review will be assessed through the BlackLine gap assessment."},{"id":"APD.C12","name":"Segregation of Duties Ruleset review","key":true,"status":"gap","statusLabel":"Not performed","freq":"Not currently performed","objective":"To confirm that the appropriateness of the Segregation of duties ruleset is periodically confirmed by management / information owners.","roles":[],"systems":["Vendor-defined BlackLine roles"],"railLabel":"The access model in place of a ruleset","steps":[{"actor":"Vendor role model","text":"BlackLine uses vendor-defined application roles and entity-based restrictions. Intact uses the vendor role information when requesting, approving, assigning and reviewing user access.","sys":"Vendor-defined roles"},{"actor":"Governance in place","text":"Access is governed through the ServiceDesk Plus request and approval process, vendor role information, entity restrictions, the quarterly user access review and the separate approval and review of System Administrator access.","sys":"5 governance mechanisms"},{"actor":"The gap","text":"Intact does not maintain a separate BlackLine SoD or Sensitive Access ruleset. Prohibited role combinations, sensitive-access definitions, conflict severity and ruleset ownership are not formally documented.","sys":"No ruleset exists","type":"stop"},{"actor":"Not performed","text":"A periodic process to review, approve or update a BlackLine-specific SoD ruleset does not operate. The existing access-request, approval, entity-restriction and access-review processes do not constitute a formal ruleset review.","sys":"No operating control","type":"stop"}],"exception":"NA","limits":["Intact does not maintain a separate BlackLine Segregation of Duties or Sensitive Access ruleset.","Prohibited role combinations, sensitive-access definitions, conflict severity and ruleset ownership are not formally documented for BlackLine.","A periodic process to review, approve or update a BlackLine-specific SoD ruleset does not operate."],"future":"NA","tod":"Assess the vendor-defined role model, entity-based restrictions, prohibited or sensitive-access combinations, conflict severity, ruleset ownership and existing approval and review controls through the BlackLine gap assessment."}]},{"code":"CM","short":"Change","name":"Change Management","intro":"BlackLine performs core application changes — product releases, enhancements, fixes and platform updates — inside the vendor-managed environment. The Finance Systems Team does not develop or deploy BlackLine product code. Intact's change footprint is limited to customer-side configuration: fields, accounts, reconciliation settings, user access and entity access. The enterprise Change Enablement Process v2.1 applies; there is no BlackLine-specific procedure.","summary":[{"lab":"Controls","val":"9","note":"8 key, 1 non-key"},{"lab":"Design gaps","val":"5","tone":"amber","note":"C01, C02, C03, C05, C09"},{"lab":"Vendor reliance","val":"3","note":"C04, C06, C08 via SOC 1 Type II"},{"lab":"Not applicable","val":"1","note":"C07 — no Intact-owned SoD ruleset"}],"outro":"The recurring theme across Change Management is that Intact receives BlackLine's release information but does not maintain an internal population of those releases with a recorded business-impact assessment. That makes it difficult to demonstrate completeness over the change population — the single most common SOX challenge for a vendor-managed SaaS platform.","controls":[{"id":"CM.C01","name":"Policies & Procedures","key":false,"status":"part","freq":"Annual","objective":"To confirm that change management policies and standard operating procedures (SOPs) are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Finance Systems Team","Finance Systems Team Lead / Platform Owner","BlackLine Vendor","TRM Team"],"systems":["Change Enablement Process v2.1","Change Delivery Framework"],"railLabel":"How change responsibility divides","steps":[{"actor":"BlackLine (vendor)","text":"Performs core application changes — product releases, enhancements, fixes and platform updates — within the vendor-managed environment.","sys":"Vendor-managed"},{"actor":"Intact framework","text":"The Intact Change Enablement Process v2.1 provides the enterprise-wide framework and includes unauthorised change as a change type. The Change Delivery Framework – Minimum Standards Guidance provides supporting requirements.","sys":"Enterprise policy"},{"actor":"Intact customer-side","text":"Configuration of fields and accounts, reconciliation settings, account frequency, user access and entity access. User and entity access changes are governed through the access-management process instead.","sys":"Customer-side only","type":"dec"},{"actor":"Business-as-usual","text":"Changes to account-reconciliation frequency and the addition of new accounts form part of the ongoing reconciliation process and are NOT treated as core application changes.","sys":"Not a change","type":"dec"},{"actor":"Vendor assurance","text":"BlackLine controls over change approval, development, testing, implementation and post-implementation review are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Intact does not maintain a separate BlackLine-specific Change Management procedure setting out the complete division of responsibility between vendor-managed product changes, customer-side configuration activities, operational reconciliation updates and internally governed changes."],"future":"The Change Management Processes documentation is expected to be refreshed in Q3 2026 to include Ireland processes.","tod":"Validate the Change Enablement Process v2.1 and supporting Change Delivery Framework — ownership, approval, effective date, version history, annual review — and the distinction between vendor-managed product changes, customer-side configuration and ongoing reconciliation updates. Vendor-operated change controls assessed through the SOC 1 Type II report."},{"id":"CM.C02","name":"Change Request Approval","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that all changes are supported by documented and approved business or IT requirements.","roles":["BlackLine Vendor","Finance Systems Team","Finance Systems Team Lead / Platform Owner"],"systems":["Vendor release communications","ServiceDesk Plus"],"railLabel":"How a change is initiated and approved","steps":[{"actor":"BlackLine (vendor)","text":"Initiates and approves core application changes through the vendor Change Management process. Intact does not raise or approve vendor product changes through ServiceNow, ServiceDesk Plus or any internal tool.","sys":"Vendor process"},{"actor":"BlackLine (vendor)","text":"Maintains the release schedule and publishes information relating to product releases. The vendor release process governs approval before development and implementation.","sys":"Release schedule"},{"actor":"Finance Systems Team","text":"Receives release information through the vendor's release communications and website, supporting awareness of releases and their potential relevance to reconciliation and close.","sys":"Vendor comms + website","type":"dec"},{"actor":"Routed elsewhere","text":"Customer-side user-access and entity-access requests are raised and approved through ServiceDesk Plus and governed under APD, not CM.C02. Account and reconciliation-frequency updates follow the business reconciliation process.","sys":"Out of CM scope","type":"dec"}],"exception":"NA","limits":["A formal Intact process for recording, approving and tracking the business impact of each BlackLine vendor release is not established.","Intact does not maintain a complete internal change-request population covering each vendor product release and the corresponding business-impact consideration — so completeness of the change population cannot be demonstrated internally."],"future":"NA","tod":"Review selected vendor releases to validate release information, schedule, communication to the Finance Systems Team and any retained business-impact assessment or decision. The absence of a formal Intact process for recording, approving and tracking the business impact of each release will be assessed through the gap assessment."},{"id":"CM.C03","name":"Change Development & Testing Approval","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that changes are developed by authorized personnel and validated by QA and/or UAT in a separate non-production environment before deployment.","roles":["BlackLine Vendor","Finance Systems Team","Affected Finance Users","TRM Team"],"systems":["Vendor sandbox / test","BlackLine Production"],"railLabel":"Development, testing and the Intact validation layer","steps":[{"actor":"BlackLine (vendor)","text":"Develops core application changes within the vendor-managed environment, and tests them in the vendor's sandbox or test environment before release to Production.","sys":"Vendor sandbox / test"},{"actor":"BlackLine (vendor)","text":"Performs the testing and approval required for product releases. Intact does not perform unit testing, system testing or technical approval over BlackLine product code.","sys":"Vendor testing"},{"actor":"Finance Systems Team + Finance users","text":"Where a release or support fix affects the Intact reconciliation or financial-close process, they validate the relevant BlackLine functionality. This is distinct from the vendor's technical testing.","sys":"Customer-side validation","type":"dec"},{"actor":"TRM Team","text":"Development, testing and approval controls operated by BlackLine are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["A standard Intact testing pack is not maintained.","There is no mandatory UAT requirement covering each BlackLine vendor release.","No formal approval record covering each vendor release exists. Intact validation is performed where a release affects reconciliation or close, rather than as a documented requirement for every release."],"future":"NA","tod":"Review selected vendor releases or support fixes affecting reconciliation or close to validate available vendor testing information, Finance Systems Team and Finance-user validation, identified issues and retained acceptance evidence. Assess the absence of a standard testing pack, mandatory UAT requirement and formal approval record."},{"id":"CM.C04","name":"Environment Segregation","key":true,"status":"vend","freq":"Ad hoc / on occurrence","objective":"To confirm that logical separation exists between production and non-production environments to protect system integrity.","roles":["BlackLine Vendor","TRM Team"],"systems":["Vendor sandbox / test / Production"],"railLabel":"Who controls which environment","steps":[{"actor":"BlackLine (vendor)","text":"Develops and tests core application changes within vendor-managed sandbox or test environments before releasing to Production.","sys":"Vendor environments"},{"actor":"BlackLine Production","text":"Supports the live account-reconciliation and financial-close process. This is the only financially relevant environment for Intact.","sys":"Production"},{"actor":"Intact","text":"Does not administer BlackLine's Development, Test or Production infrastructure and does not control the movement of product code between environments.","sys":"No Intact control","type":"dec"},{"actor":"Intact","text":"Does not maintain a separate BlackLine Development, UAT or Patch environment for routine customer-side administration.","sys":"No Intact non-prod","type":"dec"},{"actor":"TRM Team","text":"Segregation of vendor environments, and access to them, is operated by BlackLine and assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Intact does not directly administer or independently evidence access segregation and product-code promotion across the vendor-managed Development, Testing and Production environments. Reliance is placed entirely on vendor controls and assurance reporting."],"future":"NA","tod":"Vendor environment segregation and access controls will be assessed through the BlackLine SOC 1 Type II report."},{"id":"CM.C05","name":"Direct Production Changes","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that direct changes to production are restricted and the changes are logged, monitored and reviewed for their appropriateness by an authorized user.","roles":["BlackLine Vendor","UK&I Finance Systems Team","BlackLine System Administrators","TRM Team"],"systems":["BlackLine tenant","ServiceDesk Plus"],"railLabel":"What Intact can change directly in Production","steps":[{"actor":"Intact","text":"Does not develop or directly deploy BlackLine product code into Production. BlackLine performs core Production releases through its vendor-managed release process.","sys":"No code deployment"},{"actor":"System Administrators","text":"Can perform customer-side administration directly within the BlackLine tenant: user administration, entity-access administration, password-setting administration and operation of the auto-reconciliation process.","sys":"4 direct capabilities","type":"dec"},{"actor":"Classification","text":"These customer-side administrative activities do not represent deployment of BlackLine product code.","sys":"Not product code"},{"actor":"Supporting approvals","text":"User-access and entity-access changes are supported by approved ServiceDesk Plus requests. Account and reconciliation-frequency updates are performed as part of the ongoing reconciliation process.","sys":"ServiceDesk Plus"},{"actor":"TRM Team","text":"Vendor controls over Production releases and direct changes are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"Customer-side administration is performed directly within the BlackLine tenant but does not represent deployment of BlackLine product code.","limits":["A separate reconciliation of all customer-side configuration activity recorded within BlackLine to approved change records is not performed — so there is no detective control confirming that every direct configuration action was authorised."],"future":"NA","tod":"Validate customer-side administrative activity and supporting approvals. Vendor Production-change controls assessed through the SOC 1 Type II report."},{"id":"CM.C06","name":"Developer Access to Production (IT Segregation of Duties)","key":true,"status":"vend","freq":"Ad hoc / on occurrence","objective":"To confirm that production access is restricted to authorized personnel based on job roles and segregated from development functions, and that segregation of duties exists between developers and deployment personnel who implement changes in the production environment.","roles":["BlackLine Vendor","TRM Team"],"systems":["Vendor development environment"],"railLabel":"Where the segregation sits","steps":[{"actor":"Intact","text":"Does not develop BlackLine product code and does not provide Intact developers with access to BlackLine's vendor-managed Development or Production-deployment environments.","sys":"No developer access"},{"actor":"BlackLine (vendor)","text":"Manages vendor-developer access, segregation between Development and Production, and authority to deploy product changes.","sys":"Vendor-operated"},{"actor":"Finance Systems Team","text":"Members hold System Administrator access for customer-side administration. This permits application administration but does NOT provide access to source code or the vendor deployment process.","sys":"Admin ≠ developer","type":"dec"},{"actor":"Cross-reference","text":"Approval and periodic review of Intact System Administrator access is governed under APD.C08. Monitoring of customer-side privileged activity is addressed under APD.C09.","sys":"APD.C08 · APD.C09"},{"actor":"TRM Team","text":"Vendor-operated controls are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Intact does not directly administer or evidence vendor-developer access, segregation between vendor Development and Production responsibilities, or authority to deploy BlackLine product changes. Reliance is placed on the SOC 1 Type II report."],"future":"NA","tod":"Vendor developer-access and deployment-segregation controls will be assessed through the BlackLine SOC 1 Type II report."},{"id":"CM.C07","name":"Changes to the Rulesets of Segregation of Duties (SoD) and Sensitive Access (SA)","key":false,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To confirm that changes to SoD / SA ruleset are authorized and appropriate.","roles":[],"systems":["ServiceDesk Plus"],"railLabel":"Why the control does not arise","steps":[{"actor":"Precondition absent","text":"Intact does not maintain a formal BlackLine SoD or Sensitive Access ruleset, so changes to an Intact-owned ruleset do not arise as a separate change type.","sys":"No ruleset","type":"stop"},{"actor":"BlackLine (vendor)","text":"Maintains the vendor-defined application roles. Intact assigns these roles together with entity-based restrictions through the access-management process.","sys":"Vendor roles"},{"actor":"Where changes go","text":"Changes to user roles or entity access follow the applicable ServiceDesk Plus request and approval process.","sys":"ServiceDesk Plus","type":"dec"},{"actor":"Governance covered under","text":"APD.C02 User Profile Management, APD.C11 SoD periodic detective checks, and APD.C12 SoD Ruleset review.","sys":"APD.C02 · C11 · C12","type":"out"}],"exception":"NA","limits":["A formal Intact-owned BlackLine SoD or Sensitive Access ruleset is not maintained. CM.C07 therefore does not operate as a separate BlackLine control."],"future":"NA","tod":"CM.C07 is not currently applicable because Intact does not maintain a formal BlackLine SoD or Sensitive Access ruleset."},{"id":"CM.C08","name":"Emergency Changes","key":true,"status":"vend","freq":"Ad hoc / on occurrence","objective":"To confirm that expedited procedures for emergency changes are backed by incident tickets or approvals and reviewed post-deployment.","roles":["BlackLine Vendor","UK&I Finance Systems Team","BlackLine System Administrators","Affected Finance Users","TRM Team"],"systems":["BlackLine Community Forum"],"railLabel":"Urgent issue to vendor remediation","steps":[{"actor":"Trigger","text":"An urgent application issue requires vendor action.","sys":"Urgent issue"},{"actor":"Finance Systems Team","text":"Raises a case through the BlackLine Community Forum and assigns the applicable priority.","sys":"Community Forum · priority"},{"actor":"BlackLine (vendor)","text":"Investigates the issue and implements the required vendor-side remediation, managing emergency changes to the core application through its own incident-management and Change Management processes.","sys":"Vendor remediation"},{"actor":"Finance Systems Team","text":"Monitors the support case and confirms resolution where the issue affects the reconciliation or financial-close process.","sys":"Case monitoring","type":"dec"},{"actor":"Intact","text":"Does not operate a separate emergency-change process for changes to BlackLine product code.","sys":"No Intact route","type":"dec"},{"actor":"TRM Team","text":"Vendor approval, testing, implementation and retrospective review of emergency changes are assessed through the SOC 1 Type II report.","sys":"SOC 1 Type II","type":"out"}],"exception":"Urgent application issues requiring vendor action are managed through the BlackLine Community Forum and the vendor's incident-management and Change Management processes.","limits":["Intact does not directly operate or evidence the vendor's approval, testing, implementation or retrospective review of changes to BlackLine product code. Reliance is placed on vendor controls and assurance reporting."],"future":"NA","tod":"Validate selected urgent support cases and business confirmation of resolution. Vendor emergency-change controls assessed through the SOC 1 Type II report."},{"id":"CM.C09","name":"Post-Implementation Review (PIR) or Change Review","key":true,"status":"part","freq":"Ad hoc / on occurrence","objective":"To confirm that all system deployments are authorized, reviewed, and traceable to approved change tickets.","roles":["BlackLine Vendor","UK&I Finance Systems Team","Affected Finance Users","TRM Team"],"systems":["BlackLine Community Forum"],"railLabel":"What happens after a release lands","steps":[{"actor":"BlackLine (vendor)","text":"Performs post-implementation activities for core application releases through the vendor-managed Change Management process.","sys":"Vendor PIR"},{"actor":"Intact","text":"Does not perform a separate post-implementation review over each BlackLine product release.","sys":"No per-release PIR","type":"dec"},{"actor":"Finance Systems Team + Finance users","text":"Where a release or support fix affects reconciliation or close, confirm that the application operates as required.","sys":"Functional confirmation"},{"actor":"Finance Systems Team","text":"Issues identified through this validation are raised with BlackLine through the Community Forum and monitored through to resolution.","sys":"Community Forum"},{"actor":"TRM Team","text":"BlackLine controls over release validation, post-implementation review and resolution of failed changes are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["A periodic Intact review that reconciles the complete population of BlackLine vendor releases to documented business-impact assessments, testing records and acceptance decisions is not performed."],"future":"NA","tod":"Assess Intact's validation of relevant vendor releases. Vendor post-implementation controls considered through the SOC 1 Type II report."}]},{"code":"CO","short":"Operations","name":"Computer Operations","intro":"The Finance Systems Team runs and monitors the built-in auto-reconciliation process, checks the import-status result, investigates failed runs, triages application issues and raises Community Forum cases where vendor support is required. BlackLine operates hosting, the underlying platform, application and data backups, backup monitoring, restoration testing and technical resilience — and investigates incidents escalated through the Forum.","summary":[{"lab":"Controls","val":"6","note":"CO.C01 to CO.C06"},{"lab":"Intact-operated","val":"2","tone":"ok","note":"CO.C02 batch, CO.C05 incidents"},{"lab":"Vendor reliance","val":"3","note":"CO.C03, CO.C04, CO.C06"},{"lab":"Design gaps","val":"1","tone":"amber","note":"CO.C01 — no BlackLine-specific procedure"}],"controls":[{"id":"CO.C01","name":"Policies & Procedures","key":false,"status":"part","freq":"Annual","objective":"Computer Operations Policy and SOPs, describing computer operation management objective, control processes, and relevant service level agreements (SLAs), must be reviewed and approved by authorized personnel at least on an annual basis.","roles":["UK&I Finance Systems Team","Finance Systems Team Lead / Platform Owner","BlackLine Vendor","TRM Team"],"systems":["IT Policy Control Framework v4","Wipro-RSA Incident Management Process v1.8"],"railLabel":"Governing documents and the split of duties","steps":[{"actor":"Governing policies","text":"Computer Operations for BlackLine are governed by the Intact UK&I Information Technology Policy, the Information Technology Policy Control Framework v4 and the Wipro-RSA Incident Management Process v1.8.","sys":"3 governing documents"},{"actor":"Finance Systems Team","text":"Performs customer-side application support, runs and monitors the auto-reconciliation process, performs initial incident triage and coordinates escalation to BlackLine.","sys":"Intact responsibilities"},{"actor":"BlackLine (vendor)","text":"Operates the hosted SaaS platform, underlying infrastructure, application and data backups, backup monitoring, restoration testing and technical resilience.","sys":"Vendor responsibilities"},{"actor":"TRM Team","text":"Vendor-operated Computer Operations controls are addressed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["A separate BlackLine-specific Computer Operations procedure covering the complete application-support process, auto-reconciliation monitoring, incident escalation, vendor-case monitoring, evidence retention and business confirmation of resolution is not maintained."],"future":"NA","tod":"Validate the internal support process, auto-reconciliation monitoring, vendor escalation, evidence retention and periodic review requirements."},{"id":"CO.C02","name":"Batch Job Failure Resolution Within Timely Manner","key":true,"status":"ok","freq":"Normally each morning / ad hoc","objective":"To confirm that data flow between systems is adequately controlled and any errors identified should be resolved within a timely manner.","roles":["UK&I Finance Systems Team","BlackLine System Administrators","BlackLine Vendor"],"systems":["BlackLine auto-reconciliation","Import-status screen","ServiceDesk Plus","Community Forum"],"railLabel":"The daily auto-reconciliation run","steps":[{"actor":"Context","text":"BlackLine does not use an Intact-managed external scheduler for its reconciliation processing.","sys":"No external scheduler"},{"actor":"System Administrator","text":"Manually initiates the built-in auto-reconciliation process, normally each morning. Access to initiate is restricted to System Administrators within the Finance Systems Team.","sys":"Manual initiation · restricted"},{"actor":"BlackLine","text":"Selects the account process and runs auto-certification or auto-decertification based on the reconciliation-frequency settings held for the relevant accounts. Normally completes in approximately five minutes.","sys":"~5 minutes"},{"actor":"System Administrator","text":"Checks the BlackLine import-status screen, which records whether the process completed successfully or failed.","sys":"Import-status screen","type":"dec"},{"actor":"Finance Systems Team","text":"Where the process fails, investigates and determines whether the issue can be resolved internally.","sys":"Internal triage","type":"dec"},{"actor":"System Administrator","text":"Where BlackLine support is required, raises a case through the Community Forum and monitors it through to resolution.","sys":"Community Forum"},{"actor":"Records","text":"ServiceDesk Plus request for additional runs, import-status result, investigation evidence and Community Forum case.","sys":"4 supporting records","type":"out"}],"altLabel":"Where an additional run is needed","altSteps":[{"actor":"Trigger","text":"Account or reconciliation-setting changes need to take effect before the next routine run.","sys":"Off-cycle need","type":"dec"},{"actor":"Requestor","text":"An additional run is requested through ServiceDesk Plus.","sys":"ServiceDesk Plus"},{"actor":"System Administrator","text":"Executes the additional run and checks the import-status result as normal.","sys":"Import-status screen","type":"out"}],"exception":"An additional auto-reconciliation run may be requested through ServiceDesk Plus where account or reconciliation-setting changes need to take effect before the next routine run.","limits":[],"future":"NA","tod":"Review selected auto-reconciliation runs and failures to validate authorised execution, import-status monitoring, investigation, vendor escalation and resolution evidence."},{"id":"CO.C03","name":"Data Backup Failures Resolution and Backup Restoration","key":true,"status":"vend","freq":"Vendor-operated","objective":"Backup processes are continuously monitored to ensure critical financial data remains complete, accurate, and recoverable when needed.","roles":["BlackLine Vendor","TRM Team"],"systems":["Vendor backup platform"],"railLabel":"Where backup responsibility sits","steps":[{"actor":"BlackLine (vendor)","text":"Performs and monitors application and data backups within the SaaS environment.","sys":"Vendor-operated"},{"actor":"Intact","text":"Does not configure, schedule, monitor, investigate or re-execute BlackLine backups.","sys":"No Intact operation","type":"dec"},{"actor":"TRM Team","text":"Backup coverage, secure storage, encryption, failure monitoring, re-execution and successful completion are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only. Intact holds no direct evidence of backup execution or monitoring."],"future":"NA","tod":"Assess backup coverage, secure storage, encryption, failure monitoring, re-execution, successful completion and restoration procedures through the BlackLine SOC 1 Type II report and the TPRM process."},{"id":"CO.C04","name":"Business Continuity and Disaster Recovery","key":true,"status":"vend","freq":"Vendor-operated","objective":"To confirm that a documented, approved, and periodically tested Business Continuity and Disaster Recovery Plan is maintained to ensure operational readiness and timely restoration of critical operations and systems.","roles":["BlackLine Vendor","TRM Team"],"systems":["Vendor hosting platform"],"railLabel":"Resilience and recovery","steps":[{"actor":"BlackLine (vendor)","text":"Operates hosting resilience and recovery capability for the SaaS platform.","sys":"Vendor-operated"},{"actor":"Intact","text":"Relies on SOC and contractual assurance rather than operating the recovery environment directly.","sys":"Contractual reliance","type":"dec"},{"actor":"TRM Team","text":"Recovery objectives, vendor testing, exceptions, CUECs and any retained Intact continuity responsibilities are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only."],"future":"NA","tod":"Assess recovery objectives, vendor testing, exceptions, CUECs and retained Intact continuity responsibilities through the SOC 1 Type II report and TPRM."},{"id":"CO.C05","name":"Incident Management","key":true,"status":"ok","freq":"Ad hoc / on occurrence","objective":"To confirm that incidents impacting financial reporting-related system jobs, processes, and programs are identified and resolved in a timely manner.","roles":["UK&I Finance Systems Team","BlackLine System Administrators","Finance Users","Regional Reconciliation Teams","BlackLine Vendor"],"systems":["BlackLine Community Forum"],"railLabel":"Incident lifecycle","steps":[{"actor":"Identification","text":"Incidents are identified by Finance users, regional reconciliation teams or the Finance Systems Team. They include application unavailability, reporting failures, reconciliation-processing issues and other service failures.","sys":"3 identification routes"},{"actor":"Finance Systems Team","text":"Performs initial triage and determines whether the issue can be resolved through customer-side administration or requires action from BlackLine.","sys":"Triage decision","type":"dec"},{"actor":"System Administrator","text":"Where vendor support is required, raises a case through the Community Forum and assigns the applicable priority.","sys":"Community Forum · priority"},{"actor":"BlackLine (vendor)","text":"Investigates and resolves the issue through the vendor-support process in accordance with the applicable priority-based service arrangements.","sys":"Vendor resolution"},{"actor":"Finance Systems Team","text":"Monitors the case, follows up with BlackLine and coordinates communications with affected users.","sys":"Case monitoring"},{"actor":"Affected Finance users","text":"Where the incident affects reconciliation, close processing or reporting, confirm that the service or processing output operates as required BEFORE the incident is closed.","sys":"Business confirmation gate","type":"dec"},{"actor":"Evidence","text":"The Community Forum case retains the issue description, assigned priority, vendor investigation, status updates and resolution details, plus internal communications and business confirmation.","sys":"Forum case + comms","type":"out"}],"exception":"BlackLine application incidents are managed through the Finance Systems support route and the BlackLine Community Forum rather than through a separate ServiceNow incident-management process.","limits":["A separate ServiceNow incident-management process does not operate for BlackLine application incidents. The Community Forum case-logging tool is the incident-management tool and the vendor is responsible for investigation, resolution, reporting and monitoring — so incident SLA and RCA evidence sits largely outside Intact's control."],"future":"NA","tod":"Review selected incidents to validate triage, priority assignment, vendor escalation, case monitoring, resolution, business confirmation and closure evidence."},{"id":"CO.C06","name":"Backup Restoration Testing and Validation","key":true,"status":"vend","freq":"Vendor-operated","objective":"To ensure effectiveness of data recovery procedures and validate that data can be successfully recovered and used as intended.","roles":["BlackLine Vendor","TRM Team"],"systems":["Vendor restoration process"],"railLabel":"Restoration testing","steps":[{"actor":"BlackLine (vendor)","text":"Performs backup restoration and recovery testing within the SaaS environment.","sys":"Vendor-operated"},{"actor":"Intact","text":"Does not directly execute restoration tests over the vendor-hosted platform.","sys":"No Intact testing","type":"dec"},{"actor":"TRM Team","text":"Restoration procedures, testing, approval, successful-recovery evidence and exceptions are assessed through the SOC 1 Type II report and TPRM.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":["Applicable through vendor reliance only."],"future":"NA","tod":"Assess restoration procedures, testing, approval, successful-recovery evidence and exceptions through the SOC 1 Type II report and TPRM."}]},{"code":"PD","short":"Development","name":"Program Development","intro":"BlackLine is a purchased, vendor-managed SaaS application. BlackLine performs core product development, platform maintenance and application releases within its own environment. Intact does not develop, modify or deploy BlackLine product code, so Program Development controls are not separately operated in the current state.","summary":[{"lab":"Controls","val":"4","note":"PD.C01 to PD.C04"},{"lab":"Via common CN","val":"1","note":"PD.C01 policies"},{"lab":"Not applicable","val":"3","note":"PD.C02, C03, C04"},{"lab":"Qualifying initiative","val":"None","note":"No major development or migration in progress"}],"outro":"Program Development becomes live for BlackLine only if a qualifying major development, new module or one-off data-migration initiative arises — for example the potential migration to Oracle ARCS flagged under Future State.","controls":[{"id":"PD.C01","name":"PD Policies and Procedures","key":false,"status":"na","statusLabel":"Via common CN","freq":"Per common CN","objective":"To confirm that project acquisition and development policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.","roles":["Common Program Development control owners"],"systems":["Common PD Control Narrative"],"railLabel":"Where the methodology lives","steps":[{"actor":"Intact","text":"BlackLine does not maintain a separate application-specific Program Development or SDLC procedure.","sys":"No app-specific SDLC"},{"actor":"Common methodology","text":"Intact's common Program Development policies and methodology apply where a qualifying major development, new implementation, new module or one-off data-migration initiative affects BlackLine.","sys":"Common PD CN","type":"dec"},{"actor":"BlackLine (vendor)","text":"Core product development remains subject to the vendor's development controls and the applicable SOC 1 Type II assessment.","sys":"SOC 1 Type II","type":"out"}],"exception":"NA","limits":[],"future":"NA","tod":"Refer to the Common Program Development Control Narrative for the enterprise methodology, project governance requirements and the distinction between qualifying Program Development activity and routine Change Management."},{"id":"PD.C02","name":"Program Development and Data Migration","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To confirm program development related activities are governed, approved, and assessed for IT general control readiness prior to implementation.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No major development, new BlackLine module or one-off data-migration initiative currently affects BlackLine.","sys":"No qualifying initiative","type":"stop"},{"actor":"BlackLine (vendor)","text":"Core application development and platform releases are performed by the vendor.","sys":"Vendor-managed"},{"actor":"Customer-side activity","text":"Configuration of fields, accounts, reconciliation settings, user access and entity access is governed through Access Management, the reconciliation process or Change Management — not Program Development.","sys":"APD / CM route","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm whether any qualifying major development, new module or one-off data-migration initiative arose during the period."},{"id":"PD.C03","name":"Data Migration Completeness and Accuracy Validation","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that data migrated as part of program development initiatives is complete and accurate through defined data validation, reconciliation, and exception resolution procedures prior to production deployment.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No one-off migration of data from a legacy system into BlackLine currently takes place.","sys":"No migration","type":"stop"},{"actor":"Classification","text":"Account information and recurring data flows used in the reconciliation process form part of ongoing business operations and do not represent a Program Development data migration.","sys":"BAU, not migration","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying migration occurred. Note that a future migration to Oracle ARCS would bring PD.C03 into scope."},{"id":"PD.C04","name":"Program Development Testing and Approval","key":true,"status":"na","statusLabel":"Not applicable","freq":"Not currently applicable","objective":"To ensure that program development activities are executed in accordance with a documented methodology and are formally tested, documented, and approved by management prior to deployment.","roles":[],"systems":[],"railLabel":"Why it does not apply today","steps":[{"actor":"Assessment","text":"No major Program Development initiative currently affects BlackLine.","sys":"No qualifying initiative","type":"stop"},{"actor":"BlackLine (vendor)","text":"Performs development and testing of core product releases within the vendor-managed environment.","sys":"Vendor testing"},{"actor":"Not duplicated","text":"Testing and approval of routine vendor releases and customer-side changes are addressed under CM.C03 and are not duplicated under PD.C04.","sys":"CM.C03 route","type":"dec"}],"exception":"NA","limits":[],"future":"NA","tod":"Confirm no qualifying initiative arose; testing of routine changes is tested under CM.C03."}]},{"code":"TPRM","short":"Third party","name":"Third-Party Risk Management","intro":"BlackLine is externally hosted by the vendor. The vendor provides a SOC 1 Type II report supporting reliance over vendor-managed infrastructure and platform controls. The TRM Team performs the review and assessment through Intact's centrally managed Third-Party Risk Management process. Period of coverage and bridge letter are recorded as TBC in the control narrative.","summary":[{"lab":"Assurance report","val":"SOC 1 II","note":"Vendor-provided"},{"lab":"Coverage period","val":"TBC","tone":"amber","note":"Not recorded in the narrative"},{"lab":"Bridge letter","val":"TBC","tone":"amber","note":"Not recorded in the narrative"},{"lab":"Reviewer","val":"TRM Team","note":"Centrally managed TPRM process"}],"outro":"Detailed vendor-specific SOC 1 Type II analysis is treated as separate vendor-assurance or TPRM documentation. Where reliance is placed on a third party, the applicable SOC report, bridge coverage, CUECs, vendor exceptions, management review and mitigation requirements are documented in the specific TPRM control narrative.","controls":[{"id":"TP.C01","name":"Third-Party Assurance Report Review","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that reliance on third-party service providers and vendor-operated controls is appropriately governed, monitored and evidenced.","roles":["TRM Team","Finance Systems Team Lead / Platform Owner","BlackLine Vendor"],"systems":["BlackLine SOC 1 Type II report"],"railLabel":"Assurance review cycle","steps":[{"actor":"BlackLine (vendor)","text":"Provides a SOC 1 Type II report as part of the assurance documentation supporting reliance over vendor-managed infrastructure and platform controls.","sys":"SOC 1 Type II"},{"actor":"TRM Team","text":"Reviews the report through Intact's centrally managed Third-Party Risk Management process, assessing reporting period, service-auditor opinion and scope.","sys":"TPRM process"},{"actor":"TRM Team","text":"Assesses bridge-letter or other gap-coverage evidence where the report period does not align with Intact's reporting period.","sys":"Bridge coverage","type":"dec"},{"actor":"TRM Team","text":"Maps vendor controls and subservice organisations, identifies control exceptions and assesses their impact.","sys":"Control + subservice mapping"},{"actor":"TRM Team","text":"Maps Complementary User Entity Controls (CUECs) and confirms customer-side ownership and operation.","sys":"CUEC mapping","type":"dec"},{"actor":"TRM Team","text":"Records mitigation actions, the reliance conclusion, preparer and reviewer sign-off, and evidence of closure for outstanding actions.","sys":"Reliance conclusion","type":"out"}],"exception":"NA","limits":["Period of coverage is recorded as TBC.","Bridge letter is recorded as TBC.","Vendor-specific SOC 1 Type II analysis is held as separate TPRM documentation rather than within this control narrative."],"evidence":["BlackLine SOC 1 Type II report; reporting period; service-auditor opinion","Scope assessment; bridge letter or gap-coverage evidence","Vendor-control mapping; subservice-organisation assessment; CUEC mapping","Control exceptions; impact assessment; mitigation actions; reliance conclusion","TRM preparer and reviewer sign-off; evidence of closure for outstanding actions"],"future":"NA","tod":"Validate the report period, opinion, scope, bridge coverage, subservice organisations, CUEC ownership, exceptions, management responses, remediation and the documented reliance conclusion."},{"id":"TP.C02","name":"Complementary User Entity Controls (CUECs)","key":true,"status":"vend","freq":"Annual / per report","objective":"To confirm that controls the vendor expects Intact to operate are identified, owned and operating.","roles":["TRM Team","Finance Systems Team Lead / Platform Owner","UK&I Finance Systems Team"],"systems":["BlackLine SOC 1 Type II report"],"railLabel":"From vendor expectation to Intact control","steps":[{"actor":"TRM Team","text":"Extracts the CUECs listed in the BlackLine SOC 1 Type II report.","sys":"SOC 1 Type II · CUEC section"},{"actor":"TRM Team","text":"Maps each CUEC to an Intact control owner and to the BlackLine control narrative where an equivalent control exists.","sys":"CUEC → control mapping","type":"dec"},{"actor":"Control owners","text":"Confirm customer-side ownership and operation of each mapped CUEC.","sys":"Owner confirmation"},{"actor":"TRM Team","text":"Where a CUEC has no operating Intact control, records the residual risk and tracks mitigation to closure.","sys":"Residual-risk assessment","type":"out"}],"exception":"NA","limits":["CUEC mapping outcomes for BlackLine are held within the separate TPRM documentation and are not evidenced inside this control narrative."],"future":"NA","tod":"Validate CUEC identification, mapping to Intact control owners, evidence of operation, residual-risk assessment and tracking of unresolved matters to closure."}]}],"gaps":[{"id":"APD.C09","sev":"H","gap":"No recurring review of System Administrator or privileged activity. Administrative activity logs are not periodically extracted and independently reviewed, and no frequency, review criteria, independent reviewer, exception process or retention requirement has been established.","why":"A key control with no operating activity. Four administrators can create users, assign entity access, change password settings and run the reconciliation process with no detective review of what they actually did."},{"id":"APD.C11","sev":"H","gap":"No formal periodic detective review of incompatible roles, conflicting responsibilities or sensitive-access combinations. The quarterly UAR assesses appropriateness of access but applies no SoD ruleset.","why":"A key control with no operating activity. SoD conflicts cannot be identified because no conflict definition exists to test against."},{"id":"APD.C12","sev":"H","gap":"No BlackLine SoD or Sensitive Access ruleset is maintained. Prohibited role combinations, sensitive-access definitions, conflict severity and ruleset ownership are not documented, and no periodic ruleset review operates.","why":"A key control with no operating activity, and the precondition for APD.C11 and CM.C07. Without a ruleset, neither conflict detection nor ruleset change control can exist."},{"id":"APD.C10","sev":"H","gap":"No corporate SSO, no MFA, and no IP-based access restrictions. Users reach BlackLine over the internet with local credentials and do not need the Intact network or VPN.","why":"A compromised password alone grants access to a financially relevant close application. SailPoint-integrated SSO is in progress but not yet operating."},{"id":"CM.C02","sev":"H","gap":"No internal population of BlackLine vendor releases with a recorded business-impact assessment. Intact receives release information but does not record, approve or track the impact of each release.","why":"Completeness of the change population cannot be demonstrated internally — typically the first question an auditor asks about a vendor-managed SaaS platform."},{"id":"APD.C08","sev":"M","gap":"No separate formal periodic review covering the complete API and vendor support-account population. Human administrators are certified quarterly; the non-human and vendor accounts are not.","why":"The API account holds a standing service identity and the vendor support account is created outside Intact's process. Neither is subject to periodic certification."},{"id":"APD.C07","sev":"M","gap":"The BlackLine user and entitlement report does not include a record count. Population consistency relies on comparing screenshots or PDF output to the Excel extract using username and last-login date/time.","why":"Weakens the IPE completeness assertion over the review population — an auditor cannot confirm the review covered every user."},{"id":"APD.C02","sev":"M","gap":"The entity-access requirement is entered as free text in ServiceDesk Plus rather than selected from a controlled dropdown.","why":"Creates a transcription risk between what was approved and what was configured, and makes the approved population harder to test systematically."},{"id":"CM.C05","sev":"M","gap":"No reconciliation of customer-side configuration activity recorded within BlackLine to approved change records.","why":"There is no detective control confirming that every direct configuration action performed in the tenant was authorised."},{"id":"CM.C03","sev":"M","gap":"No standard Intact testing pack, no mandatory UAT requirement and no formal approval record for each vendor release. Validation happens only where a release affects reconciliation or close.","why":"Testing coverage is discretionary rather than required, so a release with unrecognised impact could reach Production without Intact validation."},{"id":"CM.C09","sev":"M","gap":"No periodic Intact review reconciling the complete population of vendor releases to business-impact assessments, testing records and acceptance decisions.","why":"Without population completeness there is no basis to conclude that all deployments were reviewed."},{"id":"CM.C04","sev":"M","gap":"Intact does not directly administer or independently evidence access segregation and product-code promotion across the vendor's environments.","why":"Full reliance on the SOC 1 Type II report — the reliance conclusion becomes load-bearing and must be supported by bridge coverage."},{"id":"CM.C06","sev":"M","gap":"Intact does not administer or evidence vendor-developer access, segregation between vendor Development and Production, or authority to deploy product changes.","why":"Full reliance on the SOC 1 Type II report for a key IT SoD control."},{"id":"CM.C08","sev":"M","gap":"Intact does not operate or evidence the vendor's approval, testing, implementation or retrospective review of emergency changes to product code.","why":"Emergency changes are the highest-risk change type; visibility rests entirely on vendor assurance."},{"id":"CO.C05","sev":"M","gap":"No ServiceNow incident-management process operates for BlackLine application incidents. The Community Forum is the incident-management tool and the vendor owns investigation, resolution, reporting and monitoring.","why":"Incident SLA, escalation and root-cause evidence sit largely outside Intact's control and outside the enterprise incident framework."},{"id":"APD.C05","sev":"M","gap":"No formal BlackLine-specific deprovisioning SLA operates.","why":"There is no agreed maximum period between a user's last working day and removal of access, so timeliness cannot be tested against a standard."},{"id":"APD.C01","sev":"L","gap":"No standalone BlackLine-specific access-management policy covering account classes, approval roles, role-to-entity assignment standards, access-removal timing, privileged-access monitoring or evidence retention. Document owner, approver, effective date and version history are not evidenced.","why":"Non-key control, but weak documentation undermines the evidence trail for every key APD control beneath it."},{"id":"APD.C01","sev":"L","gap":"The Blueworks procedure does not document lifecycle requirements for vendor support accounts, the SailPoint service account, generic, shared, service or other system accounts.","why":"Non-human account classes have no documented lifecycle, which is exactly where the APD.C08 review gap also sits."},{"id":"CM.C01","sev":"L","gap":"No BlackLine-specific Change Management procedure setting out the division of responsibility between vendor product changes, customer-side configuration, reconciliation updates and internally governed changes.","why":"Non-key, but the absence of a documented boundary is what makes CM.C02 completeness hard to evidence."},{"id":"CO.C01","sev":"L","gap":"No BlackLine-specific Computer Operations procedure covering application support, auto-reconciliation monitoring, incident escalation, vendor-case monitoring, evidence retention and business confirmation of resolution.","why":"Non-key, but CO.C02 and CO.C05 both operate without a documented procedure behind them."},{"id":"APD.C06","sev":"L","gap":"The monthly review is based on inactivity and last-login data only; it does not replace timely processing of leaver notifications, transfer instructions or role-change communications.","why":"The detective backstop works, but it is not a substitute for the primary leaver control under APD.C05."},{"id":"Interface","sev":"M","gap":"The SAP → BlackLine feed mechanism, feed name, file or message format, automated or manual nature, frequency, source tables, data fields and interface-monitoring arrangements are not identified in the reviewed architecture.","why":"The primary data input to a financially relevant application cannot be described, let alone tested for completeness and accuracy."},{"id":"TP.C01","sev":"M","gap":"Period of coverage and bridge letter for the BlackLine SOC 1 Type II report are both recorded as TBC.","why":"Reliance on vendor controls across CM.C04, C06, C08 and CO.C03, C04, C06 cannot be concluded until report period and bridge coverage are confirmed."}]};
+document.addEventListener('DOMContentLoaded', ()=>boot(DATA_JSON));
+</script>
+</body>
+</html>
