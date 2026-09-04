@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Common Change Management — Control Narrative | Intact Insurance UK&amp;I</title>
+<style>
+:root{
+  /* Intact palette */
+  --ink:#001A1B;
+  --deep:#052429;
+  --pacific:#00AEBD;
+  --pacific-dim:#0B7C86;
+  --pacific-glow:rgba(0,174,189,.16);
+
+  /* Intact red — change this one value to match the exact brand hex */
+  --red:#D81E28;
+  --red-deep:#A81620;
+  --red-lite:#FF6E75;
+  --red-tint:#FDECEE;
+  --red-glow:rgba(216,30,40,.14);
+
+  --paper:#EFF3F3;
+  --card:#FFFFFF;
+  --line:#D6DEDE;
+  --line-soft:#E6ECEC;
+  --text:#0B2226;
+  --text-2:#4A6165;
+  --text-3:#7C9296;
+  --amber:#B87A12;
+  --amber-bg:#FBF1DE;
+  --slate:#5B7A80;
+  --r-lg:22px; --r-md:14px;
+  --shadow-1:0 1px 2px rgba(0,26,27,.05), 0 4px 14px rgba(0,26,27,.05);
+  --shadow-2:0 12px 34px rgba(0,26,27,.14), 0 2px 6px rgba(0,26,27,.07);
+  --ease:cubic-bezier(.22,.85,.28,1);
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 34px}
+@media(max-width:760px){.wrap{padding:0 20px}}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(239,243,243,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
+.topbar.stuck{border-bottom-color:var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:26px;height:56px}
+.brandmark{display:flex;align-items:center;gap:11px;font-weight:640;letter-spacing:-.015em;white-space:nowrap}
+.brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px var(--red-glow)}
+.brandmark small{display:block;font-weight:450;font-size:11.5px;color:var(--text-3);letter-spacing:0}
+.navlinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{text-decoration:none;font-size:13.5px;color:var(--text-2);font-weight:520;padding:7px 12px;border-radius:999px;white-space:nowrap;transition:.2s var(--ease)}
+.navlinks a:hover{color:var(--text);background:var(--red-tint)}
+.navlinks a.on{color:var(--ink);background:#fff;box-shadow:var(--shadow-1)}
+.navlinks a.on::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:middle}
+@media(max-width:900px){.navlinks{display:none}}
+
+/* ---------- dark canvas ---------- */
+.dark{background:var(--ink);color:#DFEAEA;position:relative;overflow:hidden;border-top:3px solid var(--red)}
+.dark::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(760px 380px at 8% -12%, rgba(0,174,189,.20), transparent 62%),radial-gradient(620px 420px at 96% 6%, rgba(216,30,40,.12), transparent 58%)}
+.dark .wrap{position:relative}
+.hero{padding:80px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:560;color:var(--red-lite);border:1px solid rgba(255,110,117,.36);border-radius:999px;padding:5px 13px 5px 9px;background:rgba(216,30,40,.10)}
+.eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:var(--red-lite)}
+h1{font-size:clamp(34px,4.9vw,58px);line-height:1.04;letter-spacing:-.036em;font-weight:660;color:#fff;margin:26px 0 0;max-width:16ch}
+h1 .thin{display:block;font-weight:280;color:#8FB4B8;letter-spacing:-.02em;font-size:.46em;margin-top:14px;line-height:1.15}
+.hero-lede{margin-top:24px;max-width:60ch;color:#A9C4C7;font-size:17px;line-height:1.62;font-weight:380}
+.hero-lede b{color:#DDECEC;font-weight:560}
+.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media(max-width:980px){.herogrid{grid-template-columns:1fr;gap:38px}}
+.chain{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:24px 24px 20px}
+.chain h6{font-size:11.5px;font-weight:640;color:var(--pacific);margin-bottom:16px}
+.clink{display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:16px}
+.clink:last-child{padding-bottom:0}
+.clink::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:1.5px;background:linear-gradient(180deg,rgba(0,174,189,.55),rgba(0,174,189,.12))}
+.clink:last-child::before{display:none}
+.cnode{width:31px;height:31px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;background:rgba(0,174,189,.16);border:1px solid rgba(0,174,189,.4);color:var(--pacific);transition:.3s var(--ease)}
+.clink:hover .cnode{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.12)}
+.cnode svg{width:16px;height:16px}
+.ctext b{display:block;font-size:13.5px;font-weight:600;color:#E2F0F0;letter-spacing:-.012em;line-height:1.3}
+.ctext span{display:block;font-size:12px;color:#89AEB2;line-height:1.45;margin-top:3px}
+
+.ledger{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--red)}
+.ledger div{padding:22px 22px 22px 0;border-right:1px solid rgba(255,255,255,.10)}
+.ledger div:last-child{border-right:0}
+.ledger .n{font-size:40px;font-weight:600;letter-spacing:-.04em;color:#fff;line-height:1}
+.ledger .l{margin-top:9px;font-size:13px;color:#8FB4B8;line-height:1.4;max-width:22ch}
+@media(max-width:760px){.ledger{grid-template-columns:1fr 1fr}.ledger div:nth-child(2){border-right:0}}
+
+/* ---------- section chrome ---------- */
+section{scroll-margin-top:64px}
+.band{padding:76px 0}
+.band-tight{padding:54px 0 76px}
+.shead{max-width:64ch;margin-bottom:36px}
+.shead .kick{font-size:12.5px;font-weight:640;color:var(--red-deep);margin-bottom:12px;display:flex;align-items:center;gap:9px;letter-spacing:.01em}
+.shead .kick::before{content:"";width:24px;height:2px;background:var(--red);border-radius:2px}
+.dark .shead .kick{color:var(--red-lite)}
+.dark .shead .kick::before{background:var(--red-lite)}
+h2{font-size:clamp(27px,3.5vw,40px);letter-spacing:-.032em;font-weight:640;line-height:1.1}
+.dark h2{color:#fff}
+.shead p{margin-top:15px;color:var(--text-2);font-size:16.5px;line-height:1.62}
+.dark .shead p{color:#9DBABE}
+
+/* ---------- lifecycle spine ---------- */
+.spine-scroll{overflow-x:auto;padding:6px 0 22px;-webkit-overflow-scrolling:touch}
+.spine{display:flex;gap:0;min-width:1080px;position:relative}
+.stage{flex:1 1 0;position:relative;padding:0 7px}
+.stage-btn{width:100%;text-align:left;position:relative;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:17px 15px 15px;transition:transform .38s var(--ease),background .28s,border-color .28s,box-shadow .38s var(--ease);transform-origin:center bottom;height:100%;display:flex;flex-direction:column;gap:10px}
+.stage-btn:hover{transform:translateY(-7px) scale(1.045);z-index:5;background:rgba(216,30,40,.16);border-color:rgba(255,110,117,.55);box-shadow:0 20px 44px rgba(0,0,0,.45)}
+.stage.active .stage-btn{background:var(--red);border-color:var(--red);box-shadow:0 18px 40px rgba(216,30,40,.34)}
+.stage.active .stage-btn *{color:#fff!important}
+.stage.active .cchip{background:rgba(255,255,255,.22)}
+.stage-idx{font-size:11px;font-weight:640;color:var(--pacific);display:flex;align-items:center;gap:7px}
+.stage-idx .bead{width:5px;height:5px;border-radius:50%;background:currentColor}
+.stage-ico{width:26px;height:26px;color:#fff;opacity:.92}
+.stage-name{font-size:14.5px;font-weight:620;color:#fff;letter-spacing:-.016em;line-height:1.25}
+.stage-tool{font-size:11.5px;color:#8CB0B4;line-height:1.4;font-weight:450}
+.stage-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}
+.cchip{font-size:10.5px;font-weight:640;padding:2.5px 6px;border-radius:5px;background:rgba(255,255,255,.11);color:#B7D6D9}
+.connector{position:absolute;top:50%;right:-6px;width:12px;height:12px;z-index:2;color:rgba(255,255,255,.26)}
+.stage:last-child .connector{display:none}
+.stage-panel{margin-top:6px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-left:3px solid var(--red);border-radius:20px;padding:0 30px;max-height:0;overflow:hidden;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .35s;opacity:0}
+.stage-panel.open{max-height:1400px;padding:30px;opacity:1}
+.sp-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:34px}
+@media(max-width:860px){.sp-grid{grid-template-columns:1fr;gap:24px}}
+.sp-h{font-size:20px;font-weight:620;color:#fff;letter-spacing:-.022em;margin-bottom:12px}
+.sp-body p{color:#A9C6C9;font-size:15px;line-height:1.68;margin-bottom:12px}
+.sp-body p:last-child{margin-bottom:0}
+.sp-body b{color:#E3F1F1;font-weight:580}
+.sp-side h5{font-size:12px;font-weight:640;color:var(--red-lite);margin-bottom:10px}
+.sp-side li{font-size:13.5px;color:#B3CDD0;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:10px;line-height:1.45}
+.sp-side li:last-child{border-bottom:0}
+.sp-side li span{color:#7FA5A9;flex:1 1 auto;min-width:0;font-size:12px;padding-top:1px;overflow-wrap:anywhere}
+.jump-row{display:flex;flex-wrap:wrap;gap:7px}
+.jump{font-size:12px;font-weight:640;padding:6px 12px;border-radius:8px;background:rgba(216,30,40,.18);color:#FF9095;border:1px solid rgba(255,110,117,.34);transition:.2s var(--ease)}
+.jump:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+.hint{font-size:12.5px;color:#7BA0A4;margin-top:16px;display:flex;align-items:flex-start;gap:9px;max-width:96ch}
+.hint svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;color:var(--red-lite)}
+
+/* ---------- tabs / lanes ---------- */
+.tabs{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:4px;gap:3px;margin-bottom:26px}
+.tab{font-size:14px;font-weight:580;padding:9px 20px;border-radius:9px;color:var(--text-2);transition:.25s var(--ease)}
+.tab.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.lanes{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lane{display:grid;grid-template-columns:190px 1fr;border-bottom:1px solid var(--line-soft)}
+.lane:last-child{border-bottom:0}
+.lane-h{padding:20px;background:#F7FAFA;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;gap:5px;justify-content:center;position:relative}
+.lane-h::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:var(--red);border-radius:0 3px 3px 0;opacity:.55}
+.lane-h b{font-size:13.5px;font-weight:640;letter-spacing:-.01em}
+.lane-h small{font-size:11.5px;color:var(--text-3);line-height:1.35}
+.lane-steps{display:flex;gap:10px;padding:16px;overflow-x:auto;align-items:stretch}
+.step{flex:0 0 auto;max-width:290px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:transform .32s var(--ease),box-shadow .32s var(--ease),border-color .25s}
+.step:hover{transform:translateY(-5px) scale(1.02);box-shadow:var(--shadow-2);border-color:var(--red);z-index:3;position:relative}
+.step b{display:block;font-size:13.5px;font-weight:620;letter-spacing:-.012em;margin-bottom:5px}
+.step p{font-size:12.5px;color:var(--text-2);line-height:1.5}
+.step .tools{margin-top:9px;display:flex;flex-wrap:wrap;gap:4px}
+.tool{font-size:10.5px;font-weight:640;padding:2.5px 7px;border-radius:5px;background:#EAF1F1;color:var(--slate)}
+.tool.k{background:var(--red-tint);color:var(--red-deep)}
+.stepsep{flex:0 0 auto;align-self:center;color:#C3CFD0;display:flex;align-items:center}
+.stepsep svg{width:14px;height:14px}
+
+/* ---------- control grid ---------- */
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:26px}
+.fchip{font-size:13px;font-weight:560;padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease)}
+.fchip:hover{border-color:var(--red);color:var(--red-deep)}
+.fchip.on{background:var(--red);border-color:var(--red);color:#fff}
+.fcount{margin-left:auto;font-size:13px;color:var(--text-3)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1000px){.cgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.cgrid{grid-template-columns:1fr}}
+.ccard{position:relative;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 22px 18px;overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s var(--ease),border-color .3s;display:flex;flex-direction:column;min-height:212px}
+.ccard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.ccard:hover{transform:translateY(-6px) scale(1.017);box-shadow:var(--shadow-2);border-color:#C6B2B4;z-index:2}
+.ccard:hover::after{transform:scaleY(1)}
+.ccard.hide{display:none}
+.cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cc-id{font-size:12.5px;font-weight:680;color:var(--red-deep);letter-spacing:.02em}
+.cc-ico{width:30px;height:30px;color:var(--ink);opacity:.8;flex:0 0 auto;transition:.35s var(--ease)}
+.ccard:hover .cc-ico{color:var(--red);opacity:1;transform:scale(1.08)}
+.cc-name{font-size:18.5px;font-weight:620;letter-spacing:-.026em;line-height:1.22}
+.cc-obj{margin-top:9px;font-size:13.5px;color:var(--text-2);line-height:1.52;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cc-foot{margin-top:auto;padding-top:15px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{font-size:10.5px;font-weight:660;padding:3.5px 9px;border-radius:6px;letter-spacing:.015em}
+.badge.key{background:var(--red);color:#fff}
+.badge.nonkey{background:#E7EDED;color:var(--slate)}
+.badge.freq{background:#EEF4F4;color:var(--text-2);font-weight:560}
+.badge.alt{background:var(--amber-bg);color:var(--amber)}
+.cc-more{margin-left:auto;font-size:12px;font-weight:640;color:var(--text-3);display:flex;align-items:center;gap:5px;transition:.25s var(--ease)}
+.ccard:hover .cc-more{color:var(--red)}
+.cc-more svg{width:13px;height:13px;transition:transform .3s var(--ease)}
+.ccard:hover .cc-more svg{transform:translateX(4px)}
+body.reading .cgrid, body.reading .filterbar{display:none}
+
+/* ---------- in-page control reader ---------- */
+.reader-sec{display:none;animation:rise .5s var(--ease)}
+body.reading .reader-sec{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.reader-top{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.backbtn{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:620;padding:9px 16px;border-radius:999px;background:var(--ink);color:#fff;transition:.24s var(--ease)}
+.backbtn:hover{background:var(--red);transform:translateX(-3px)}
+.backbtn svg{width:14px;height:14px}
+.rnav{margin-left:auto;display:flex;align-items:center;gap:8px}
+.rnav button{font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--text-2);display:flex;align-items:center;gap:7px;transition:.22s var(--ease)}
+.rnav button:hover:not(:disabled){background:var(--red);border-color:var(--red);color:#fff}
+.rnav button:disabled{opacity:.34;cursor:default}
+.rnav svg{width:13px;height:13px}
+.rpos{font-size:12.5px;color:var(--text-3);font-weight:600;padding:0 6px}
+.reader{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+.reader>*{min-width:0}
+@media(max-width:940px){.reader{grid-template-columns:1fr;gap:18px}}
+.rail{position:sticky;top:74px;display:flex;flex-direction:column;gap:3px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:4px}
+@media(max-width:940px){.rail{position:static;flex-direction:row;overflow-x:auto;max-height:none;padding-bottom:6px}}
+.railitem{text-align:left;display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:11px;border:1px solid transparent;transition:.24s var(--ease);flex:0 0 auto}
+.railitem:hover{background:#fff;border-color:var(--line);transform:translateX(3px)}
+@media(max-width:940px){.railitem{min-width:190px}.railitem:hover{transform:translateY(-3px)}}
+.railitem .rid{font-size:11px;font-weight:700;color:var(--text-3);flex:0 0 auto;padding-top:2px;letter-spacing:.02em}
+.railitem .rnm{font-size:12.8px;font-weight:560;color:var(--text-2);line-height:1.35}
+.railitem.on{background:#fff;border-color:var(--line);box-shadow:var(--shadow-1);position:relative}
+.railitem.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--red);border-radius:0 3px 3px 0}
+.railitem.on .rid{color:var(--red)}
+.railitem.on .rnm{color:var(--ink);font-weight:640}
+
+.rbody{background:#fff;border:1px solid var(--line);border-radius:26px}
+.rhead{padding:34px 38px 28px;border-bottom:1px solid var(--line-soft);background:linear-gradient(160deg,#FEFAFA,#fff 55%);position:relative}
+.rhead::before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,var(--red),var(--pacific))}
+@media(max-width:680px){.rhead{padding:26px 22px 22px}}
+.rhead .rid-big{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rhead h3{font-size:clamp(24px,3.6vw,36px);font-weight:660;letter-spacing:-.032em;line-height:1.12;max-width:22ch}
+.rhead .rico{position:absolute;right:34px;top:32px;width:56px;height:56px;color:var(--red);opacity:.16}
+@media(max-width:680px){.rhead .rico{display:none}}
+.rcontent{padding:30px 38px 40px}
+@media(max-width:680px){.rcontent{padding:24px 22px 34px}}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+.attr{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:680px){.attr{grid-template-columns:1fr}}
+.attr .cell{background:#F6FAFA;border:1px solid var(--line-soft);border-radius:var(--r-md);padding:16px 18px;transition:.3s var(--ease)}
+.attr .cell:hover{transform:translateY(-3px);box-shadow:var(--shadow-1);border-color:var(--red);background:#fff}
+.attr .cell.wide{grid-column:1/-1}
+.attr h6{font-size:11.5px;font-weight:660;color:var(--red-deep);margin-bottom:7px;letter-spacing:.015em}
+.attr p{font-size:14px;line-height:1.58;color:var(--text)}
+.attr .cell.alert{background:var(--amber-bg);border-color:#EEDBB6}
+.attr .cell.alert h6{color:var(--amber)}
+
+.blk{margin-bottom:28px}
+.blk>h4{font-size:15px;font-weight:660;letter-spacing:-.018em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.blk>h4 svg{width:17px;height:17px;color:var(--red)}
+.blk>h4::after{content:"";flex:1 1 auto;height:1px;background:var(--line-soft)}
+.blk p{font-size:14.8px;line-height:1.7;color:var(--text-2);margin-bottom:12px}
+.blk p:last-child{margin-bottom:0}
+.blk p b{color:var(--text);font-weight:620}
+.plist li{font-size:14.2px;line-height:1.62;color:var(--text-2);padding:11px 0 11px 24px;position:relative;border-bottom:1px solid var(--line-soft);transition:.26s var(--ease)}
+.plist li:last-child{border-bottom:0}
+.plist li::before{content:"";position:absolute;left:5px;top:19px;width:6px;height:6px;border-radius:50%;background:var(--red);transition:.26s var(--ease)}
+.plist li:hover{color:var(--text);padding-left:30px}
+.plist li:hover::before{transform:scale(1.5)}
+.plist li b{color:var(--text);font-weight:620}
+.applist{display:flex;flex-wrap:wrap;gap:6px}
+.app{font-size:12px;font-weight:560;padding:5px 10px;border-radius:7px;background:#EDF3F3;color:var(--text-2);border:1px solid transparent;transition:.2s var(--ease)}
+.app:hover{background:var(--red-tint);color:var(--red-deep);border-color:rgba(216,30,40,.25)}
+.app.alt{background:var(--amber-bg);color:var(--amber);border-color:#EEDBB6}
+.sublabel{font-size:12.5px;color:var(--text-3);margin:0 0 9px;font-weight:600}
+.evid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.evid{grid-template-columns:1fr}}
+.evbox{border:1px solid var(--line);border-radius:var(--r-md);padding:17px 18px;background:#fff;transition:.3s var(--ease)}
+.evbox:hover{box-shadow:var(--shadow-2);transform:translateY(-3px)}
+.evbox.pri{background:#FFF8F8;border-color:#F0D3D5}
+.evbox h6{font-size:11.5px;font-weight:660;margin-bottom:11px;color:var(--text-2)}
+.evbox.pri h6{color:var(--red-deep)}
+.evbox li{font-size:12.9px;line-height:1.5;color:var(--text-2);padding:5px 0 5px 15px;position:relative}
+.evbox li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:1.5px;background:var(--text-3)}
+.evbox.pri li::before{background:var(--red)}
+.tod{background:#F4F8F8;border-left:3px solid var(--pacific);border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 20px}
+.tod h6{font-size:11.5px;font-weight:660;color:var(--pacific-dim);margin-bottom:7px}
+.tod p{font-size:13.6px;line-height:1.62;color:var(--text-2)}
+.tod.altnote{background:var(--amber-bg);border-left-color:var(--amber)}
+.tod.altnote h6{color:var(--amber)}
+
+/* ---------- matrix ---------- */
+.mtools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:240px}
+.search svg{width:15px;height:15px;color:var(--text-3);flex:0 0 auto}
+.search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--text)}
+.editbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:16px}
+.ebtn{font-size:12.5px;font-weight:620;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease);display:inline-flex;align-items:center;gap:7px}
+.ebtn:hover{border-color:var(--red);color:var(--red-deep)}
+.ebtn svg{width:13px;height:13px}
+.ebtn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.ebtn.primary:hover{background:var(--red-deep);border-color:var(--red-deep);color:#fff}
+.ebtn.toggled{background:var(--red);border-color:var(--red);color:#fff}
+.savestat{margin-left:auto;font-size:12.5px;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.savestat .sdot{width:7px;height:7px;border-radius:50%;background:#BFCBCB}
+.savestat.dirty .sdot{background:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px;font-size:12.5px;color:var(--text-2)}
+.legend i{display:inline-flex;align-items:center;gap:7px;font-style:normal}
+.key-dot{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+.d-0{background:var(--pacific)}
+.d-1{background:#E5B860}
+.d-2{background:transparent;border:2px solid var(--pacific-dim)}
+.d-3{background:#E1E8E8}
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:auto;max-height:660px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+thead th{position:sticky;top:0;z-index:3;background:#F7FAFA;text-align:left;padding:12px 10px;font-weight:660;font-size:11.5px;color:var(--text-2);border-bottom:2px solid var(--line);white-space:nowrap}
+thead th:first-child{left:0;z-index:4;min-width:172px}
+thead th.ch{text-align:center;cursor:default}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FFF6F6}
+tbody td:first-child{position:sticky;left:0;background:#fff;font-weight:620;font-size:13px;z-index:2;border-right:1px solid var(--line-soft)}
+tbody tr:hover td:first-child{background:#FFF6F6}
+td.c{text-align:center;padding:6px 4px}
+.cellbtn{width:30px;height:26px;border-radius:7px;display:inline-grid;place-items:center;position:relative;transition:.2s var(--ease);cursor:default}
+body.editing .cellbtn{cursor:pointer}
+body.editing .cellbtn:hover{background:var(--red-tint);transform:scale(1.12)}
+.cellmark{width:14px;height:14px;border-radius:4px;display:block}
+.cellbtn.mod::after{content:"";position:absolute;top:2px;right:2px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+.conn{font-size:12px;color:var(--text-2)}
+.conn.tbc{color:var(--amber);font-weight:560}
+
+/* ---------- roles / scope ---------- */
+.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.rolegrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.rolegrid{grid-template-columns:1fr}}
+.role{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:19px 20px;transition:transform .34s var(--ease),box-shadow .34s var(--ease),border-color .28s;position:relative;overflow:hidden}
+.role::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .38s var(--ease)}
+.role:hover{transform:translateY(-5px) scale(1.014);box-shadow:var(--shadow-2);border-color:#DEC7C9}
+.role:hover::before{transform:scaleY(1)}
+.role b{font-size:15px;font-weight:630;letter-spacing:-.018em;display:block;margin-bottom:9px}
+.role p{font-size:13px;line-height:1.55;color:var(--text-2)}
+.role .ev{margin-top:12px;padding-top:11px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--text-3);line-height:1.5}
+.role .ev b{font-size:11.5px;color:var(--red-deep);font-weight:660;margin-bottom:4px}
+.role .rc{display:flex;flex-wrap:wrap;gap:4px;margin-top:11px}
+.rc span{font-size:10.5px;font-weight:660;padding:2.5px 6px;border-radius:5px;background:var(--red-tint);color:var(--red-deep)}
+.scope{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:840px){.scope{grid-template-columns:1fr}}
+.scard{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px;transition:.3s var(--ease)}
+.scard:hover{box-shadow:var(--shadow-2);transform:translateY(-4px);border-color:#DEC7C9}
+.scard h5{font-size:12px;font-weight:660;color:var(--red-deep);margin-bottom:10px}
+.scard p{font-size:13.5px;line-height:1.62;color:var(--text-2)}
+
+footer{padding:42px 0 58px;border-top:3px solid var(--red);background:var(--paper)}
+footer p{font-size:12.5px;color:var(--text-3);line-height:1.68;max-width:96ch}
+footer p+p{margin-top:11px}
+footer b{color:var(--text-2);font-weight:640}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* ===== interaction layer ===== */
+.cgrid{perspective:1400px}
+.cgrid:has(.ccard:hover) .ccard:not(:hover){opacity:.72;filter:saturate(.78)}
+.ccard{--mx:50%;--my:50%;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .3s,opacity .35s,filter .35s;transform-style:preserve-3d}
+.ccard::after{display:none}
+.ccard::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:radial-gradient(360px circle at var(--mx) var(--my), rgba(216,30,40,.11), transparent 62%);
+  opacity:0;transition:opacity .45s var(--ease)}
+.ccard:hover::before{opacity:1}
+.cc-glow{position:absolute;inset:0;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:0;
+  background:radial-gradient(240px circle at var(--mx) var(--my), var(--red), rgba(216,30,40,0) 64%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .4s var(--ease)}
+.ccard:hover .cc-glow{opacity:1}
+.cc-top,.cc-name,.cc-obj,.cc-foot,.cc-cov{position:relative;z-index:1}
+.ccard:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 60px rgba(0,26,27,.17),0 3px 8px rgba(0,26,27,.07);border-color:#E2C9CC}
+.cc-cov{margin-top:16px}
+.covbar{display:flex;height:5px;border-radius:99px;overflow:hidden;background:#EDF2F2;gap:1.5px}
+.covbar .seg{height:100%;width:0;transition:width .8s var(--ease)}
+.ccard.lit .covbar .seg{width:var(--w)}
+.covbar .seg.k0{background:var(--pacific)}
+.covbar .seg.k1{background:#E5B860}
+.covbar .seg.k2{background:#9AD0D6}
+.covbar .seg.k3{background:#DDE5E5}
+.covlbl{margin-top:8px;font-size:11px;color:var(--text-3);font-weight:560;letter-spacing:.005em;transition:color .3s}
+.ccard:hover .covlbl{color:var(--red-deep)}
+.cc-id{transition:letter-spacing .35s var(--ease)}
+.ccard:hover .cc-id{letter-spacing:.09em}
+
+/* ===== reader sub-navigation and progress ===== */
+.rprog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.rprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--pacific));transition:width .12s linear}
+.rsub{position:sticky;top:56px;z-index:20;display:flex;gap:4px;align-items:center;overflow-x:auto;
+  padding:11px 38px;background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line-soft);scrollbar-width:none}
+.rsub::-webkit-scrollbar{display:none}
+@media(max-width:680px){.rsub{padding:10px 20px}}
+.rsub button{font-size:12.5px;font-weight:580;color:var(--text-3);padding:6px 12px;border-radius:999px;white-space:nowrap;transition:.24s var(--ease)}
+.rsub button:hover{color:var(--red-deep);background:var(--red-tint)}
+.rsub button.on{color:#fff;background:var(--ink)}
+.rbody{position:relative;overflow:visible}
+.rhead{border-radius:25px 25px 0 0;overflow:hidden}
+.rcontent{border-radius:0 0 25px 25px;overflow:hidden}
+.rhead{position:relative}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(20px);filter:blur(6px);transition:opacity .7s var(--ease),transform .7s var(--ease),filter .7s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* ===== matrix crosshair and ripple ===== */
+tbody tr.xrow td{background:#FFF4F5}
+tbody tr.xrow td:first-child{background:#FFF4F5;color:var(--red-deep)}
+td.xc{background:#FFF4F5!important}
+thead th.xcol{color:#fff;background:var(--red)}
+tbody td:first-child.xname{color:var(--red-deep)}
+.cellbtn{transition:transform .22s var(--ease),background .22s}
+.cellbtn.pop{animation:cellpop .5s var(--ease)}
+@keyframes cellpop{0%{transform:scale(1)}35%{transform:scale(1.55)}100%{transform:scale(1)}}
+.cellbtn .ring{position:absolute;inset:0;border-radius:8px;border:2px solid var(--red);opacity:0;pointer-events:none}
+.cellbtn.pop .ring{animation:ringout .55s var(--ease)}
+@keyframes ringout{0%{opacity:.85;transform:scale(.6)}100%{opacity:0;transform:scale(2)}}
+
+/* ===== rail with full control ids ===== */
+.railitem{flex-direction:column;gap:4px}
+.railitem .rid{font-size:10.5px;letter-spacing:.07em}
+@media(max-width:940px){.railitem{min-width:210px}}
+
+/* ===== stage chips with full ids ===== */
+.cchip{font-size:10px;letter-spacing:.02em}
+.rc span{letter-spacing:.02em}
+
+/* ===== application / tool categories ===== */
+.kdot{display:inline-block;width:8px;height:8px;border-radius:2.5px;margin-right:9px;vertical-align:middle}
+tr.r-app .kdot{background:var(--pacific)}
+tr.r-tool .kdot{background:#2B4A72}
+tr.r-tool td:first-child{color:#24405F}
+.kd-app{background:var(--pacific)}
+.kd-tool{background:#2B4A72}
+.kindseg{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:3px;gap:3px}
+.kbtn{font-size:12.5px;font-weight:580;padding:8px 15px;border-radius:9px;color:var(--text-2);transition:.22s var(--ease);white-space:nowrap}
+.kbtn:hover{color:var(--red-deep)}
+.kbtn.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.app.tool{background:#E9EFF6;color:#24405F}
+.app.tool:hover{background:#DCE6F2;color:#1A3350;border-color:rgba(43,74,114,.28)}
+</style>
+
+<style>
+.classgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1080px){.classgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.classgrid{grid-template-columns:1fr}}
+.klass{text-align:left;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 20px 17px;position:relative;overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s var(--ease),border-color .3s;display:flex;flex-direction:column;min-height:200px}
+.klass::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.klass:hover{transform:translateY(-6px) scale(1.02);box-shadow:var(--shadow-2);border-color:#DEC7C9;z-index:2}
+.klass:hover::after,.klass.on::after{transform:scaleY(1)}
+.klass.on{border-color:var(--red);box-shadow:var(--shadow-2)}
+.klass .kico{width:28px;height:28px;color:var(--ink);opacity:.8;margin-bottom:13px;transition:.35s var(--ease)}
+.klass:hover .kico,.klass.on .kico{color:var(--red);opacity:1;transform:scale(1.08)}
+.klass b{font-size:16.5px;font-weight:640;letter-spacing:-.022em;display:block;margin-bottom:7px}
+.klass p{font-size:12.8px;line-height:1.52;color:var(--text-2)}
+.klass .kfoot{margin-top:auto;padding-top:14px;font-size:11px;font-weight:660;color:var(--red-deep)}
+.kpanel{margin-top:14px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);border-radius:var(--r-lg);max-height:0;overflow:hidden;opacity:0;padding:0 30px;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .35s}
+.kpanel.open{max-height:1200px;padding:28px 30px;opacity:1}
+.krow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.krow{grid-template-columns:1fr}}
+.kcell{background:#F6FAFA;border:1px solid var(--line-soft);border-radius:var(--r-md);padding:16px 18px;transition:.3s var(--ease)}
+.kcell:hover{transform:translateY(-3px);background:#fff;border-color:var(--red);box-shadow:var(--shadow-1)}
+.kcell h6{font-size:11.5px;font-weight:660;color:var(--red-deep);margin-bottom:8px}
+.kcell p{font-size:13.5px;line-height:1.6;color:var(--text-2)}
+.kdetail{margin-top:18px;font-size:14.5px;line-height:1.7;color:var(--text-2)}
+.kdetail b{color:var(--text);font-weight:620}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar">
+  <div class="wrap">
+    <div class="brandmark"><span class="dot"></span>
+      <span>Change Management<small>Intact Insurance UK&amp;I · Common control narrative</small></span>
+    </div>
+    <nav class="navlinks">
+      <a href="#lifecycle">Change route</a>
+      <a href="#types">Change types</a>
+      <a href="#controls">Controls</a>
+      <a href="#matrix">Applicability</a>
+      <a href="#roles">Roles</a>
+      <a href="#scope">Scope</a>
+    </nav>
+  </div>
+</div>
+
+<div class="dark">
+  <div class="wrap hero">
+    <div class="herogrid">
+      <div>
+        <span class="eyebrow"><span class="pulse"></span>CM.C01 – CM.C09 · Current state</span>
+        <h1>Common Change Management<span class="thin">Control Narrative</span></h1>
+        <p class="hero-lede">Defines the governance, control design and operational procedures supporting Change Management controls. The process ensures that changes are <b>appropriately authorised, risk-assessed, tested, approved, implemented and reviewed</b> before deployment into production environments, supporting the effectiveness of internal controls over financial reporting.</p>
+      </div>
+      <div class="chain" id="chain"></div>
+    </div>
+    <div class="ledger">
+      <div><div class="n">9</div><div class="l">CM controls in the common process</div></div>
+      <div><div class="n">8</div><div class="l">Key controls relied on for SOX</div></div>
+      <div><div class="n">38</div><div class="l">Applications and tools in the population</div></div>
+      <div><div class="n">5</div><div class="l">Change classifications, each with its own route</div></div>
+    </div>
+  </div>
+
+  <section id="lifecycle" class="wrap band-tight">
+    <div class="shead">
+      <div class="kick">Process model</div>
+      <h2>From request to closure</h2>
+      <p>The process is operated through an enterprise ITSM platform and supported by a structured governance model including request submission, technical review, QA, Service Manager oversight and CAB governance. Select a stage for the detail.</p>
+    </div>
+    <div class="spine-scroll"><div class="spine" id="spine"></div></div>
+    <div class="stage-panel" id="stagePanel"></div>
+    <div class="hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      The route taken depends on the change classification. Standard changes execute against a pre-approved template. Implementation before completion of the normal approval route is permitted only through the approved emergency-change process, and a change ticket remains mandatory.
+    </div>
+  </section>
+</div>
+
+<section id="types" class="wrap band">
+  <div class="shead">
+    <div class="kick">Classification</div>
+    <h2>Five change classifications</h2>
+    <p>The selected classification determines the applicable assessment, approval, testing and governance route. Select a classification for the detail.</p>
+  </div>
+  <div class="classgrid" id="classgrid"></div>
+  <div class="kpanel" id="kpanel"></div>
+</section>
+
+<section class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Failed changes</div>
+    <h2>Failed change management</h2>
+    <p>A change is treated as failed where it does not achieve the intended outcome or results in an incident. It is not closed simply by recording an unsuccessful result.</p>
+  </div>
+  <div class="lanes" id="failLanes"></div>
+</section>
+
+<section id="controls" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">The control set</div>
+    <h2>Change Management controls</h2>
+    <p>CM.C01 to CM.C09. Select a control for its objective, frequency, roles involved, exception handling, applicability and evidence requirements.</p>
+  </div>
+  <div class="filterbar" id="filterbar"></div>
+  <div class="cgrid" id="cgrid"></div>
+
+  <div id="reader" class="reader-sec">
+    <div class="reader-top">
+      <button class="backbtn" id="backAll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>All controls</button>
+      <div class="rnav">
+        <button id="rPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>Previous</button>
+        <span class="rpos" id="rposLabel"></span>
+        <button id="rNext">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="reader">
+      <aside class="rail" id="rail"></aside>
+      <div class="rbody" id="rbody"></div>
+    </div>
+  </div>
+</section>
+
+<section id="matrix" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Coverage</div>
+    <h2>Applicability by application</h2>
+    <p>The starting position is taken from the applicability statement under each control, including the qualifying condition where one is stated. Hover a control column for that condition. Turn on editing to set applicability yourself, control by control; changes are held in this browser and can be exported to a file.</p>
+  </div>
+  <div class="mtools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="appSearch" placeholder="Find an application or tool" aria-label="Search applications and tools">
+    </div>
+    <div class="kindseg" id="kindseg"><button class="kbtn on" data-k="all">All 38</button><button class="kbtn" data-k="app">Applications 23</button><button class="kbtn" data-k="tool">Tools 15</button></div>
+  </div>
+  <div class="editbar" id="editbar">
+    <button class="ebtn" id="editToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14 6.5l3.5 3.5"/></svg><span>Edit applicability</span></button>
+    <button class="ebtn" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Export</button>
+    <label class="ebtn" for="importFile" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 17V5M8 9l4-4 4 4"/><path d="M4 19h16"/></svg>Import</label>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="ebtn" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4.5V10h-5.5"/></svg>Reset to narrative</button>
+    <span class="savestat" id="savestat"><span class="sdot"></span><span></span></span>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="tablewrap" id="tablewrap"></div>
+</section>
+
+<section id="roles" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Accountability</div>
+    <h2>Roles and responsibility ownership</h2>
+    <p>Change Management roles and approval responsibilities are configured through ServiceNow workflow roles, assignment groups and approval groups. Membership of the relevant authorised groups determines who may raise, review, approve or implement changes.</p>
+  </div>
+  <div class="rolegrid" id="rolegrid"></div>
+</section>
+
+<section id="scope" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Boundaries</div>
+    <h2>Scope</h2>
+  </div>
+  <div class="scope" id="scope"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Domain</b> Common Change Management &nbsp;&nbsp;<b>Version</b> V0.1 &nbsp;&nbsp;<b>Description of changes</b> DRAFT &nbsp;&nbsp;<b>Document owner</b> TBC &nbsp;&nbsp;<b>Control owner</b> TBC &nbsp;&nbsp;<b>Author</b> TBC &nbsp;&nbsp;<b>Approver</b> TBC &nbsp;&nbsp;<b>Next review date</b> TBC &nbsp;&nbsp;<b>Classification</b> TBC</p>
+    <p>From 1 July 2026, accountability for Change Management transferred to Intact under the revised operating model. The Change Management process and ServiceNow tooling remain unchanged; governance and oversight responsibilities are managed by Intact, while existing process activities continue to be supported by operational teams where applicable. Program Development and Third-Party Risk Management are separate ITGC control domains documented within their own control narratives.</p>
+    <p><b>References</b> &nbsp;Change Management Processes (expected Q3 2026 refresh to include Ireland processes) &nbsp;&nbsp; The Change Enablement Process v2.1 &nbsp;&nbsp; Change Delivery Framework – Minimum Standards Guidance &nbsp;&nbsp; PD Change Policy &nbsp;&nbsp; IM-GOV-0015 Internal Model Change Policy &nbsp;&nbsp; Problem Management Process 3.0 &nbsp;&nbsp; Third Party Risk &amp; Outsourcing Policy &nbsp;&nbsp; Supplier Management &nbsp;&nbsp; Third Party Management (TPM)</p>
+  </div>
+</footer>
+
+<script>
+const I = {
+  policy:'<path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M9 13h7M9 17h5"/>',
+  ticket:'<path d="M3.5 8.5A2 2 0 0 1 5.5 6.5h13a2 2 0 0 1 2 2v1.6a2.4 2.4 0 0 0 0 4.8v1.6a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-1.6a2.4 2.4 0 0 0 0-4.8z"/><path d="M10 9.5v5"/>',
+  risk:'<path d="M12 3.5l9.2 16H2.8z"/><path d="M12 10v4.2"/><circle cx="12" cy="17" r=".7" fill="currentColor"/>',
+  qa:'<path d="M4.5 5h15v14h-15z"/><path d="M8 12.5l2.5 2.5L16 9.5"/>',
+  approve:'<path d="M4.5 12.5l4.5 4.5 10-10.5"/>',
+  test:'<path d="M9.5 3v6.2L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3l-4.7-8.8V3"/><path d="M8 3h8M7.4 14.5h9.2"/>',
+  env:'<rect x="2.5" y="4.5" width="8" height="6" rx="1.2"/><rect x="13.5" y="4.5" width="8" height="6" rx="1.2"/><rect x="8" y="14.5" width="8" height="6" rx="1.2"/><path d="M6.5 10.5v2.5h11v-2.5"/>',
+  deploy:'<path d="M12 2.5s4.5 2.5 4.5 8.5c0 2.4-1 4.4-2 5.7h-5c-1-1.3-2-3.3-2-5.7C7.5 5 12 2.5 12 2.5z"/><circle cx="12" cy="10" r="1.8"/><path d="M9.5 18.5l-2 3h9l-2-3"/>',
+  cab:'<circle cx="8" cy="8.5" r="2.6"/><circle cx="16" cy="8.5" r="2.6"/><path d="M3 19c0-2.8 2.2-4.4 5-4.4s5 1.6 5 4.4"/><path d="M13.5 15.2c.8-.4 1.7-.6 2.5-.6 2.8 0 5 1.6 5 4.4"/>',
+  emg:'<path d="M13 2.5L4.5 13.5H11l-1 8L19 10h-6.5z"/>',
+  pir:'<path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4.5V10h-5.5"/><path d="M9.5 12l1.8 1.8L15 10"/>',
+  sod:'<circle cx="8.5" cy="12" r="5"/><circle cx="15.5" cy="12" r="5"/><path d="M12 8.2v7.6"/>',
+  prod:'<path d="M3.5 7.5l8.5-4.5 8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
+  dev:'<path d="M9 8l-4.5 4L9 16M15 8l4.5 4L15 16"/>',
+  eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  repeat:'<path d="M4 9V7.5a2.5 2.5 0 0 1 2.5-2.5H18l-2.5-2.5M20 15v1.5a2.5 2.5 0 0 1-2.5 2.5H6l2.5 2.5"/>',
+  info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 16v-4.5M12 8.2h.01"/>',
+  fast:'<path d="M3 8h9M3 12h6M3 16h9"/><path d="M14 6l5 6-5 6"/>'
+};
+const svg = p => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+
+/* application population named across every CM control */
+const CM_APPS = ["Blackline","S360","PTX","AIS","UKRIS","FDS","Global IP","Synergy","Eclipse","Atlas","SAP GL","SAP HR","DXC Assure","Guidewire","CCS","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+
+/* ============================================================
+   THE NINE CONTROLS
+   ============================================================ */
+const CONTROLS = [
+{
+  id:"CM.C01", name:"Change management policies and procedures", key:false, icon:I.policy, theme:"govern",
+  freq:"Annual",
+  objective:"To confirm that change management policies and standard operating procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.",
+  roles:["Change Enablement Team","Mini-CAB"],
+  exception:"Policies and procedures are reviewed more frequently where changes occur. Process non-adherence prevents a change from progressing through the approval workflow. Failed and unauthorised changes are reviewed through the applicable change-governance process.",
+  qual:"Applicable across the named application population.",
+  how:[
+    "The common process is supported by the <b>Change Management Policy</b> and the <b>ServiceNow Change Training</b> documentation. The policy establishes the enterprise-wide framework, while the training material provides operational requirements for change approvals, testing, rollback and post-implementation activities.",
+    "The process applies generically to applications using the common Change Management route, rather than being limited to a single technology platform.",
+    "The process recognises <b>five change classifications</b> — Standard, Normal, Informational, Emergency and Expedited. The selected classification determines the applicable assessment, approval, testing and governance route.",
+    "Change Owners are required to record changes in ServiceNow, and <b>non-adherence prevents the change from progressing through approval</b>. Failed and unauthorised changes are formally reviewed, together with the related lessons learned and preventive actions.",
+    "Process documentation is reviewed annually or more frequently when changes are made."
+  ],
+  points:[
+    "<b>Licence gates participation.</b> Access to initiate change records is restricted to users holding the required ServiceNow licence. Requests for new licences are copied to Change Enablement, which provides the change-process documentation and online training material.",
+    "<b>Training before licence.</b> The licence request is approved after the requester confirms by email that the required training has been completed.",
+    "<b>Refresher cadence.</b> Refresher sessions are held three times each year, and process or tool updates are communicated to CAB participants and other change-managed-user distribution lists.",
+    "<b>Same rules for third parties.</b> These requirements apply equally to authorised internal and third-party users.",
+    "<b>Retention is open.</b> ServiceNow retains the change record and associated audit trail for audit purposes; however, the precise retention period is not currently defined in the process or training documentation and remains to be confirmed."
+  ],
+  evPri:["Approved and current Change Management Policy and Change Enablement Process, including document title, version, owner, approval date, effective date and review frequency","Approved procedures covering change initiation, classification, risk assessment, testing, approval, implementation, rollback or backout, post-implementation review and closure","Approved definitions and requirements for Standard, Normal, Informational, Emergency and Expedited changes","Evidence of the latest policy and process review and approval","Authoritative repository record confirming the current approved versions are maintained centrally","Approved standard-change requirements, including template approval, eligibility, recertification and retirement","Current operating-model documentation reflecting Intact ownership of the Change Management process"],
+  evSec:["Process maps and workflow guidance","Change Management training materials","ITSM licence requests and approvals","Training-completion confirmation","Communications issued to change users and CAB participants","Change-user, approval-group and CAB membership records","Records supporting the transfer of operational responsibilities from Wipro to Intact"],
+  tod:"The applicable retention period and availability of prior-year Change Management evidence will be confirmed with Intact through the SOX TOD evidence questions."
+},
+{
+  id:"CM.C02", name:"Change request approval", key:true, icon:I.ticket, theme:"approve",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that all changes are supported by documented and approved business or IT requirements.",
+  roles:["Change Requestor","Change Owner","Technical Approver","Wipro Change Management Team / QA Function","Service Manager","Change Enablement Team","CAB","Mini-CAB","Security Team / Security Approver","Third-Party Delivery or Support Team"],
+  exception:"Changes cannot progress without the required record, QA review and workflow approvals. Implementation before completion of the normal approval route is permitted only through the approved emergency-change process. Incomplete or incorrectly classified records are returned for correction.",
+  qual:"Applicable across the named application population.",
+  how:[
+    "Authorised and trained requestors create change records in ServiceNow using the standardised workflow. Mandatory information includes the <b>change type, description, affected service or system, embedded risk assessment, impacted teams, implementation activities, testing information and task ownership</b>.",
+    "The selected service line and other change attributes drive workflow assignment, including the addition of relevant technical and service-management teams. <b>Change Enablement</b> checks whether any additional impacted teams must be included where the automated workflow has not identified them.",
+    "The record first passes through a <b>Change Management QA review</b> of its quality, classification and completeness. Wipro Change Management resources continue to perform the initial QA activity; Service Manager approval responsibility has transitioned to Intact as part of the operating model change. This review relates to the completeness and governance of the record and is distinct from technical or application testing.",
+    "Following QA, ServiceNow routes the change to the technical teams responsible for the activities recorded in the ticket. <b>At least one implementation task is created</b>, and each task-owning team approves the change to confirm its understanding of the activity, timing and dependencies.",
+    "Service Manager and CAB approvals are then applied according to the relevant change classification and workflow."
+  ],
+  points:[
+    "<b>No self-approval on the automated route.</b> The ServiceNow workflow prevents the Change Owner or assigned individual from providing the automated technical approval for their own change.",
+    "<b>QA is not development.</b> For the same change, the individual performing the Change Management QA review does not also perform the development and approval activities.",
+    "<b>Same team, different people.</b> Personnel from the same organisation or team may participate at various stages where they hold the relevant authorised workflow roles; the individual actions are separately recorded in the ServiceNow audit trail.",
+    "<b>Third parties carry the same authority.</b> Third-party users have the same approval authority as internal users where they are members of an authorised approval group. They are identified through the ServiceNow licensing process and participate in the applicable training and CAB arrangements.",
+    "<b>The audit trail is the evidence.</b> Approval evidence is retained through the ServiceNow audit trail, including the workflow decision, timestamp and approving user identity."
+  ],
+  evPri:["System-generated change population from the ITSM tool for the relevant period, including the applicable extraction criteria and record count","Approved change record showing the classification, description, affected service or system, justification, impacted teams, risk and impact assessment, implementation plan and assigned tasks","Workflow status demonstrating completion of the Change Management QA review","System-generated approval trail showing the approval decision, date, time and authorised approver","Technical or task-owning team approvals","Service Manager approval where required","CAB approval or governance decision where required by the change classification","Evidence that required approvals were completed before implementation, except where the approved emergency process applies"],
+  evSec:["CAB agenda, meeting record or decision supporting the approval recorded in the ITSM workflow","Technical-impact and service-impact assessments","Business-owner or application-owner approval where required","Security or cyber review where applicable","Implementation and rollback or backout plans","Email approval where this forms part of an approved process and remains traceable to the change record","Jira, Azure DevOps or other work items linked to the approved change","Third-party release information and release notes"],
+  evNote:"The ITSM change record is the primary evidence of change initiation, risk assessment and approval. The specific approval route varies according to the change classification, affected service, assigned tasks and application or platform impacted.",
+  tod:"As part of SOX TOD, selected change records will be reviewed to validate the separation of QA, development and approval activities for the same change, including the relevant ServiceNow workflow roles, individual audit trail and approval-group membership."
+},
+{
+  id:"CM.C03", name:"Program change testing and approval", key:true, icon:I.test, theme:"approve",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that changes are developed by authorised personnel and validated by QA and / or UAT in a separate non-production environment before deployment.",
+  roles:["Change Requestor","Change Owner","Technical Approver","Wipro Change Management Team / QA Function","CAB","Development / Delivery Teams","Business / UAT Approver","Application / Platform Owner","Third-Party Delivery or Support Team"],
+  exception:"Testing defects and exceptions are addressed before implementation. Where emergency conditions reduce pre-implementation testing, subsequent validation and PIR are required. Where responsibilities overlap, an independent business, application-owner, platform-owner, Service Manager or CAB review is applied and evidenced where applicable.",
+  qual:"Applicable across the named application population.",
+  how:[
+    "A <b>risk assessment is embedded in ServiceNow</b> and is required and evidenced for each change. The nature and risk of the change determine the required testing.",
+    "Technical changes require appropriate technical validation, while business-led changes require business testing attestation and, where relevant, <b>UAT confirmation</b>.",
+    "Evidence of the testing performed and the applicable sign-off is recorded in, or attached through supporting artefacts to, the ServiceNow change record <b>before production approval</b> — except where the emergency process allows reduced pre-implementation testing.",
+    "The common process does not prescribe one uniform set of unit, integration, regression, QA and UAT evidence for every application. The relevant technical and business teams determine the testing required based on the nature, risk, complexity and potential impact of the change.",
+    "At a minimum, the retained evidence identifies <b>the testing performed, the expected and actual results, the outcome, any exceptions or defects identified, and the relevant technical or business sign-off</b>."
+  ],
+  points:[
+    "<b>Same organisation is permitted; same individual is not.</b> Development, testing and approval may involve personnel from the same organisation (Wipro) or technical team where they hold the relevant authorised roles. However, the same individual does not develop, test and approve the same change.",
+    "<b>Where separation cannot be achieved.</b> Because of the application, vendor or support model, the applicable independent business, application-owner, platform-owner, Service Manager or CAB review is documented within the relevant application Control Narrative.",
+    "<b>Emergency reduces testing, not accountability.</b> Emergency situations reduce the extent of UAT before deployment. Where UAT is bypassed or reduced, the change record still requires validation and post-implementation review to confirm the urgent implementation achieved the intended result without creating unacceptable residual risk.",
+    "<b>Vendor development.</b> Where development and application testing are undertaken within the same third-party organisation, the activities are performed by separate individuals for the same change. Tester and reviewer independence is supported through the vendor testing and release governance and supplemented by third-party assurance.",
+    "<b>Business validation of vendor changes.</b> The Finance Systems Team and Platform Owner perform business validation or impact assessment of vendor changes where considered necessary.",
+    "<b>Assurance is not a substitute.</b> Third-party assurance may provide additional assurance over vendor-operated development and release controls, but does not replace the change-specific testing and approval evidence required under the applicable process."
+  ],
+  evPri:["Approved change record identifying the testing and validation required","Testing evidence showing the test performed, test environment, expected result, actual result and outcome","Technical, functional or QA testing evidence appropriate to the change","Business-testing or UAT evidence where applicable","Evidence that defects, unsuccessful results or testing exceptions were addressed before implementation","Evidence of retesting where required","Relevant technical, business or UAT approval","Evidence that the tested code, configuration, build or release is traceable to the version approved for production","Release approval before production deployment","Available testing and subsequent validation for emergency changes"],
+  evSec:["Test plans, test scripts and screenshots","Defect, issue or bug records","Jira or Azure DevOps test records","Business acceptance documentation","Technical validation outputs","Build records and version-control history","CI/CD pipeline test results","Vendor testing and release evidence where applicable","Independent or compensating review evidence where development, testing or approval responsibilities overlap and such a review operates"],
+  evNote:"The testing performed, its outcome and the relevant approval must be traceable to the approved change before production implementation, except where the approved emergency process applies.",
+  tod:"As part of SOX TOD, application-specific testing requirements, minimum evidence, tester and approver responsibilities, and any independent or compensating review will be validated through selected change records and supporting technical evidence."
+},
+{
+  id:"CM.C04", name:"Environment segregation", key:true, icon:I.env, theme:"segregate",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that logical separation exists between production and non-production environments to protect system integrity.",
+  roles:["Development / Delivery Teams","Application / Platform Owner","Third-Party Delivery or Support Team"],
+  exception:"Where full environment or role segregation cannot be achieved, the exception and applicable compensating review are documented and evidenced at application or platform level.",
+  qual:"Applies where separate development, testing or production environments support the change process.",
+  how:[
+    "The change process is designed on the basis that development, testing and production activities occur in <b>segregated environments</b>, and that changes are developed and tested by authorised personnel against an approved change record before production deployment.",
+    "There are multiple environments in comparable delivery models such as <b>SAND, DEV, QA and Production</b>, but <b>there is no one universal DEV, TEST, UAT and PROD model across all applications</b>.",
+    "Environment architecture, developer access, tester access, production-deployment rights, temporary access, emergency access and periodic access review are <b>application and platform specific</b>.",
+    "The separation between developers and deployers, and the controls restricting direct production access — that developers do not deploy directly to production — is therefore documented and evidenced in each relevant application control narrative."
+  ],
+  points:[
+    "<b>The ITSM record is not enough.</b> CM.C04 is evidenced at application or platform level because environment structures, access models and deployment methods differ across the population. The ServiceNow change record alone does not demonstrate technical segregation between development, testing and production.",
+    "<b>What must be shown per system.</b> The environments that exist, who has access to each, who may deploy to production, and whether developers are technically prevented from deploying.",
+    "<b>Exceptions must be named.</b> Where full environment or role segregation cannot be achieved, the exception and the compensating review are documented at application or platform level."
+  ],
+  evPri:["Current environment architecture or system landscape identifying the development, test, QA, UAT and production environments for the relevant application or platform","System-generated user access listings for the relevant development, test and production environments","System-generated deployment access listing identifying users or groups authorised to migrate or deploy changes into production","Configuration evidence demonstrating restrictions between development, testing and production environments","Evidence that developers cannot directly deploy changes into production where this restriction is technically enforced","Evidence that production deployment is performed by an authorised individual or team independent from the developer, where applicable","Approved exception where full environment or role segregation cannot be achieved, including the compensating review performed","Periodic review or certification of production and deployment access where this forms part of the application or platform control"],
+  evSec:["Environment diagrams and application architecture documentation","Repository, branch-protection and code-merge permissions","CI/CD pipeline roles and deployment-stage permissions","Production-deployer group membership","Privileged-access or PAM / PIM records supporting production deployment","Temporary or emergency production-access approval and removal evidence","Deployment logs identifying the developer, approver and production implementer for selected changes","Independent management, application-owner or platform-owner review where responsibilities overlap","Evidence supporting any compensating control where strict segregation is not technically possible"],
+  tod:"As part of SOX TOD, environment segregation will be validated for each applicable application or platform, including the separation of production and non-production environments, developer production access, deployment permissions, periodic access review and any approved exceptions or compensating controls."
+},
+{
+  id:"CM.C05", name:"Direct production changes", key:true, icon:I.prod, theme:"segregate", gap:true,
+  freq:"Not currently performed",
+  objective:"To confirm that direct changes to production are restricted and that the changes are logged, monitored and reviewed for their appropriateness by an authorised user.",
+  roles:["Not applicable — a common population-based monitoring control has not been established"],
+  exception:"Not applicable — a common population-based monitoring control has not been established to identify the complete population of unauthorised deployments, emergency bypasses or direct production changes.",
+  qual:"Applies where Intact, Wipro or another authorised support provider can implement or facilitate production changes.",
+  how:[
+    "For the standard change route, production implementation is supported by a <b>ServiceNow change record</b> containing the risk assessment, implementation details, testing information and required approvals.",
+    "Implementation before completion of the normal workflow is permitted <b>only where the incident-linked emergency route</b> allows immediate action.",
+    "Unauthorised changes identified within ServiceNow continue to be managed through the <b>failed-change process</b>. Additional ServiceNow labelling has been implemented to improve differentiation between Request Items (RITMs) and formal Change Requests.",
+    "<b>A formal monitoring control designed to proactively identify the complete population of unauthorised changes has not yet been established</b> and remains subject to further management review.",
+    "There is currently <b>no common population-based reconciliation</b> of all production deployments to approved change records, because of the volume and complexity of change. Such reconciliation may become feasible through future automation using CMDB and change data, or for smaller populations where changes are fully automated."
+  ],
+  points:[
+    "<b>What exists.</b> Preventive routing through ServiceNow, the emergency route as the only permitted bypass, and the failed-change process for unauthorised changes identified within the tool.",
+    "<b>What is missing.</b> A detective control that identifies the complete population of direct or unauthorised production changes and reconciles deployments back to approved records.",
+    "<b>Why.</b> The stated reason is the volume and complexity of change across the estate.",
+    "<b>Possible route forward.</b> Future automation using CMDB and change data, or reconciliation for smaller, fully automated populations."
+  ],
+  evPri:["Native production deployment, activity or audit-log population used to identify changes made directly in production, where a detective monitoring control operates","Evidence reconciling identified production activity to approved ITSM change records","System-generated evidence of preventive restrictions over direct production changes where such controls are implemented","Approved exceptions permitting direct production activity, including justification, owner and approval","Formal review and sign-off over identified direct production activity","Investigation, remediation and closure evidence for unauthorised or unrecorded production changes","Emergency-change records where urgent direct production activity followed the approved emergency process"],
+  evSec:["CI/CD deployment records","Release-management records","Application, database, operating-system or infrastructure activity logs","Version-control history","Production implementation logs","Incident or problem records linked to unauthorised or failed activity","Exception investigations and corrective actions","Rollback or backout evidence","Application or platform monitoring reports"],
+  evNote:"Where direct-production monitoring operates, the population and review evidence must come from the relevant application, infrastructure or deployment platform.",
+  tod:"CM.C05 is a known control gap because a formal monitoring control has not been established to identify the complete population of unauthorised deployments, emergency bypasses or direct production changes. The gap, application-level impact and required remediation will be assessed through the SOX gap assessment and TOD procedures."
+},
+{
+  id:"CM.C06", name:"Developer access to production and change-lifecycle segregation", key:true, icon:I.dev, theme:"segregate",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that production access is restricted to authorised personnel based on job roles and segregated from development functions, and that segregation of duties exists between developers and the deployment personnel who implement changes in the production environment.",
+  roles:["Development / Delivery Teams","Application / Platform Owner","Third-Party Delivery or Support Team"],
+  exception:"Where strict segregation is not possible, independent management approval, Application or Platform Owner review, CAB review, monitoring or mandatory PIR is applied as an application-specific compensating control. Inappropriate or conflicting access identified through review is removed.",
+  qual:"Applies where development, configuration, testing or production-deployment activities are performed.",
+  how:[
+    "The workflow distinguishes the responsibilities of the <b>Change Requestor, Change Management QA reviewer, technical or task approver, Service Manager, CAB and Change Implementer</b>.",
+    "Approval authority is based on membership of authorised workflow groups and completion of the required ServiceNow training. This layered workflow provides <b>multiple review and challenge points</b> before implementation.",
+    "The current process nevertheless permits <b>technical approval by an authorised member of the same technical team as the requester</b>, and third-party personnel (Wipro) may participate at more than one stage of the change lifecycle.",
+    "<b>A universal preventive rule ensuring that the requester, developer, tester, approver and implementer are always different individuals is not in place.</b>"
+  ],
+  points:[
+    "<b>Where the workflow stops short.</b> The ITSM workflow may identify the requester, approvers and implementer for an individual change, but it does not by itself demonstrate that developers are technically restricted from production or deployment access.",
+    "<b>What must be shown per system.</b> Whether developers are restricted from production access, whether deployment responsibilities are appropriately segregated, whether production activity is monitored, and whether relevant access reviews are performed.",
+    "<b>Compensating controls.</b> Where strict segregation is not possible, independent management approval, CAB review or a mandatory PIR is documented and evidenced in the relevant application control narrative."
+  ],
+  evPri:["System-generated listing of users with access to modify source code","System-generated listing of users with access to production environments","System-generated listing of users or groups authorised to deploy changes into production","Configuration evidence showing how source-code, production and deployment access is restricted","Comparison of developer, approver and production-deployer access to identify incompatible responsibilities","Periodic review and approval of source-code, production and deployment access where this forms part of the application or platform control model","Evidence of independent approval or compensating review where change-lifecycle responsibilities overlap","Evidence of removal of inappropriate or conflicting access identified through the review"],
+  evSec:["Repository and source-code permissions","CI/CD pipeline permissions","Production-deployer group membership","Application-administrator and privileged-access records","Temporary or emergency production-access approvals and removal evidence","Application-specific segregation matrix","Monitoring of developer or privileged activity in production where implemented","CAB, platform-owner or independent management review where responsibilities overlap","PIR evidence where PIR provides an additional review"],
+  evNote:"CM.C06 is primarily evidenced through the application or platform access model.",
+  tod:"As part of SOX TOD, CM.C06 will be assessed for each applicable application to confirm whether developers are restricted from production access, deployment responsibilities are appropriately segregated, production activity is monitored and relevant access reviews are performed. Where strict segregation is not possible, the compensating control of independent management approval, CAB review or mandatory PIR is documented and evidenced in each relevant application control narrative."
+},
+{
+  id:"CM.C07", name:"Changes to segregation of duties and sensitive-access rulesets", key:true, icon:I.sod, theme:"segregate",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that changes to the SoD and sensitive-access ruleset are authorised and appropriate.",
+  roles:["Security Team / Security Approver","Application / Platform Owner"],
+  exception:"Relevant ruleset, approval-group and workflow changes follow the Change Management route. However, a separate common independent-review requirement has not been confirmed. Applicability and any required independent review are determined at application level.",
+  qual:"Applies where changes affect SoD rules, sensitive-access settings, roles, entitlements, approval groups or workflow configurations.",
+  how:[
+    "Changes to access rules, approval groups, SoD configurations, or other sensitive workflow settings <b>follow the applicable ServiceNow change route</b>.",
+    "The common documentation <b>does not currently establish a separate independent review requirement</b> for all changes to SoD rules, sensitive access settings — including those administered by Wipro — approval groups and workflow configurations.",
+    "The applicability and operation of this control therefore require validation at application level."
+  ],
+  points:[
+    "<b>Governance is in the ITSM record; the proof is in the system.</b> The ServiceNow record shows the governance of the change, while the actual ruleset, approval-group or configuration evidence is obtained from the affected system.",
+    "<b>Before and after.</b> Ruleset, workflow, approval-group or configuration evidence is expected both before and after implementation.",
+    "<b>Independent review is not assured.</b> Whether an independent review applies, and how it is evidenced, is determined per application."
+  ],
+  evPri:["Population of changes affecting SoD rules, sensitive-access settings, approval groups or workflow configurations, where available","Approved change record showing the description, justification, risk assessment and impact of the change","Approval by the relevant technical, business, application or control owner","Testing evidence demonstrating the impact of the proposed change","Evidence that testing exceptions or defects were addressed before implementation","Implementation record identifying what was changed, who made the change and when","Ruleset, workflow, approval-group or configuration evidence before and after implementation","Post-implementation validation where applicable"],
+  evSec:["Workflow-configuration extracts","Approval-group membership before and after the change","SoD or sensitive-access rulesets","Role or entitlement matrices","Configuration screenshots","Test scripts and results","Jira, Azure DevOps or configuration-history records","Application-owner or control-owner review","Exception, remediation and closure evidence"],
+  tod:"The applicability and operation of CM.C07 will be confirmed for each relevant application through SOX TOD. This will include whether changes to SoD rules, sensitive access settings, approval groups or workflow configurations occur, the approval and testing applied, and whether an independent review is required and evidenced."
+},
+{
+  id:"CM.C08", name:"Emergency changes", key:true, icon:I.emg, theme:"emergency",
+  freq:"Ad hoc / on occurrence",
+  objective:"To confirm that expedited procedures for emergency changes are backed by incident tickets or approvals and reviewed post-deployment.",
+  roles:["Change Owner","Service Manager","Change Enablement Team","CAB","Development / Delivery Teams","Security Team / Security Approver","MIM / Incident Team","Third-Party Delivery or Support Team"],
+  exception:"Immediate implementation may precede completion of the change record only where the incident-linked emergency route applies. The emergency change must be documented retrospectively, linked to the incident and subjected to PIR. Overdue records and PIRs are identified through automated reporting and email escalation.",
+  qual:"Applies where the common or linked vendor emergency-change route applies.",
+  how:[
+    "Emergency changes are managed through the incident process and are <b>linked to critical or high incidents</b> such as P1 and P2 events, customer-impacting disruption, or cyber and security incidents.",
+    "The <b>Service Manager</b> remains central to the emergency route and guides the process. The incident / MIM team and security stakeholders are involved where incident severity or cyber impact requires additional oversight.",
+    "Where immediate action is required to restore service or contain risk, <b>implementation may precede completion of the change record</b>. The change is then documented retrospectively and linked back to the relevant incident context.",
+    "<b>A change ticket is mandatory for an emergency change even where implementation occurs first.</b>",
+    "The PIR is completed <b>within 24 hours, or within 48 hours when the fix is deployed on a non-working day</b>. PIR evidence includes the justification, incident linkage, approvals, available testing, impact and remediation information."
+  ],
+  points:[
+    "<b>Only High or Critical.</b> Emergency changes are restricted to High or Critical incidents and are linked to the relevant incident record.",
+    "<b>PIR is always required.</b> Emergency changes are always subject to post-implementation review because they are incident-driven changes implemented under expedited conditions.",
+    "<b>Overdue is chased automatically.</b> Changes that remain open beyond the preset timeframe are identified through automated daily reports and email escalation.",
+    "<b>Incident rules live elsewhere.</b> The underlying incident classification, escalation and approval requirements for P1 and P2 are documented within the Common Incident Management Control Narrative. This control covers the related emergency change requirements."
+  ],
+  evPri:["System-generated population of changes classified as Emergency in the ITSM tool for the relevant period, including the extraction criteria and record count","Emergency-change record showing the classification, affected service or application, emergency justification, risk and impact assessment, implementation details and closure","Linked High or Critical incident record, including P1 or P2 where applicable","Explanation of why the normal change process or lead time could not be followed","Service Manager and Incident or Major Incident Management involvement","Security or cyber involvement where relevant","Available testing or technical validation","Approval before implementation, or retrospective approval where immediate action was required under the approved emergency process","Native application, infrastructure or deployment evidence confirming what was implemented, by whom and when","Rollback, backout or remediation information","Completed PIR within the applicable timeframe","Final outcome and closure evidence"],
+  evSec:["Major Incident record and incident bridge communications","Emergency CAB or equivalent governance record","Technical diagnostics and impact assessment","Application, infrastructure or deployment logs","Version-control, release-management or CI/CD records","Confirmation that service was restored and the change operated as intended","Cyber or security incident records where applicable","Reports or escalations identifying overdue emergency-change documentation or PIR completion","Follow-up actions, problem records and remediation evidence"],
+  evNote:"The emergency-change population and workflow are obtained from the ITSM tool. Native application or platform evidence is used to confirm the emergency implementation and technical outcome.",
+  tod:"As part of SOX TOD, the applicable emergency change approvals will be validated against the linked incident record and ServiceNow workflow."
+},
+{
+  id:"CM.C09", name:"Post-implementation review and change review", key:true, icon:I.pir, theme:"close",
+  freq:"Ad hoc · Weekly for failed changes",
+  objective:"To confirm that all system deployments are authorised, reviewed, and traceable to approved change tickets.",
+  roles:["Change Owner","Service Manager","Change Enablement Team","CAB","Development / Delivery Teams","MIM / Incident Team","Application / Platform Owner"],
+  exception:"Unsuccessful, backed-out or unauthorised changes, and changes resulting in a High or Critical incident, enter the failed-change review process. Root cause, corrective or preventive action and any replacement change are documented and tracked before closure. Overdue PIR or closure activity is escalated.",
+  qual:"Applies where the change requires a PIR, failed-change review or post-implementation validation.",
+  freqDetail:["<b>Ad hoc / on occurrence</b> — implementation outcome and closure","<b>Weekly</b> — failed-change review"],
+  how:[
+    "Following implementation, the <b>Change Implementer updates the ServiceNow record</b> with the actual implementation outcome and confirms whether the change was <b>successful, unsuccessful, or backed out</b> before the record is closed.",
+    "<b>Emergency changes</b> are subject to a Post-Implementation Review. The review considers the implementation outcome, impact, available testing, incident linkage, approvals, remediation requirements and any follow-up actions.",
+    "Change Enablement monitors overdue emergency-change records and PIR activities through <b>ServiceNow dashboards, automated reports and email escalation</b>.",
+    "Changes that are unsuccessful, backed out, unauthorised, or result in a High or Critical incident enter the <b>failed-change review process</b>. Failed changes are reviewed <b>weekly</b> by Change Enablement with the Change Owner, Service Manager and relevant platform, delivery or operational teams.",
+    "The review establishes the cause of failure, corrective or preventive actions, and the approach to any subsequent implementation attempt. Where a replacement change is raised, <b>Change Enablement manually links it</b> to the original failed-change record rather than the ITSM tool doing so automatically.",
+    "For other change types, including Normal changes, the Change Implementer records the implementation outcome and completes the applicable post-implementation information before closure."
+  ],
+  points:[
+    "<b>Recording failure is not closing it.</b> Failed changes are not closed solely by recording an unsuccessful result; they enter the failed-change review process.",
+    "<b>Weekly cadence.</b> Failed changes are reviewed weekly by Change Enablement together with the Change Owner, Service Manager and relevant platform or delivery teams.",
+    "<b>Manual linkage.</b> Replacement changes are linked to the original failed record by Change Enablement, not automatically within the tooling.",
+    "<b>High-risk Normal changes.</b> The evidence guidance records a mandatory PIR for all high-risk Normal changes; whether a separate formal PIR applies, or whether the pre and post implementation checklist and completed ServiceNow post-implementation fields constitute the required review evidence, is to be validated."
+  ],
+  evPri:["System-generated population of emergency, failed or other changes subject to post-implementation review","Change record showing whether implementation was successful or unsuccessful","Post-implementation details completed before closure","Implementer confirmation of the outcome","PIR for emergency changes","Failed-change population and individual failed-change records","Weekly failed-change review evidence","Root-cause analysis and corrective actions","Action owner and target date where retained","Closure decision","Link between the original failed change and any replacement change","Technical confirmation from the affected application or platform supporting the implementation outcome","Evidence that overdue PIR, remediation or closure actions were tracked through closure"],
+  evSec:["ITSM dashboards showing open, failed or overdue changes","Automated reports and escalation communications","Change Enablement, Service Manager or CAB review records","Incident or problem records linked to failed changes","Application and platform monitoring outputs","Deployment, rollback and restoration records","Lessons-learned documentation","Remediation tracker and completed corrective actions","Technical validation confirming remediation or service restoration"],
+  evNote:"The ITSM tool provides the population and records the formal outcome and closure. Application or platform evidence is used where necessary to confirm the technical result, root cause, remediation or restoration.",
+  tod:"As part of SOX TOD, the review requirements for High or Critical risk Normal changes will be validated, including whether a separate formal PIR applies or whether the pre and post implementation checklist and completed ServiceNow post-implementation fields constitute the required review evidence."
+}
+];
+
+/* ============================================================
+   LIFECYCLE STAGES
+   ============================================================ */
+const STAGES = [
+{
+  name:"The change is raised", tool:"ServiceNow · authorised requestor", icon:I.ticket, ctrls:["CM.C01","CM.C02"],
+  body:[
+    "Authorised and <b>trained</b> requestors create change records in ServiceNow using the standardised workflow. Access to initiate a change record is restricted to users holding the required ServiceNow licence.",
+    "Licence requests are copied to <b>Change Enablement</b>, which provides the change-process documentation and online training material. The licence is approved once the requester confirms by email that the required training has been completed. Refresher sessions are held three times each year.",
+    "These requirements apply equally to authorised internal and third-party users."
+  ],
+  who:[["Change type","Standard, Normal, Informational, Emergency or Expedited"],["Description","What is changing and why"],["Affected service or system","Drives workflow assignment"],["Risk assessment","Embedded in ServiceNow; required for every change"],["Impacted teams","Added automatically, then checked by Change Enablement"],["Implementation activities","What will be done"],["Testing information","What testing applies"],["Task ownership","Which team owns each task"]],
+  whoLabel:"Mandatory information on the record"
+},
+{
+  name:"Classification and risk assessment", tool:"ServiceNow embedded risk assessment", icon:I.risk, ctrls:["CM.C01","CM.C02","CM.C03"],
+  body:[
+    "The process recognises <b>five change classifications</b>. The one selected determines the applicable assessment, approval, testing and governance route.",
+    "A risk assessment is <b>embedded in ServiceNow and is required and evidenced for each change</b>. The nature and risk of the change determine the required testing.",
+    "The selected service line and other change attributes drive workflow assignment, including the addition of relevant technical and service-management teams. Change Enablement checks whether any additional impacted teams must be included where the automated workflow has not identified them.",
+    "<b>Incomplete or incorrectly classified records are returned for correction.</b>"
+  ],
+  who:[["Standard","Low-risk, repeatable, pre-approved catalogue template"],["Normal","Full end-to-end governance route"],["Informational","Raised for visibility, scheduling and traceability"],["Emergency","High or Critical incident only; PIR mandatory"],["Expedited","Accelerated route where normal lead time cannot be met"]],
+  whoLabel:"The five classifications"
+},
+{
+  name:"Change Management QA review", tool:"Wipro Change Management team / QA function", icon:I.qa, ctrls:["CM.C02"],
+  body:[
+    "The record first passes through a <b>Change Management QA review</b> of its quality, classification and completeness.",
+    "Wipro Change Management resources continue to perform the initial QA activity. Service Manager approval responsibility has transitioned to Intact as part of the operating model change.",
+    "This review relates to the <b>completeness and governance of the change record</b> and is distinct from technical or application testing.",
+    "For the same change, the individual performing the Change Management QA review <b>does not also perform the development and approval activities</b>. Personnel from the same organisation or team may participate at various stages where they hold the relevant authorised workflow roles, but individual actions are separately recorded in the ServiceNow audit trail."
+  ],
+  who:[["What QA checks","Quality, classification and completeness of the record"],["What QA is not","Technical or application testing"],["Performed by","Wipro Change Management resources"],["Cannot also","Perform development and approval on the same change"]],
+  whoLabel:"Scope of the QA step"
+},
+{
+  name:"Technical and task approval", tool:"ServiceNow workflow routing", icon:I.approve, ctrls:["CM.C02","CM.C06"],
+  body:[
+    "Following QA, ServiceNow routes the change to the technical teams responsible for the activities recorded in the ticket.",
+    "<b>At least one implementation task is created</b> for the change, and each task-owning team approves the change to confirm its understanding of the activity, timing and dependencies.",
+    "The ServiceNow workflow <b>prevents the Change Owner or assigned individual from providing the automated technical approval for their own change</b>.",
+    "Approval authority is based on membership of authorised workflow groups and completion of the required ServiceNow training. Third-party users have the same approval authority as internal users where they are members of an authorised approval group."
+  ],
+  who:[["Change Requestor","Raises the change and defines requirements"],["Change Owner","Accountable for completeness, coordination, outcome and closure"],["Technical Approver","Reviews technical impact and approves from the technical-team perspective"],["Task-owning teams","Approve to confirm understanding of activity, timing and dependencies"]],
+  whoLabel:"Distinct workflow roles"
+},
+{
+  name:"Testing and validation", tool:"Non-production environments · UAT", icon:I.test, ctrls:["CM.C03","CM.C04"],
+  body:[
+    "The nature and risk of the change determine the required testing. Technical changes require appropriate technical validation; business-led changes require business testing attestation and, where relevant, <b>UAT confirmation</b>.",
+    "Evidence of the testing performed and the applicable sign-off is recorded in, or attached to, the ServiceNow change record <b>before production approval</b> — except where the emergency process allows reduced pre-implementation testing.",
+    "The common process does not prescribe one uniform set of unit, integration, regression, QA and UAT evidence for every application. There are multiple environments in comparable delivery models such as SAND, DEV, QA and Production, but <b>no one universal DEV, TEST, UAT and PROD model across all applications</b>."
+  ],
+  who:[["The testing performed","What was tested and how"],["Test environment","Where it was tested"],["Expected and actual results","What should happen, and what did"],["Outcome","Pass, fail, or exceptions raised"],["Exceptions or defects","Identified and addressed before implementation"],["Sign-off","Relevant technical or business approval"]],
+  whoLabel:"Minimum retained evidence"
+},
+{
+  name:"Service Manager and CAB", tool:"Service Manager · CAB · Mini-CAB", icon:I.cab, ctrls:["CM.C02","CM.C03"],
+  body:[
+    "Service Manager and CAB approvals are applied according to the relevant change classification and workflow.",
+    "<b>Intact Service Managers</b> now perform the service-management approval activities within the workflow. The approval activity previously performed by Wipro Service Managers has transitioned to Intact Service Managers.",
+    "<b>CAB</b> reviews risk, impact, scheduling and readiness for applicable changes before production implementation. <b>Mini-CAB</b> provides lighter-touch governance for standard-change templates and the suitability of catalogue entries.",
+    "CAB activities continue under the existing process framework and are now managed internally by Intact. Change governance is reviewed through monthly governance forums including the <b>Change Operational Committee</b> and the <b>Live Services Committee</b>, attended by Intact and Wipro stakeholders."
+  ],
+  who:[["Service Manager","Reviews service impact; guides urgent scenarios; participates in standard, normal and emergency governance"],["CAB","Risk, impact, scheduling and readiness before production implementation"],["Mini-CAB","Standard-change template approval and catalogue suitability"],["Change Operational Committee","Monthly governance forum"],["Live Services Committee","Monthly governance forum"]],
+  whoLabel:"Governance bodies"
+},
+{
+  name:"Deployment to production", tool:"Approved technical teams · Change Implementer", icon:I.deploy, ctrls:["CM.C04","CM.C05","CM.C06"],
+  body:[
+    "Approved technical teams implement the change after the approval workflow is complete. Production implementation is restricted to authorised application or platform processes <b>operating against an approved change record</b>.",
+    "Implementation before completion of the normal workflow is permitted <b>only where the incident-linked emergency route</b> allows immediate action.",
+    "The separation between developers and deployers, and the controls restricting direct production access, are documented and evidenced in each relevant application control narrative — environment architecture, developer access, deployment rights, temporary and emergency access, and periodic access review are application and platform specific.",
+    "<b>A formal monitoring control to proactively identify the complete population of unauthorised changes has not yet been established</b>, and there is currently no common population-based reconciliation of all production deployments to approved change records."
+  ],
+  who:[["Change Implementer","Authorised person or team that performs the approved implementation tasks"],["Deployment","Controlled promotion or implementation of an approved change into the target environment"],["Release Management","Coordination of approved changes into planned production releases"],["Backout plan","Documented steps to reverse an implemented change"],["Rollback plan","Planned response to restore the prior stable state"]],
+  whoLabel:"Deployment concepts"
+},
+{
+  name:"Outcome, review and closure", tool:"ServiceNow · PIR · weekly failed-change review", icon:I.pir, ctrls:["CM.C09","CM.C08"],
+  body:[
+    "The Change Implementer updates the ServiceNow record with the actual implementation outcome and confirms whether the change was <b>successful, unsuccessful, or backed out</b> before the record is closed.",
+    "<b>Emergency changes</b> are always subject to a Post-Implementation Review, completed within <b>24 hours — or 48 hours where the fix is deployed on a non-working day</b>.",
+    "Changes that are unsuccessful, backed out, unauthorised, or result in a High or Critical incident enter the <b>failed-change review process</b>, reviewed weekly by Change Enablement with the Change Owner, Service Manager and relevant teams.",
+    "Change Enablement monitors overdue emergency-change records and PIR activities through ServiceNow dashboards, automated reports and email escalation."
+  ],
+  who:[["Successful","Change achieved its intended outcome"],["Unsuccessful","Enters the failed-change review process"],["Backed out","Reversed using the documented backout plan"],["PIR — emergency","Within 24 hours, or 48 on a non-working day"],["Failed-change review","Weekly"],["Replacement change","Manually linked to the original failed record by Change Enablement"]],
+  whoLabel:"Closure outcomes"
+}
+];
+
+/* ============================================================
+   CHANGE CLASSIFICATIONS
+   ============================================================ */
+const KLASS = [
+{
+  k:"Standard", icon:I.repeat, tag:"Pre-approved template",
+  short:"Low-risk, repeatable activities executed through an approved ServiceNow catalogue template.",
+  init:"The requestor selects a pre-approved catalogue entry or template within the ITSM tool.",
+  appr:"Mini-CAB or standard-change governance applies at the template stage rather than per execution. Service management remains involved where required.",
+  exec:"The approved team executes the repeatable low-risk change using the approved template.",
+  detail:"A proposed standard-change template is supported by a <b>history of at least three successful implementations</b> before it is considered for pre-approval. The template is reviewed through the standard-change governance or mini-CAB route; once approved, individual executions do not require full CAB approval. Catalogue entries and owners are <b>recertified annually</b>. Entries that are no longer extensively used, or that no longer meet the classification criteria, are retired through ServiceNow."
+},
+{
+  k:"Normal", icon:I.gear, tag:"Full governance route",
+  short:"The standard end-to-end governance route for changes that are neither pre-approved nor urgent.",
+  init:"An authorised requestor raises a ticket in the ITSM tool and selects the service line, impacted teams and change type.",
+  appr:"Peer or technical review, initial QA, team and task approvals, Service Manager approval, and CAB approval where applicable.",
+  exec:"Approved technical teams implement the change after the approval workflow is complete.",
+  detail:"The change is recorded and risk-assessed in ServiceNow, reviewed for quality and completeness, approved by the relevant technical or task-owning teams, and progressed through Service Manager and CAB governance where applicable. <b>Testing evidence appropriate to the nature and risk of the change is retained before implementation.</b> The evidence guidance also records a mandatory PIR for all high-risk Normal changes."
+},
+{
+  k:"Informational", icon:I.info, tag:"Visibility and traceability",
+  short:"Raised where visibility, scheduling awareness, coordination or traceability is required.",
+  init:"The change is raised for visibility and traceability, even where Intact may not implement the underlying technical activity.",
+  appr:"Flows through the CAB process for information purposes, without standard full discussion in each case.",
+  exec:"Relevant teams are informed and, where applicable, carry out associated activity.",
+  detail:"This route is commonly used to <b>communicate relevant third-party changes to impacted internal teams</b>. The record passes through the CAB workflow for awareness but is not treated as a full CAB discussion item."
+},
+{
+  k:"Emergency", icon:I.emg, tag:"Incident-linked · PIR mandatory", emg:true,
+  short:"Used only where a High or Critical incident is in progress.",
+  init:"Triggered by a P1 or P2 incident, a customer-impacting event, or a cyber or security issue.",
+  appr:"The Service Manager and relevant incident and security stakeholders guide and approve the urgent route. Full documentation may follow retrospectively.",
+  exec:"Authorised technical teams implement the urgent fix, with post-implementation review required afterwards.",
+  detail:"The emergency route is incident-linked and contains the justification, approvals, available testing, impact and remediation information required by the incident and emergency-change processes. <b>A change ticket is mandatory even where implementation occurs first.</b> The PIR is completed within 24 hours, or within 48 hours when the fix is deployed on a non-working day. Changes that remain open beyond the preset timeframe are identified through automated daily reports and email escalation."
+},
+{
+  k:"Expedited", icon:I.fast, tag:"Accelerated approval",
+  short:"Time-sensitive changes that follow an accelerated approval route where the normal lead time cannot be met.",
+  init:"An authorised requestor raises a ticket in the ITSM tool and selects the service line, impacted teams and change type.",
+  appr:"Peer or technical review, initial QA, team and task approvals, Service Manager approval, and CAB approval where applicable — on an accelerated route.",
+  exec:"Approved technical teams implement the change after the approval workflow is complete.",
+  detail:"<b>The accelerated route does not remove the requirement for an approved change record or supporting evidence.</b> The testing and review performed continue to depend on the nature and risk of the change."
+}
+];
+
+/* ============================================================
+   FAILED CHANGE LANES
+   ============================================================ */
+const FAIL_LANES = [
+ {lane:"Trigger", sub:"What makes a change failed", steps:[
+   {t:"Intended outcome not achieved", d:"The change does not achieve what it was raised to do.", tools:["Change record outcome"]},
+   {t:"Results in an incident", d:"The change causes an incident, including a High or Critical incident.", tools:["Incident record"]},
+   {t:"Backed out or unauthorised", d:"The change was reversed, or was implemented without authorisation.", tools:["ServiceNow"]}
+ ]},
+ {lane:"Review", sub:"Change Enablement, weekly", steps:[
+   {t:"Weekly review", d:"Failed changes are reviewed weekly by Change Enablement together with the Change Owner, Service Manager and relevant platform, delivery or operational teams.", tools:["Change Enablement","Change Owner","Service Manager"]},
+   {t:"Establish the root cause", d:"The review establishes why the change failed and what the root cause was.", tools:["Root-cause analysis"]},
+   {t:"Agree corrective action", d:"Required corrective or preventive action is agreed, along with the approach to any subsequent implementation attempt.", tools:["Corrective actions"]}
+ ]},
+ {lane:"Closure", sub:"Not closed on the result alone", steps:[
+   {t:"Documentation before closure", d:"Closure requires completion of the failed-change review and documentation of the cause and the actions intended to prevent recurrence.", tools:["Failed-change review"], gap:false},
+   {t:"Link the replacement", d:"If a replacement change is raised, Change Enablement manually links it to the original failed record rather than the ITSM tooling doing so automatically.", tools:["Manual linkage"], gap:true},
+   {t:"Escalate overdue items", d:"Overdue PIR or closure activity is escalated. Change Enablement monitors through ServiceNow dashboards, automated reports and email escalation.", tools:["Dashboards","Automated reports"]}
+ ]}
+];
+
+/* ============================================================
+   ROLES
+   ============================================================ */
+const ROLES = [
+ {r:"Change Requestor", c:["CM.C02","CM.C03"],
+  d:"Raises the change, defines business or technical requirements, and ensures core details are included in the request.",
+  e:"Change request record and supporting description within the ITSM tool (ServiceNow change record)."},
+ {r:"Change Owner", c:["CM.C02","CM.C03","CM.C08","CM.C09"],
+  d:"Accountable for completeness, coordination, implementation outcome and closure.",
+  e:"Change record, updates, and closure."},
+ {r:"Technical Approver", c:["CM.C02","CM.C03"],
+  d:"Reviews technical impact, confirms understanding of tasks, and approves the change from the relevant technical-team perspective.",
+  e:"Technical approval captured within the ITSM workflow."},
+ {r:"Wipro Change Management Team / QA Function", c:["CM.C02","CM.C03"],
+  d:"Performs initial QA over change completeness and classification before governance approvals progress.",
+  e:"QA confirmation or workflow movement showing completeness review."},
+ {r:"Service Manager", c:["CM.C02","CM.C08","CM.C09"],
+  d:"Reviews service impact, guides the process for urgent scenarios, and participates in standard, normal and emergency governance. Intact Service Managers now perform the service-management approval activities within the workflow, transitioned from Wipro Service Managers.",
+  e:"Service Manager approval or participation record in the change, workflow approval."},
+ {r:"Change Enablement Team", c:["CM.C01","CM.C02","CM.C08","CM.C09"],
+  d:"Coordinates change assessment, checks that impacted teams are included, and facilitates CAB and failed-change governance.",
+  e:"Change-management workflow actions, CAB coordination evidence, exception follow-up evidence."},
+ {r:"CAB", c:["CM.C02","CM.C03","CM.C08","CM.C09"],
+  d:"Reviews risk, impact, scheduling and readiness for applicable changes before production implementation.",
+  e:"CAB approval decision and meeting record where applicable."},
+ {r:"Mini-CAB", c:["CM.C01","CM.C02"],
+  d:"Provides lighter-touch governance for standard-change templates and the suitability of catalogue entries.",
+  e:"Mini-CAB review evidence and standard-change template approval."},
+ {r:"Development / Delivery Teams", c:["CM.C03","CM.C04","CM.C05","CM.C06","CM.C08","CM.C09"],
+  d:"Perform development, technical validation, and implementation activity in line with approved change records.",
+  e:"Testing evidence, implementation updates, deployment notes."},
+ {r:"Business / UAT Approver", c:["CM.C03"],
+  d:"Provides business validation where user acceptance testing is required.",
+  e:"UAT sign-off or equivalent business attestation."},
+ {r:"Security Team / Security Approver", c:["CM.C02","CM.C07","CM.C08"],
+  d:"Reviews changes with security or cyber implications and participates in approvals where relevant.",
+  e:"Security approval or review evidence in the ITSM record."},
+ {r:"MIM / Incident Team", c:["CM.C08","CM.C09"],
+  d:"Coordinates emergency changes linked to major incidents and sees that incident-linked emergency governance is followed.",
+  e:"Linked incident record and emergency change documentation."},
+ {r:"Application / Platform Owner", c:["CM.C03","CM.C04","CM.C05","CM.C06","CM.C07","CM.C09"],
+  d:"Provides application or platform-specific oversight over testing, environment arrangements, deployment rights, technical segregation, sensitive configuration changes and implementation outcomes where applicable.",
+  e:"Application approval, technical-impact review, environment and deployment evidence, access or segregation evidence, and post-implementation validation."},
+ {r:"Third-Party Delivery or Support Team", c:["CM.C02","CM.C03","CM.C04","CM.C06","CM.C08"],
+  d:"Performs authorised Change Management, development, testing, technical approval, implementation or support activities in accordance with the applicable ITSM workflow and application or service arrangement. Intact retains ownership of the common Change Management process.",
+  e:"ITSM workflow activity, testing evidence, technical approval, implementation record, and relevant vendor delivery evidence."}
+];
+
+/* ============================================================
+   SCOPE
+   ============================================================ */
+const SCOPE = [
+ {h:"Process covered", p:"The enterprise-wide Change Management process governing technology changes affecting in-scope applications, platforms, infrastructure and services that support financially significant processing. It is a common ITIL-aligned process operating across technology environments rather than a single application-specific process."},
+ {h:"Activity types in scope", p:"Application changes, infrastructure changes, platform changes, production releases, customer-controlled configuration changes, vendor-driven changes requiring customer assessment, emergency changes, expedited changes, and post-implementation review activities. Vendor and SaaS provider changes are included where Intact performs impact assessment, release governance, customer-side configuration, approval, testing, validation or implementation."},
+ {h:"Environments", p:"Production environments supporting financially relevant applications and platforms are in scope. Relevant non-production environments — Development, Test, QA and UAT — are considered where they are used to develop, configure, test, validate or prepare changes for production, or where evidence generated from those environments supports the approval of a production change. Environment structures and terminology vary by application and platform."},
+ {h:"Explicit exclusions", p:"Business process changes that do not involve technology change; access management activities; incident management activities other than emergency change linkage; vendor-controlled SaaS code development outside Intact control; and application-specific SDLC controls documented within individual application control narratives. Operating system, database, infrastructure or application-specific ITGCs outside the common change management lifecycle are addressed in the respective application control narratives."},
+ {h:"Adjacent domains", p:"Program Development and Third-Party Risk Management are separate ITGC control domains. Program Development controls support the design, development, testing and validation of a change, while the common Change Management controls govern the production change record, risk assessment, approval workflow, implementation scheduling, deployment authorisation and closure."},
+ {h:"Third-party participation", p:"Third-party resources participate where they support Change Management QA, technical assessment, development, testing, approval, implementation or other platform and service-management activities. They follow the same common requirements as internal personnel — the approved ITSM workflow, required change information, risk assessment, testing evidence, approval routing, implementation recording and post-implementation activities. The use of third-party resources does not transfer ownership of the common Change Management process from Intact."}
+];
+
+
+const CHAIN=[
+ ["ServiceNow", "The single change record — classification, risk assessment, approvals, tasks, outcome and closure", I.ticket],
+ ["Change Management QA", "Initial review of record quality, classification and completeness", I.qa],
+ ["Technical and task teams", "Approve to confirm understanding of the activity, timing and dependencies", I.approve],
+ ["Service Manager and CAB", "Service impact, risk, scheduling and readiness before production", I.cab],
+ ["Non-production environments", "Where the change is built and tested before it goes anywhere near production", I.env],
+ ["Production", "Reached only against an approved change record, or through the incident-linked emergency route", I.prod]
+];
+
+
+/* ---------- page configuration ---------- */
+const CHAIN_TITLE='The common change route';
+const APPS=CM_APPS;
+const STORAGE_KEY='intact-cm-applicability-v2';
+const TOOLS=["Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const isTool=a=>TOOLS.indexOf(a)>-1;
+
+const ICO={gear:I.gear, check:I.approve, box:I.prod, doc:I.policy};
+const FILTERS=[
+ {k:'all',l:'All nine'},
+ {k:'key',l:'Key controls'},
+ {k:'govern',l:'Policy and procedures'},
+ {k:'approve',l:'Request, approve, test'},
+ {k:'segregate',l:'Segregation and production'},
+ {k:'emergency',l:'Emergency'},
+ {k:'close',l:'Review and closure'}
+];
+function BASELINE_FOR(c,a){ return c.qual.indexOf('Applies where')===0 ? 2 : 0; }
+function APPLIC_HTML(c){
+  return '<p style="margin-bottom:14px">'+c.qual+'</p>'+
+         '<p class="sublabel">Applications and tools named — '+CM_APPS.length+'</p>'+
+         '<div class="applist">'+CM_APPS.map(a=>'<span class="app'+(isTool(a)?' tool':'')+'">'+a+'</span>').join('')+'</div>';
+}
+
+/* ---------- classifications ---------- */
+const classgrid=document.getElementById('classgrid'), kpanel=document.getElementById('kpanel');
+let openK=-1;
+classgrid.innerHTML=KLASS.map((k,i)=>
+  '<button class="klass" data-i="'+i+'"><span class="kico">'+svg(k.icon)+'</span><b>'+k.k+'</b><p>'+k.short+'</p><span class="kfoot">'+k.tag+'</span></button>').join('');
+classgrid.querySelectorAll('.klass').forEach(el=>el.addEventListener('click',()=>{
+  const i=+el.dataset.i;
+  if(openK===i){openK=-1;kpanel.classList.remove('open');kpanel.innerHTML='';classgrid.querySelectorAll('.klass').forEach(x=>x.classList.remove('on'));return}
+  openK=i;
+  classgrid.querySelectorAll('.klass').forEach(x=>x.classList.toggle('on',+x.dataset.i===i));
+  const k=KLASS[i];
+  kpanel.innerHTML='<div class="krow">'+
+    '<div class="kcell"><h6>Initiation</h6><p>'+k.init+'</p></div>'+
+    '<div class="kcell"><h6>Review and approval</h6><p>'+k.appr+'</p></div>'+
+    '<div class="kcell"><h6>Execution</h6><p>'+k.exec+'</p></div></div>'+
+    '<div class="kdetail">'+k.detail+'</div>';
+  kpanel.classList.add('open');
+}));
+
+/* ---------- failed change lanes ---------- */
+document.getElementById('failLanes').innerHTML=FAIL_LANES.map(l=>
+  '<div class="lane"><div class="lane-h"><b>'+l.lane+'</b><small>'+l.sub+'</small></div>'+
+  '<div class="lane-steps">'+l.steps.map(s=>
+    '<div class="step"><b>'+s.t+'</b><p>'+s.d+'</p><div class="tools">'+
+    s.tools.map((t,ix)=>'<span class="tool'+(ix===0?' k':'')+'">'+t+'</span>').join('')+'</div></div>'
+  ).join('<span class="stepsep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></span>')+'</div></div>'
+).join('');
+
+/* ============================================================
+   HERO CHAIN
+   ============================================================ */
+document.getElementById('chain').innerHTML =
+  '<h6>'+CHAIN_TITLE+'</h6>'+
+  CHAIN.map(c=>'<div class="clink"><span class="cnode">'+svg(c[2])+'</span><span class="ctext"><b>'+c[0]+'</b><span>'+c[1]+'</span></span></div>').join('');
+
+/* ============================================================
+   LIFECYCLE SPINE
+   ============================================================ */
+const spine=document.getElementById('spine'), stagePanel=document.getElementById('stagePanel');
+let openStage=-1;
+STAGES.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='stage'; d.dataset.i=i;
+  d.innerHTML=
+    '<button class="stage-btn" aria-expanded="false">'+
+      '<span class="stage-idx"><span class="bead"></span>Stage '+(i+1)+'</span>'+
+      '<span class="stage-ico">'+svg(s.icon)+'</span>'+
+      '<span class="stage-name">'+s.name+'</span>'+
+      '<span class="stage-tool">'+s.tool+'</span>'+
+      '<span class="stage-chips">'+s.ctrls.map(c=>'<span class="cchip">'+c+'</span>').join('')+'</span>'+
+    '</button>'+
+    '<svg class="connector" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>';
+  d.querySelector('.stage-btn').addEventListener('click',()=>toggleStage(i));
+  spine.appendChild(d);
+});
+function toggleStage(i){
+  const stages=spine.querySelectorAll('.stage');
+  if(openStage===i){
+    openStage=-1; stagePanel.classList.remove('open'); stagePanel.innerHTML='';
+    stages.forEach(x=>{x.classList.remove('active');x.querySelector('.stage-btn').setAttribute('aria-expanded','false')});
+    return;
+  }
+  openStage=i;
+  stages.forEach(x=>{const on=+x.dataset.i===i;x.classList.toggle('active',on);x.querySelector('.stage-btn').setAttribute('aria-expanded',on?'true':'false')});
+  const s=STAGES[i];
+  stagePanel.innerHTML=
+    '<div class="sp-grid"><div class="sp-body"><div class="sp-h">'+s.name+'</div>'+
+      s.body.map(p=>'<p>'+p+'</p>').join('')+
+      '<div class="jump-row" style="margin-top:18px">'+s.ctrls.map(c=>'<button class="jump" data-jump="'+c+'">Open '+c+'</button>').join('')+'</div>'+
+    '</div><div class="sp-side"><h5>'+s.whoLabel+'</h5><ul>'+
+      s.who.map(w=>'<li><b style="color:#DCEFEF;font-weight:580;flex:0 0 auto;min-width:36%;max-width:44%;overflow-wrap:anywhere">'+w[0]+'</b><span>'+w[1]+'</span></li>').join('')+
+    '</ul></div></div>';
+  stagePanel.classList.add('open');
+  stagePanel.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>{
+    const idx=CONTROLS.findIndex(c=>c.id===b.dataset.jump);
+    if(idx>-1) openReader(idx);
+  }));
+}
+
+/* ============================================================
+   CONTROL GRID
+   ============================================================ */
+const cgrid=document.getElementById('cgrid'), filterbar=document.getElementById('filterbar');
+filterbar.innerHTML=FILTERS.map((f,i)=>'<button class="fchip'+(i===0?' on':'')+'" data-f="'+f.k+'">'+f.l+'</button>').join('')+'<span class="fcount" id="fcount"></span>';
+cgrid.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="ccard" data-i="'+i+'" data-theme="'+c.theme+'" data-key="'+(c.key?'key':'nonkey')+'">'+
+    '<span class="cc-glow"></span>'+
+    '<div class="cc-top"><span class="cc-id">'+c.id+'</span><span class="cc-ico">'+svg(c.icon)+'</span></div>'+
+    '<div class="cc-name">'+c.name+'</div>'+
+    '<div class="cc-obj">'+c.objective+'</div>'+
+    '<div class="cc-cov"><div class="covbar" data-ci="'+i+'"></div><div class="covlbl" data-cl="'+i+'"></div></div>'+
+    '<div class="cc-foot">'+
+      '<span class="badge '+(c.key?'key':'nonkey')+'">'+(c.key?'Key':'Non-key')+'</span>'+
+      '<span class="badge '+(c.gap?'alt':'freq')+'">'+c.freq+'</span>'+
+      '<span class="cc-more">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></span>'+
+    '</div></button>').join('');
+cgrid.querySelectorAll('.ccard').forEach(el=>{
+  el.addEventListener('click',()=>openReader(+el.dataset.i));
+  el.addEventListener('pointermove',ev=>{
+    const r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(ev.clientX-r.left)+'px');
+    el.style.setProperty('--my',(ev.clientY-r.top)+'px');
+  });
+  el.addEventListener('pointerleave',()=>{el.style.setProperty('--mx','50%');el.style.setProperty('--my','50%')});
+});
+
+/* coverage meter on each card, driven by the live applicability grid */
+const COVLBL=['common process','standalone process','criteria-based','not applicable'];
+function paintCoverage(){
+  CONTROLS.forEach((c,i)=>{
+    const bar=cgrid.querySelector('.covbar[data-ci="'+i+'"]');
+    if(!bar||typeof grid==='undefined')return;
+    const n=[0,0,0,0]; grid[i].forEach(v=>n[v]++);
+    const t=APPS.length;
+    bar.innerHTML=n.map((v,k)=>v?'<span class="seg k'+k+'" style="--w:'+(v/t*100)+'%" title="'+v+' '+COVLBL[k]+'"></span>':'').join('');
+    const parts=[];
+    n.forEach((v,k)=>{ if(v) parts.push(v+' '+COVLBL[k]); });
+    cgrid.querySelector('.covlbl[data-cl="'+i+'"]').textContent=parts.join(' · ');
+  });
+}
+const covObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('lit');covObs.unobserve(e.target)}}),{threshold:.25});
+cgrid.querySelectorAll('.ccard').forEach(el=>covObs.observe(el));
+filterbar.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click',()=>{
+  filterbar.querySelectorAll('.fchip').forEach(x=>x.classList.remove('on'));b.classList.add('on');applyFilter(b.dataset.f)}));
+function applyFilter(f){
+  let n=0;
+  cgrid.querySelectorAll('.ccard').forEach(el=>{
+    const show = f==='all'||(f==='key'&&el.dataset.key==='key')||f.split('|').indexOf(el.dataset.theme)>-1;
+    el.classList.toggle('hide',!show); if(show)n++;
+  });
+  document.getElementById('fcount').textContent=n+' of '+CONTROLS.length+' shown';
+}
+applyFilter('all');
+
+/* ============================================================
+   IN-PAGE CONTROL READER
+   ============================================================ */
+const rail=document.getElementById('rail'), rbody=document.getElementById('rbody');
+const rPrev=document.getElementById('rPrev'), rNext=document.getElementById('rNext');
+let cur=-1, revealObs=null;
+
+rail.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="railitem" data-i="'+i+'"><span class="rid">'+c.id+'</span><span class="rnm">'+c.name+'</span></button>').join('');
+rail.querySelectorAll('.railitem').forEach(el=>el.addEventListener('click',()=>openReader(+el.dataset.i,true)));
+
+function chips(list,cls){return list.map(a=>'<span class="app'+(cls||'')+'">'+a+'</span>').join('')}
+
+function openReader(i, keepScroll){
+  cur=i; const c=CONTROLS[i];
+  document.body.classList.add('reading');
+  rail.querySelectorAll('.railitem').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+
+  let h='';
+  h+='<div class="rhead"><span class="rico">'+svg(c.icon)+'</span>'+
+     '<div class="rid-big">'+c.id+
+       '<span class="badge '+(c.key?'key':'nonkey')+'">'+(c.key?'Key control':'Non-key control')+'</span>'+
+     '</div><h3>'+c.name+'</h3><div class="rprog"><i id="rprogbar"></i></div></div>';
+  h+='<div class="rsub" id="rsub">'+
+     [['sObj','Attributes'],['sCur','Current state'],['sReq','Key requirements'],['sApp','Where it applies'],['sEvi','Evidence'],['sVal','Validation']]
+       .map((t,k)=>'<button data-t="'+t[0]+'"'+(k===0?' class="on"':'')+'>'+t[1]+'</button>').join('')+
+     '</div>';
+  h+='<div class="rcontent">';
+
+  h+='<div class="attr rv" id="sObj">'+
+    '<div class="cell wide"><h6>Control objective</h6><p>'+c.objective+'</p></div>'+
+    '<div class="cell'+(c.gap?' alert':'')+'"><h6>Frequency</h6><p>'+c.freq+'</p>'+
+      (c.freqDetail?'<div style="margin-top:9px">'+c.freqDetail.map(f=>'<p style="font-size:13px;color:var(--text-2);padding:3px 0">'+f+'</p>').join('')+'</div>':'')+'</div>'+
+    '<div class="cell"><h6>Roles involved</h6><p>'+c.roles.join(' · ')+'</p></div>'+
+    '<div class="cell wide'+(c.gap?' alert':'')+'"><h6>Exception handling</h6><p>'+c.exception+'</p></div>'+
+  '</div>';
+
+  h+='<div class="blk rv" id="sCur"><h4>'+svg(ICO.gear)+'Current state</h4>'+c.how.map(p=>'<p>'+p+'</p>').join('')+'</div>';
+  h+='<div class="blk rv" id="sReq"><h4>'+svg(ICO.check)+'Key requirements</h4><ul class="plist">'+c.points.map(p=>'<li>'+p+'</li>').join('')+'</ul></div>';
+  h+='<div class="blk rv" id="sApp"><h4>'+svg(ICO.box)+'Where it applies</h4>'+APPLIC_HTML(c)+'</div>';
+  h+='<div class="blk rv" id="sEvi"><h4>'+svg(ICO.doc)+'Evidence expected</h4>'+
+      (c.evNote?'<p style="margin-bottom:14px">'+c.evNote+'</p>':'')+
+      '<div class="evid"><div class="evbox pri"><h6>Primary evidence</h6><ul>'+c.evPri.map(e=>'<li>'+e+'</li>').join('')+'</ul></div>'+
+      '<div class="evbox"><h6>Secondary evidence</h6><ul>'+c.evSec.map(e=>'<li>'+e+'</li>').join('')+'</ul></div></div></div>';
+  h+='<div class="tod rv'+(c.gap?' altnote':'')+'" id="sVal"><h6>'+(c.gap?'Current state position':'To be validated through SOX test of design')+'</h6><p>'+c.tod+'</p></div>';
+  h+='</div>';
+
+  rbody.innerHTML=h;
+  document.getElementById('rposLabel').textContent=c.id+' — '+(i+1)+' of '+CONTROLS.length;
+  rPrev.disabled=i===0; rNext.disabled=i===CONTROLS.length-1;
+
+  if(revealObs) revealObs.disconnect();
+  revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revealObs.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+  rbody.querySelectorAll('.rv').forEach((el,k)=>{el.style.transitionDelay=Math.min(k*55,260)+'ms';revealObs.observe(el)});
+
+  const active=rail.querySelector('.railitem.on');
+  if(active&&window.innerWidth<=940) setTimeout(()=>{
+    rail.scrollTo({left:Math.max(0,active.offsetLeft-rail.clientWidth/2+active.offsetWidth/2),behavior:'smooth'});
+  },120);
+  if(!keepScroll){
+    const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+    window.scrollTo({top:y,behavior:'smooth'});
+  } else {
+    const y=document.getElementById('reader').getBoundingClientRect().top+window.scrollY-60;
+    if(window.scrollY>y+300||window.scrollY<y-300) window.scrollTo({top:y,behavior:'smooth'});
+  }
+}
+document.getElementById('backAll').addEventListener('click',()=>{
+  document.body.classList.remove('reading'); cur=-1;
+  const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+  window.scrollTo({top:y,behavior:'smooth'});
+});
+rPrev.addEventListener('click',()=>openReader(cur-1,true));
+rNext.addEventListener('click',()=>openReader(cur+1,true));
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('reading'))return;
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowLeft'&&cur>0)openReader(cur-1,true);
+  if(e.key==='ArrowRight'&&cur<CONTROLS.length-1)openReader(cur+1,true);
+  if(e.key==='Escape')document.getElementById('backAll').click();
+});
+
+/* ============================================================
+   APPLICABILITY MATRIX — editable and saved
+   ============================================================ */
+const STATES=[
+ {k:0,l:'Applicable — common process'},
+ {k:1,l:'Standalone process'},
+ {k:2,l:'Applies where stated criteria are met'},
+ {k:3,l:'Not applicable'}
+];
+const baseline = CONTROLS.map(c=>APPS.map(a=>BASELINE_FOR(c,a)));
+let grid = baseline.map(r=>r.slice());
+let editing=false, q='', view='applic', kind='all';
+
+function storeGet(){
+  try{ const v=localStorage.getItem(STORAGE_KEY); return v?JSON.parse(v):null; }catch(e){ return null; }
+}
+function storeSet(v){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); return true; }catch(e){ return false; }
+}
+(function load(){
+  const saved=storeGet();
+  if(saved&&Array.isArray(saved)&&saved.length===CONTROLS.length&&saved[0].length===APPS.length) grid=saved;
+})();
+
+function dirtyCount(){
+  let n=0;
+  for(let i=0;i<grid.length;i++) for(let j=0;j<grid[i].length;j++) if(grid[i][j]!==baseline[i][j]) n++;
+  return n;
+}
+function persist(){
+  const ok=storeSet(grid);
+  try{paintCoverage()}catch(e){}
+  const n=dirtyCount(), el=document.getElementById('savestat');
+  el.classList.toggle('dirty',n>0);
+  el.querySelector('span:last-child').textContent = !ok
+    ? (n?n+' change'+(n===1?'':'s')+' — use Export to keep them':'Session only — use Export to keep changes')
+    : (n?'Saved · '+n+' change'+(n===1?'':'s')+' from the documented position':'Saved · matches the documented position');
+}
+
+const tablewrap=document.getElementById('tablewrap');
+function renderMatrix(){
+  if(view==='conn'&&typeof CONNECTORS!=='undefined'){
+    document.getElementById('legend').style.display='none';
+    document.getElementById('editbar').style.display='none';
+    const rows=CONNECTORS.filter(r=>r[0].toLowerCase().includes(q));
+    tablewrap.innerHTML='<table><thead><tr><th>Application</th><th>SailPoint integration type</th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+r[0]+'</td><td><span class="conn'+(r[1].indexOf('To be updated')===0?' tbc':'')+'">'+r[1]+'</span></td></tr>').join('')+
+      '</tbody></table>';
+    if(!rows.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">No application of that name appears in the connector table.</div>';
+    return;
+  }
+  document.getElementById('legend').style.display='flex';
+  document.getElementById('editbar').style.display='flex';
+  const idx=APPS.map((a,j)=>[a,j]).filter(p=>p[0].toLowerCase().includes(q)
+      && (kind==='all' || (kind==='tool')===isTool(p[0])));
+  tablewrap.innerHTML='<table><thead><tr><th>Application or tool</th>'+
+    CONTROLS.map(c=>'<th class="ch" data-full="'+c.id+'" title="'+esc(c.name)+(c.applicNote?' — '+esc(c.applicNote):(c.qual?' — '+esc(c.qual):''))+'">'+c.id+'</th>').join('')+
+    '</tr></thead><tbody>'+
+    idx.map(([a,j])=>'<tr class="'+(isTool(a)?'r-tool':'r-app')+'"><td><span class="kdot"></span>'+a+'</td>'+CONTROLS.map((c,i)=>{
+      const st=grid[i][j], mod=st!==baseline[i][j];
+      return '<td class="c"><span class="cellbtn'+(mod?' mod':'')+'" data-i="'+i+'" data-j="'+j+'" role="button" tabindex="-1" '+
+        'title="'+c.id+' · '+esc(a)+' — '+STATES[st].l+(mod?' (changed)':'')+'"><span class="ring"></span><span class="cellmark d-'+st+'"></span></span></td>';
+    }).join('')+'</tr>').join('')+'</tbody></table>';
+  if(!idx.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">Nothing matches that name in the current view.</div>';
+  tablewrap.querySelectorAll('.cellbtn').forEach(el=>el.addEventListener('click',()=>{
+    if(!editing) return;
+    const i=+el.dataset.i, j=+el.dataset.j;
+    grid[i][j]=(grid[i][j]+1)%4;
+    const st=grid[i][j], mod=st!==baseline[i][j];
+    el.classList.toggle('mod',mod);
+    el.querySelector('.cellmark').className='cellmark d-'+st;
+    el.title=CONTROLS[i].id+' · '+APPS[j]+' — '+STATES[st].l+(mod?' (changed)':'');
+    persist();
+  }));
+}
+function esc(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+document.getElementById('editToggle').addEventListener('click',function(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  this.classList.toggle('toggled',editing);
+  this.querySelector('span').textContent = editing?'Editing on — click a cell to change it':'Edit applicability';
+});
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const payload={file:STORAGE_KEY,savedAt:new Date().toISOString(),controls:CONTROLS.map(c=>c.id),applications:APPS,states:['Applicable','Standalone process','Criteria-based','Not applicable'],grid:grid};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=STORAGE_KEY+'.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+});
+document.getElementById('importFile').addEventListener('change',function(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const g=p.grid||p;
+      if(Array.isArray(g)&&g.length===CONTROLS.length&&g[0].length===APPS.length){ grid=g; persist(); renderMatrix(); }
+      else alert('That file does not match this matrix (expected '+CONTROLS.length+' controls by '+APPS.length+' applications).');
+    }catch(err){ alert('That file could not be read as saved applicability data.'); }
+  };
+  r.readAsText(f); e.target.value='';
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('Reset every cell back to the position stated in the control narrative?')) return;
+  grid=baseline.map(r=>r.slice()); persist(); renderMatrix();
+});
+document.getElementById('appSearch').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();renderMatrix()});
+const vA=document.getElementById('viewApplic'), vC=document.getElementById('viewConn');
+if(vA) vA.addEventListener('click',()=>{view='applic';vA.classList.add('on');if(vC)vC.classList.remove('on');renderMatrix()});
+if(vC) vC.addEventListener('click',()=>{view='conn';vC.classList.add('on');vA.classList.remove('on');renderMatrix()});
+
+document.getElementById('legend').innerHTML=STATES.map(s=>'<i><span class="key-dot d-'+s.k+'"></span>'+s.l+'</i>').join('')+
+  '<i style="margin-left:10px;padding-left:16px;border-left:1px solid var(--line)"><span class="key-dot kd-app"></span>Application</i>'+
+  '<i><span class="key-dot kd-tool"></span>Tool</i>';
+document.getElementById('kindseg').addEventListener('click',e=>{
+  const b=e.target.closest('.kbtn'); if(!b)return;
+  kind=b.dataset.k;
+  document.querySelectorAll('#kindseg .kbtn').forEach(x=>x.classList.toggle('on',x===b));
+  renderMatrix();
+});
+renderMatrix(); persist();
+
+/* ============================================================
+   ROLES / SCOPE / NAV
+   ============================================================ */
+document.getElementById('rolegrid').innerHTML=ROLES.map(r=>
+  '<div class="role"><b>'+r.r+'</b><p>'+r.d+'</p><div class="rc">'+r.c.map(x=>'<span>'+x+'</span>').join('')+'</div>'+
+  '<div class="ev"><b style="display:block">Typical evidence produced</b>'+r.e+'</div></div>').join('');
+document.getElementById('scope').innerHTML=SCOPE.map(s=>
+  '<div class="scard"><h5>'+s.h+'</h5><p>'+s.p+'</p></div>').join('');
+
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>topbar.classList.toggle('stuck',window.scrollY>10),{passive:true});
+const links=[...document.querySelectorAll('.navlinks a')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id))}})},
+  {rootMargin:'-20% 0px -70% 0px'});
+[...document.querySelectorAll('section[id]')].forEach(s=>io.observe(s));
+
+
+
+/* ============================================================
+   READER — scroll spy and reading progress
+   ============================================================ */
+const SECS=['sObj','sCur','sReq','sApp','sEvi','sVal'];
+function readerScroll(){
+  if(!document.body.classList.contains('reading'))return;
+  const bar=document.getElementById('rprogbar'), sub=document.getElementById('rsub');
+  if(!bar||!sub)return;
+  const r=rbody.getBoundingClientRect(), vh=window.innerHeight;
+  const total=r.height-vh;
+  const done=Math.min(1,Math.max(0,(-r.top)/(total>0?total:1)));
+  bar.style.width=(done*100).toFixed(1)+'%';
+  let active=SECS[0];
+  SECS.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<170)active=id});
+  sub.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===active));
+}
+window.addEventListener('scroll',readerScroll,{passive:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#rsub button'); if(!b)return;
+  const el=document.getElementById(b.dataset.t); if(!el)return;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-150,behavior:'smooth'});
+});
+
+/* ============================================================
+   MATRIX — crosshair highlight and click ripple
+   ============================================================ */
+tablewrapCrosshair();
+function tablewrapCrosshair(){
+  tablewrap.addEventListener('pointerover',e=>{
+    const cell=e.target.closest('.cellbtn'); if(!cell)return;
+    clearCross();
+    const ci=+cell.dataset.i;
+    cell.closest('tr').classList.add('xrow');
+    const th=tablewrap.querySelectorAll('thead th')[ci+1];
+    if(th) th.classList.add('xcol');
+    tablewrap.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[ci+1]; if(td) td.classList.add('xc');
+    });
+  });
+  tablewrap.addEventListener('pointerleave',clearCross);
+}
+function clearCross(){
+  tablewrap.querySelectorAll('.xrow').forEach(x=>x.classList.remove('xrow'));
+  tablewrap.querySelectorAll('.xcol').forEach(x=>x.classList.remove('xcol'));
+  tablewrap.querySelectorAll('.xc').forEach(x=>x.classList.remove('xc'));
+}
+const _origRender=renderMatrix;
+tablewrap.addEventListener('click',e=>{
+  const cell=e.target.closest('.cellbtn'); if(!cell||!editing)return;
+  cell.classList.remove('pop'); void cell.offsetWidth; cell.classList.add('pop');
+});
+
+/* ============================================================
+   HERO — count up
+   ============================================================ */
+(function(){
+  const ns=[...document.querySelectorAll('.ledger .n')];
+  if(!ns.length)return;
+  ns.forEach(el=>{
+    const target=parseInt(el.textContent,10); if(isNaN(target))return;
+    el.textContent='0'; let t0=null;
+    const step=ts=>{ if(!t0)t0=ts; const p=Math.min(1,(ts-t0)/900);
+      el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+      if(p<1)requestAnimationFrame(step); };
+    setTimeout(()=>requestAnimationFrame(step),260);
+  });
+})();
+
+paintCoverage();
+
+</script>
+</body>
+</html>

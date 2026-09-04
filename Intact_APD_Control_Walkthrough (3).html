@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Access to Programs &amp; Data — Common Control Narrative | Intact Insurance UK&amp;I</title>
+<style>
+:root{
+  /* Intact palette */
+  --ink:#001A1B;
+  --deep:#052429;
+  --pacific:#00AEBD;
+  --pacific-dim:#0B7C86;
+  --pacific-glow:rgba(0,174,189,.16);
+
+  /* Intact red — change this one value to match the exact brand hex */
+  --red:#D81E28;
+  --red-deep:#A81620;
+  --red-lite:#FF6E75;
+  --red-tint:#FDECEE;
+  --red-glow:rgba(216,30,40,.14);
+
+  --paper:#EFF3F3;
+  --card:#FFFFFF;
+  --line:#D6DEDE;
+  --line-soft:#E6ECEC;
+  --text:#0B2226;
+  --text-2:#4A6165;
+  --text-3:#7C9296;
+  --amber:#B87A12;
+  --amber-bg:#FBF1DE;
+  --slate:#5B7A80;
+  --r-lg:22px; --r-md:14px;
+  --shadow-1:0 1px 2px rgba(0,26,27,.05), 0 4px 14px rgba(0,26,27,.05);
+  --shadow-2:0 12px 34px rgba(0,26,27,.14), 0 2px 6px rgba(0,26,27,.07);
+  --ease:cubic-bezier(.22,.85,.28,1);
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 34px}
+@media(max-width:760px){.wrap{padding:0 20px}}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(239,243,243,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
+.topbar.stuck{border-bottom-color:var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:26px;height:56px}
+.brandmark{display:flex;align-items:center;gap:11px;font-weight:640;letter-spacing:-.015em;white-space:nowrap}
+.brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px var(--red-glow)}
+.brandmark small{display:block;font-weight:450;font-size:11.5px;color:var(--text-3);letter-spacing:0}
+.navlinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{text-decoration:none;font-size:13.5px;color:var(--text-2);font-weight:520;padding:7px 12px;border-radius:999px;white-space:nowrap;transition:.2s var(--ease)}
+.navlinks a:hover{color:var(--text);background:var(--red-tint)}
+.navlinks a.on{color:var(--ink);background:#fff;box-shadow:var(--shadow-1)}
+.navlinks a.on::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:middle}
+@media(max-width:900px){.navlinks{display:none}}
+
+/* ---------- dark canvas ---------- */
+.dark{background:var(--ink);color:#DFEAEA;position:relative;overflow:hidden;border-top:3px solid var(--red)}
+.dark::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(760px 380px at 8% -12%, rgba(0,174,189,.20), transparent 62%),radial-gradient(620px 420px at 96% 6%, rgba(216,30,40,.12), transparent 58%)}
+.dark .wrap{position:relative}
+.hero{padding:80px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:560;color:var(--red-lite);border:1px solid rgba(255,110,117,.36);border-radius:999px;padding:5px 13px 5px 9px;background:rgba(216,30,40,.10)}
+.eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:var(--red-lite)}
+h1{font-size:clamp(34px,4.9vw,58px);line-height:1.04;letter-spacing:-.036em;font-weight:660;color:#fff;margin:26px 0 0;max-width:16ch}
+h1 .thin{display:block;font-weight:280;color:#8FB4B8;letter-spacing:-.02em;font-size:.46em;margin-top:14px;line-height:1.15}
+.hero-lede{margin-top:24px;max-width:60ch;color:#A9C4C7;font-size:17px;line-height:1.62;font-weight:380}
+.hero-lede b{color:#DDECEC;font-weight:560}
+.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media(max-width:980px){.herogrid{grid-template-columns:1fr;gap:38px}}
+.chain{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:24px 24px 20px}
+.chain h6{font-size:11.5px;font-weight:640;color:var(--pacific);margin-bottom:16px}
+.clink{display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:16px}
+.clink:last-child{padding-bottom:0}
+.clink::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:1.5px;background:linear-gradient(180deg,rgba(0,174,189,.55),rgba(0,174,189,.12))}
+.clink:last-child::before{display:none}
+.cnode{width:31px;height:31px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;background:rgba(0,174,189,.16);border:1px solid rgba(0,174,189,.4);color:var(--pacific);transition:.3s var(--ease)}
+.clink:hover .cnode{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.12)}
+.cnode svg{width:16px;height:16px}
+.ctext b{display:block;font-size:13.5px;font-weight:600;color:#E2F0F0;letter-spacing:-.012em;line-height:1.3}
+.ctext span{display:block;font-size:12px;color:#89AEB2;line-height:1.45;margin-top:3px}
+
+.ledger{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--red)}
+.ledger div{padding:22px 22px 22px 0;border-right:1px solid rgba(255,255,255,.10)}
+.ledger div:last-child{border-right:0}
+.ledger .n{font-size:40px;font-weight:600;letter-spacing:-.04em;color:#fff;line-height:1}
+.ledger .l{margin-top:9px;font-size:13px;color:#8FB4B8;line-height:1.4;max-width:22ch}
+@media(max-width:760px){.ledger{grid-template-columns:1fr 1fr}.ledger div:nth-child(2){border-right:0}}
+
+/* ---------- section chrome ---------- */
+section{scroll-margin-top:64px}
+.band{padding:76px 0}
+.band-tight{padding:54px 0 76px}
+.shead{max-width:64ch;margin-bottom:36px}
+.shead .kick{font-size:12.5px;font-weight:640;color:var(--red-deep);margin-bottom:12px;display:flex;align-items:center;gap:9px;letter-spacing:.01em}
+.shead .kick::before{content:"";width:24px;height:2px;background:var(--red);border-radius:2px}
+.dark .shead .kick{color:var(--red-lite)}
+.dark .shead .kick::before{background:var(--red-lite)}
+h2{font-size:clamp(27px,3.5vw,40px);letter-spacing:-.032em;font-weight:640;line-height:1.1}
+.dark h2{color:#fff}
+.shead p{margin-top:15px;color:var(--text-2);font-size:16.5px;line-height:1.62}
+.dark .shead p{color:#9DBABE}
+
+/* ---------- lifecycle spine ---------- */
+.spine-scroll{overflow-x:auto;padding:6px 0 22px;-webkit-overflow-scrolling:touch}
+.spine{display:flex;gap:0;min-width:1080px;position:relative}
+.stage{flex:1 1 0;position:relative;padding:0 7px}
+.stage-btn{width:100%;text-align:left;position:relative;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:17px 15px 15px;transition:transform .38s var(--ease),background .28s,border-color .28s,box-shadow .38s var(--ease);transform-origin:center bottom;height:100%;display:flex;flex-direction:column;gap:10px}
+.stage-btn:hover{transform:translateY(-7px) scale(1.045);z-index:5;background:rgba(216,30,40,.16);border-color:rgba(255,110,117,.55);box-shadow:0 20px 44px rgba(0,0,0,.45)}
+.stage.active .stage-btn{background:var(--red);border-color:var(--red);box-shadow:0 18px 40px rgba(216,30,40,.34)}
+.stage.active .stage-btn *{color:#fff!important}
+.stage.active .cchip{background:rgba(255,255,255,.22)}
+.stage-idx{font-size:11px;font-weight:640;color:var(--pacific);display:flex;align-items:center;gap:7px}
+.stage-idx .bead{width:5px;height:5px;border-radius:50%;background:currentColor}
+.stage-ico{width:26px;height:26px;color:#fff;opacity:.92}
+.stage-name{font-size:14.5px;font-weight:620;color:#fff;letter-spacing:-.016em;line-height:1.25}
+.stage-tool{font-size:11.5px;color:#8CB0B4;line-height:1.4;font-weight:450}
+.stage-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}
+.cchip{font-size:10.5px;font-weight:640;padding:2.5px 6px;border-radius:5px;background:rgba(255,255,255,.11);color:#B7D6D9}
+.connector{position:absolute;top:50%;right:-6px;width:12px;height:12px;z-index:2;color:rgba(255,255,255,.26)}
+.stage:last-child .connector{display:none}
+.stage-panel{margin-top:6px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-left:3px solid var(--red);border-radius:20px;padding:0 30px;max-height:0;overflow:hidden;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .35s;opacity:0}
+.stage-panel.open{max-height:1400px;padding:30px;opacity:1}
+.sp-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:34px}
+@media(max-width:860px){.sp-grid{grid-template-columns:1fr;gap:24px}}
+.sp-h{font-size:20px;font-weight:620;color:#fff;letter-spacing:-.022em;margin-bottom:12px}
+.sp-body p{color:#A9C6C9;font-size:15px;line-height:1.68;margin-bottom:12px}
+.sp-body p:last-child{margin-bottom:0}
+.sp-body b{color:#E3F1F1;font-weight:580}
+.sp-side h5{font-size:12px;font-weight:640;color:var(--red-lite);margin-bottom:10px}
+.sp-side li{font-size:13.5px;color:#B3CDD0;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:10px;line-height:1.45}
+.sp-side li:last-child{border-bottom:0}
+.sp-side li span{color:#7FA5A9;flex:1 1 auto;min-width:0;font-size:12px;padding-top:1px;overflow-wrap:anywhere}
+.jump-row{display:flex;flex-wrap:wrap;gap:7px}
+.jump{font-size:12px;font-weight:640;padding:6px 12px;border-radius:8px;background:rgba(216,30,40,.18);color:#FF9095;border:1px solid rgba(255,110,117,.34);transition:.2s var(--ease)}
+.jump:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+.hint{font-size:12.5px;color:#7BA0A4;margin-top:16px;display:flex;align-items:flex-start;gap:9px;max-width:96ch}
+.hint svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;color:var(--red-lite)}
+
+/* ---------- tabs / lanes ---------- */
+.tabs{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:4px;gap:3px;margin-bottom:26px}
+.tab{font-size:14px;font-weight:580;padding:9px 20px;border-radius:9px;color:var(--text-2);transition:.25s var(--ease)}
+.tab.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.lanes{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lane{display:grid;grid-template-columns:190px 1fr;border-bottom:1px solid var(--line-soft)}
+.lane:last-child{border-bottom:0}
+.lane-h{padding:20px;background:#F7FAFA;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;gap:5px;justify-content:center;position:relative}
+.lane-h::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:var(--red);border-radius:0 3px 3px 0;opacity:.55}
+.lane-h b{font-size:13.5px;font-weight:640;letter-spacing:-.01em}
+.lane-h small{font-size:11.5px;color:var(--text-3);line-height:1.35}
+.lane-steps{display:flex;gap:10px;padding:16px;overflow-x:auto;align-items:stretch}
+.step{flex:0 0 auto;max-width:290px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:transform .32s var(--ease),box-shadow .32s var(--ease),border-color .25s}
+.step:hover{transform:translateY(-5px) scale(1.02);box-shadow:var(--shadow-2);border-color:var(--red);z-index:3;position:relative}
+.step b{display:block;font-size:13.5px;font-weight:620;letter-spacing:-.012em;margin-bottom:5px}
+.step p{font-size:12.5px;color:var(--text-2);line-height:1.5}
+.step .tools{margin-top:9px;display:flex;flex-wrap:wrap;gap:4px}
+.tool{font-size:10.5px;font-weight:640;padding:2.5px 7px;border-radius:5px;background:#EAF1F1;color:var(--slate)}
+.tool.k{background:var(--red-tint);color:var(--red-deep)}
+.stepsep{flex:0 0 auto;align-self:center;color:#C3CFD0;display:flex;align-items:center}
+.stepsep svg{width:14px;height:14px}
+
+/* ---------- control grid ---------- */
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:26px}
+.fchip{font-size:13px;font-weight:560;padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease)}
+.fchip:hover{border-color:var(--red);color:var(--red-deep)}
+.fchip.on{background:var(--red);border-color:var(--red);color:#fff}
+.fcount{margin-left:auto;font-size:13px;color:var(--text-3)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1000px){.cgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.cgrid{grid-template-columns:1fr}}
+.ccard{position:relative;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 22px 18px;overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s var(--ease),border-color .3s;display:flex;flex-direction:column;min-height:212px}
+.ccard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.ccard:hover{transform:translateY(-6px) scale(1.017);box-shadow:var(--shadow-2);border-color:#C6B2B4;z-index:2}
+.ccard:hover::after{transform:scaleY(1)}
+.ccard.hide{display:none}
+.cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cc-id{font-size:12.5px;font-weight:680;color:var(--red-deep);letter-spacing:.02em}
+.cc-ico{width:30px;height:30px;color:var(--ink);opacity:.8;flex:0 0 auto;transition:.35s var(--ease)}
+.ccard:hover .cc-ico{color:var(--red);opacity:1;transform:scale(1.08)}
+.cc-name{font-size:18.5px;font-weight:620;letter-spacing:-.026em;line-height:1.22}
+.cc-obj{margin-top:9px;font-size:13.5px;color:var(--text-2);line-height:1.52;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cc-foot{margin-top:auto;padding-top:15px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{font-size:10.5px;font-weight:660;padding:3.5px 9px;border-radius:6px;letter-spacing:.015em}
+.badge.key{background:var(--red);color:#fff}
+.badge.nonkey{background:#E7EDED;color:var(--slate)}
+.badge.freq{background:#EEF4F4;color:var(--text-2);font-weight:560}
+.badge.alt{background:var(--amber-bg);color:var(--amber)}
+.cc-more{margin-left:auto;font-size:12px;font-weight:640;color:var(--text-3);display:flex;align-items:center;gap:5px;transition:.25s var(--ease)}
+.ccard:hover .cc-more{color:var(--red)}
+.cc-more svg{width:13px;height:13px;transition:transform .3s var(--ease)}
+.ccard:hover .cc-more svg{transform:translateX(4px)}
+body.reading .cgrid, body.reading .filterbar{display:none}
+
+/* ---------- in-page control reader ---------- */
+.reader-sec{display:none;animation:rise .5s var(--ease)}
+body.reading .reader-sec{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.reader-top{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.backbtn{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:620;padding:9px 16px;border-radius:999px;background:var(--ink);color:#fff;transition:.24s var(--ease)}
+.backbtn:hover{background:var(--red);transform:translateX(-3px)}
+.backbtn svg{width:14px;height:14px}
+.rnav{margin-left:auto;display:flex;align-items:center;gap:8px}
+.rnav button{font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--text-2);display:flex;align-items:center;gap:7px;transition:.22s var(--ease)}
+.rnav button:hover:not(:disabled){background:var(--red);border-color:var(--red);color:#fff}
+.rnav button:disabled{opacity:.34;cursor:default}
+.rnav svg{width:13px;height:13px}
+.rpos{font-size:12.5px;color:var(--text-3);font-weight:600;padding:0 6px}
+.reader{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+.reader>*{min-width:0}
+@media(max-width:940px){.reader{grid-template-columns:1fr;gap:18px}}
+.rail{position:sticky;top:74px;display:flex;flex-direction:column;gap:3px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:4px}
+@media(max-width:940px){.rail{position:static;flex-direction:row;overflow-x:auto;max-height:none;padding-bottom:6px}}
+.railitem{text-align:left;display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:11px;border:1px solid transparent;transition:.24s var(--ease);flex:0 0 auto}
+.railitem:hover{background:#fff;border-color:var(--line);transform:translateX(3px)}
+@media(max-width:940px){.railitem{min-width:190px}.railitem:hover{transform:translateY(-3px)}}
+.railitem .rid{font-size:11px;font-weight:700;color:var(--text-3);flex:0 0 auto;padding-top:2px;letter-spacing:.02em}
+.railitem .rnm{font-size:12.8px;font-weight:560;color:var(--text-2);line-height:1.35}
+.railitem.on{background:#fff;border-color:var(--line);box-shadow:var(--shadow-1);position:relative}
+.railitem.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--red);border-radius:0 3px 3px 0}
+.railitem.on .rid{color:var(--red)}
+.railitem.on .rnm{color:var(--ink);font-weight:640}
+
+.rbody{background:#fff;border:1px solid var(--line);border-radius:26px}
+.rhead{padding:34px 38px 28px;border-bottom:1px solid var(--line-soft);background:linear-gradient(160deg,#FEFAFA,#fff 55%);position:relative}
+.rhead::before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,var(--red),var(--pacific))}
+@media(max-width:680px){.rhead{padding:26px 22px 22px}}
+.rhead .rid-big{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rhead h3{font-size:clamp(24px,3.6vw,36px);font-weight:660;letter-spacing:-.032em;line-height:1.12;max-width:22ch}
+.rhead .rico{position:absolute;right:34px;top:32px;width:56px;height:56px;color:var(--red);opacity:.16}
+@media(max-width:680px){.rhead .rico{display:none}}
+.rcontent{padding:30px 38px 40px}
+@media(max-width:680px){.rcontent{padding:24px 22px 34px}}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+.attr{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:680px){.attr{grid-template-columns:1fr}}
+.attr .cell{background:#F6FAFA;border:1px solid var(--line-soft);border-radius:var(--r-md);padding:16px 18px;transition:.3s var(--ease)}
+.attr .cell:hover{transform:translateY(-3px);box-shadow:var(--shadow-1);border-color:var(--red);background:#fff}
+.attr .cell.wide{grid-column:1/-1}
+.attr h6{font-size:11.5px;font-weight:660;color:var(--red-deep);margin-bottom:7px;letter-spacing:.015em}
+.attr p{font-size:14px;line-height:1.58;color:var(--text)}
+.attr .cell.alert{background:var(--amber-bg);border-color:#EEDBB6}
+.attr .cell.alert h6{color:var(--amber)}
+
+.blk{margin-bottom:28px}
+.blk>h4{font-size:15px;font-weight:660;letter-spacing:-.018em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.blk>h4 svg{width:17px;height:17px;color:var(--red)}
+.blk>h4::after{content:"";flex:1 1 auto;height:1px;background:var(--line-soft)}
+.blk p{font-size:14.8px;line-height:1.7;color:var(--text-2);margin-bottom:12px}
+.blk p:last-child{margin-bottom:0}
+.blk p b{color:var(--text);font-weight:620}
+.plist li{font-size:14.2px;line-height:1.62;color:var(--text-2);padding:11px 0 11px 24px;position:relative;border-bottom:1px solid var(--line-soft);transition:.26s var(--ease)}
+.plist li:last-child{border-bottom:0}
+.plist li::before{content:"";position:absolute;left:5px;top:19px;width:6px;height:6px;border-radius:50%;background:var(--red);transition:.26s var(--ease)}
+.plist li:hover{color:var(--text);padding-left:30px}
+.plist li:hover::before{transform:scale(1.5)}
+.plist li b{color:var(--text);font-weight:620}
+.applist{display:flex;flex-wrap:wrap;gap:6px}
+.app{font-size:12px;font-weight:560;padding:5px 10px;border-radius:7px;background:#EDF3F3;color:var(--text-2);border:1px solid transparent;transition:.2s var(--ease)}
+.app:hover{background:var(--red-tint);color:var(--red-deep);border-color:rgba(216,30,40,.25)}
+.app.alt{background:var(--amber-bg);color:var(--amber);border-color:#EEDBB6}
+.sublabel{font-size:12.5px;color:var(--text-3);margin:0 0 9px;font-weight:600}
+.evid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.evid{grid-template-columns:1fr}}
+.evbox{border:1px solid var(--line);border-radius:var(--r-md);padding:17px 18px;background:#fff;transition:.3s var(--ease)}
+.evbox:hover{box-shadow:var(--shadow-2);transform:translateY(-3px)}
+.evbox.pri{background:#FFF8F8;border-color:#F0D3D5}
+.evbox h6{font-size:11.5px;font-weight:660;margin-bottom:11px;color:var(--text-2)}
+.evbox.pri h6{color:var(--red-deep)}
+.evbox li{font-size:12.9px;line-height:1.5;color:var(--text-2);padding:5px 0 5px 15px;position:relative}
+.evbox li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:1.5px;background:var(--text-3)}
+.evbox.pri li::before{background:var(--red)}
+.tod{background:#F4F8F8;border-left:3px solid var(--pacific);border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 20px}
+.tod h6{font-size:11.5px;font-weight:660;color:var(--pacific-dim);margin-bottom:7px}
+.tod p{font-size:13.6px;line-height:1.62;color:var(--text-2)}
+.tod.altnote{background:var(--amber-bg);border-left-color:var(--amber)}
+.tod.altnote h6{color:var(--amber)}
+
+/* ---------- matrix ---------- */
+.mtools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:240px}
+.search svg{width:15px;height:15px;color:var(--text-3);flex:0 0 auto}
+.search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--text)}
+.editbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:16px}
+.ebtn{font-size:12.5px;font-weight:620;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease);display:inline-flex;align-items:center;gap:7px}
+.ebtn:hover{border-color:var(--red);color:var(--red-deep)}
+.ebtn svg{width:13px;height:13px}
+.ebtn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.ebtn.primary:hover{background:var(--red-deep);border-color:var(--red-deep);color:#fff}
+.ebtn.toggled{background:var(--red);border-color:var(--red);color:#fff}
+.savestat{margin-left:auto;font-size:12.5px;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.savestat .sdot{width:7px;height:7px;border-radius:50%;background:#BFCBCB}
+.savestat.dirty .sdot{background:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px;font-size:12.5px;color:var(--text-2)}
+.legend i{display:inline-flex;align-items:center;gap:7px;font-style:normal}
+.key-dot{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+.d-0{background:var(--pacific)}
+.d-1{background:#E5B860}
+.d-2{background:transparent;border:2px solid var(--pacific-dim)}
+.d-3{background:#E1E8E8}
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:auto;max-height:660px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+thead th{position:sticky;top:0;z-index:3;background:#F7FAFA;text-align:left;padding:12px 10px;font-weight:660;font-size:11.5px;color:var(--text-2);border-bottom:2px solid var(--line);white-space:nowrap}
+thead th:first-child{left:0;z-index:4;min-width:172px}
+thead th.ch{text-align:center;cursor:default}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FFF6F6}
+tbody td:first-child{position:sticky;left:0;background:#fff;font-weight:620;font-size:13px;z-index:2;border-right:1px solid var(--line-soft)}
+tbody tr:hover td:first-child{background:#FFF6F6}
+td.c{text-align:center;padding:6px 4px}
+.cellbtn{width:30px;height:26px;border-radius:7px;display:inline-grid;place-items:center;position:relative;transition:.2s var(--ease);cursor:default}
+body.editing .cellbtn{cursor:pointer}
+body.editing .cellbtn:hover{background:var(--red-tint);transform:scale(1.12)}
+.cellmark{width:14px;height:14px;border-radius:4px;display:block}
+.cellbtn.mod::after{content:"";position:absolute;top:2px;right:2px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+.conn{font-size:12px;color:var(--text-2)}
+.conn.tbc{color:var(--amber);font-weight:560}
+
+/* ---------- roles / scope ---------- */
+.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.rolegrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.rolegrid{grid-template-columns:1fr}}
+.role{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:19px 20px;transition:transform .34s var(--ease),box-shadow .34s var(--ease),border-color .28s;position:relative;overflow:hidden}
+.role::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .38s var(--ease)}
+.role:hover{transform:translateY(-5px) scale(1.014);box-shadow:var(--shadow-2);border-color:#DEC7C9}
+.role:hover::before{transform:scaleY(1)}
+.role b{font-size:15px;font-weight:630;letter-spacing:-.018em;display:block;margin-bottom:9px}
+.role p{font-size:13px;line-height:1.55;color:var(--text-2)}
+.role .ev{margin-top:12px;padding-top:11px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--text-3);line-height:1.5}
+.role .ev b{font-size:11.5px;color:var(--red-deep);font-weight:660;margin-bottom:4px}
+.role .rc{display:flex;flex-wrap:wrap;gap:4px;margin-top:11px}
+.rc span{font-size:10.5px;font-weight:660;padding:2.5px 6px;border-radius:5px;background:var(--red-tint);color:var(--red-deep)}
+.scope{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:840px){.scope{grid-template-columns:1fr}}
+.scard{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px;transition:.3s var(--ease)}
+.scard:hover{box-shadow:var(--shadow-2);transform:translateY(-4px);border-color:#DEC7C9}
+.scard h5{font-size:12px;font-weight:660;color:var(--red-deep);margin-bottom:10px}
+.scard p{font-size:13.5px;line-height:1.62;color:var(--text-2)}
+
+footer{padding:42px 0 58px;border-top:3px solid var(--red);background:var(--paper)}
+footer p{font-size:12.5px;color:var(--text-3);line-height:1.68;max-width:96ch}
+footer p+p{margin-top:11px}
+footer b{color:var(--text-2);font-weight:640}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* ===== interaction layer ===== */
+.cgrid{perspective:1400px}
+.cgrid:has(.ccard:hover) .ccard:not(:hover){opacity:.72;filter:saturate(.78)}
+.ccard{--mx:50%;--my:50%;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .3s,opacity .35s,filter .35s;transform-style:preserve-3d}
+.ccard::after{display:none}
+.ccard::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:radial-gradient(360px circle at var(--mx) var(--my), rgba(216,30,40,.11), transparent 62%);
+  opacity:0;transition:opacity .45s var(--ease)}
+.ccard:hover::before{opacity:1}
+.cc-glow{position:absolute;inset:0;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:0;
+  background:radial-gradient(240px circle at var(--mx) var(--my), var(--red), rgba(216,30,40,0) 64%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .4s var(--ease)}
+.ccard:hover .cc-glow{opacity:1}
+.cc-top,.cc-name,.cc-obj,.cc-foot,.cc-cov{position:relative;z-index:1}
+.ccard:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 60px rgba(0,26,27,.17),0 3px 8px rgba(0,26,27,.07);border-color:#E2C9CC}
+.cc-cov{margin-top:16px}
+.covbar{display:flex;height:5px;border-radius:99px;overflow:hidden;background:#EDF2F2;gap:1.5px}
+.covbar .seg{height:100%;width:0;transition:width .8s var(--ease)}
+.ccard.lit .covbar .seg{width:var(--w)}
+.covbar .seg.k0{background:var(--pacific)}
+.covbar .seg.k1{background:#E5B860}
+.covbar .seg.k2{background:#9AD0D6}
+.covbar .seg.k3{background:#DDE5E5}
+.covlbl{margin-top:8px;font-size:11px;color:var(--text-3);font-weight:560;letter-spacing:.005em;transition:color .3s}
+.ccard:hover .covlbl{color:var(--red-deep)}
+.cc-id{transition:letter-spacing .35s var(--ease)}
+.ccard:hover .cc-id{letter-spacing:.09em}
+
+/* ===== reader sub-navigation and progress ===== */
+.rprog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.rprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--pacific));transition:width .12s linear}
+.rsub{position:sticky;top:56px;z-index:20;display:flex;gap:4px;align-items:center;overflow-x:auto;
+  padding:11px 38px;background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line-soft);scrollbar-width:none}
+.rsub::-webkit-scrollbar{display:none}
+@media(max-width:680px){.rsub{padding:10px 20px}}
+.rsub button{font-size:12.5px;font-weight:580;color:var(--text-3);padding:6px 12px;border-radius:999px;white-space:nowrap;transition:.24s var(--ease)}
+.rsub button:hover{color:var(--red-deep);background:var(--red-tint)}
+.rsub button.on{color:#fff;background:var(--ink)}
+.rbody{position:relative;overflow:visible}
+.rhead{border-radius:25px 25px 0 0;overflow:hidden}
+.rcontent{border-radius:0 0 25px 25px;overflow:hidden}
+.rhead{position:relative}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(20px);filter:blur(6px);transition:opacity .7s var(--ease),transform .7s var(--ease),filter .7s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* ===== matrix crosshair and ripple ===== */
+tbody tr.xrow td{background:#FFF4F5}
+tbody tr.xrow td:first-child{background:#FFF4F5;color:var(--red-deep)}
+td.xc{background:#FFF4F5!important}
+thead th.xcol{color:#fff;background:var(--red)}
+tbody td:first-child.xname{color:var(--red-deep)}
+.cellbtn{transition:transform .22s var(--ease),background .22s}
+.cellbtn.pop{animation:cellpop .5s var(--ease)}
+@keyframes cellpop{0%{transform:scale(1)}35%{transform:scale(1.55)}100%{transform:scale(1)}}
+.cellbtn .ring{position:absolute;inset:0;border-radius:8px;border:2px solid var(--red);opacity:0;pointer-events:none}
+.cellbtn.pop .ring{animation:ringout .55s var(--ease)}
+@keyframes ringout{0%{opacity:.85;transform:scale(.6)}100%{opacity:0;transform:scale(2)}}
+
+/* ===== rail with full control ids ===== */
+.railitem{flex-direction:column;gap:4px}
+.railitem .rid{font-size:10.5px;letter-spacing:.07em}
+@media(max-width:940px){.railitem{min-width:210px}}
+
+/* ===== stage chips with full ids ===== */
+.cchip{font-size:10px;letter-spacing:.02em}
+.rc span{letter-spacing:.02em}
+
+/* ===== application / tool categories ===== */
+.kdot{display:inline-block;width:8px;height:8px;border-radius:2.5px;margin-right:9px;vertical-align:middle}
+tr.r-app .kdot{background:var(--pacific)}
+tr.r-tool .kdot{background:#2B4A72}
+tr.r-tool td:first-child{color:#24405F}
+.kd-app{background:var(--pacific)}
+.kd-tool{background:#2B4A72}
+.kindseg{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:3px;gap:3px}
+.kbtn{font-size:12.5px;font-weight:580;padding:8px 15px;border-radius:9px;color:var(--text-2);transition:.22s var(--ease);white-space:nowrap}
+.kbtn:hover{color:var(--red-deep)}
+.kbtn.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.app.tool{background:#E9EFF6;color:#24405F}
+.app.tool:hover{background:#DCE6F2;color:#1A3350;border-color:rgba(43,74,114,.28)}
+</style>
+
+</head>
+<body>
+
+<div class="topbar" id="topbar">
+  <div class="wrap">
+    <div class="brandmark"><span class="dot"></span>
+      <span>Access to Programs &amp; Data<small>Intact Insurance UK&amp;I · Common control narrative</small></span>
+    </div>
+    <nav class="navlinks">
+      <a href="#lifecycle">Lifecycle</a>
+      <a href="#journeys">Joiners, movers, leavers</a>
+      <a href="#controls">Controls</a>
+      <a href="#matrix">Applicability</a>
+      <a href="#roles">Roles</a>
+      <a href="#scope">Scope</a>
+    </nav>
+  </div>
+</div>
+
+<div class="dark">
+  <div class="wrap hero">
+    <div class="herogrid">
+      <div>
+        <span class="eyebrow"><span class="pulse"></span>APD.C01 – APD.C12 · Current state</span>
+        <h1>Access to Programs &amp; Data<span class="thin">Common Control Narrative</span></h1>
+        <p class="hero-lede">Defines the governance, control design and operational procedures supporting Access to Programs and Data controls for the in-scope applications that follow the common access management process, covering <b>user lifecycle management, access provisioning and modification, access revocation, periodic access reviews, privileged access, authentication and segregation of duties</b>.</p>
+      </div>
+      <div class="chain" id="chain"></div>
+    </div>
+    <div class="ledger">
+      <div><div class="n">12</div><div class="l">APD controls in the common process</div></div>
+      <div><div class="n">11</div><div class="l">Key controls relied on for SOX</div></div>
+      <div><div class="n">38</div><div class="l">Applications and tools in the population</div></div>
+      <div><div class="n">8</div><div class="l">Stages in the access lifecycle</div></div>
+    </div>
+  </div>
+
+  <section id="lifecycle" class="wrap band-tight">
+    <div class="shead">
+      <div class="kick">Process model</div>
+      <h2>The access management lifecycle</h2>
+      <p>SAP HR is the authoritative source for permanent employee lifecycle events, SailPoint manages identity lifecycle processing, and ServiceNow manages application access requests and approval workflows. Select a stage for the detail.</p>
+    </div>
+    <div class="spine-scroll"><div class="spine" id="spine"></div></div>
+    <div class="stage-panel" id="stagePanel"></div>
+    <div class="hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Provisioning and revocation capability varies by application and connector type. Applications integrated through two-way connectors support direct provisioning and revocation through SailPoint. One-way or read-only integrations support aggregation only, requiring fulfilment through ServiceNow requests and / or manual activities.
+    </div>
+  </section>
+</div>
+
+<section id="journeys" class="wrap band">
+  <div class="shead">
+    <div class="kick">Lifecycle events</div>
+    <h2>Joiners, movers and leavers</h2>
+    <p>Lifecycle events governed by APD.C03, APD.C04 and APD.C05.</p>
+  </div>
+  <div class="tabs" id="jmlTabs"></div>
+  <div class="lanes" id="lanes"></div>
+</section>
+
+<section id="controls" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">The control set</div>
+    <h2>Access to Programs and Data controls</h2>
+    <p>APD.C01 to APD.C12. Select a control for its objective, frequency, roles involved, exception handling, applicability and evidence requirements.</p>
+  </div>
+  <div class="filterbar" id="filterbar"></div>
+  <div class="cgrid" id="cgrid"></div>
+
+  <div id="reader" class="reader-sec">
+    <div class="reader-top">
+      <button class="backbtn" id="backAll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>All controls</button>
+      <div class="rnav">
+        <button id="rPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>Previous</button>
+        <span class="rpos" id="rposLabel"></span>
+        <button id="rNext">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="reader">
+      <aside class="rail" id="rail"></aside>
+      <div class="rbody" id="rbody"></div>
+    </div>
+  </div>
+</section>
+
+<section id="matrix" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Coverage</div>
+    <h2>Applicability by application</h2>
+    <p>The starting position is taken from the applicability statement under each control. Turn on editing to set applicability yourself, control by control; changes are held in this browser and can be exported to a file.</p>
+  </div>
+  <div class="mtools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="appSearch" placeholder="Find an application or tool" aria-label="Search applications and tools">
+    </div>
+    <div class="kindseg" id="kindseg"><button class="kbtn on" data-k="all">All 38</button><button class="kbtn" data-k="app">Applications 23</button><button class="kbtn" data-k="tool">Tools 15</button></div>
+    <button class="fchip on" id="viewApplic">Control applicability</button>
+    <button class="fchip" id="viewConn">SailPoint integration type</button>
+  </div>
+  <div class="editbar" id="editbar">
+    <button class="ebtn" id="editToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14 6.5l3.5 3.5"/></svg><span>Edit applicability</span></button>
+    <button class="ebtn" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Export</button>
+    <label class="ebtn" for="importFile" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 17V5M8 9l4-4 4 4"/><path d="M4 19h16"/></svg>Import</label>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="ebtn" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4.5V10h-5.5"/></svg>Reset to narrative</button>
+    <span class="savestat" id="savestat"><span class="sdot"></span><span></span></span>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="tablewrap" id="tablewrap"></div>
+</section>
+
+<section id="roles" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Accountability</div>
+    <h2>Roles and responsibility ownership</h2>
+    <p>Common participants in the APD process. Responsibilities vary by application, connector model, fulfilment route and review mechanism.</p>
+  </div>
+  <div class="rolegrid" id="rolegrid"></div>
+</section>
+
+<section id="scope" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Boundaries</div>
+    <h2>Scope</h2>
+  </div>
+  <div class="scope" id="scope"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Domain</b> Common Access To Program &amp; Data Management &nbsp;&nbsp;<b>Version</b> V0.1 &nbsp;&nbsp;<b>Description of changes</b> DRAFT &nbsp;&nbsp;<b>Document owner</b> TBC &nbsp;&nbsp;<b>Control owner</b> TBC &nbsp;&nbsp;<b>Author</b> TBC &nbsp;&nbsp;<b>Approver</b> TBC &nbsp;&nbsp;<b>Next review date</b> TBC &nbsp;&nbsp;<b>Classification</b> TBC</p>
+    <p>Operational responsibility for SailPoint transitioned from Wipro to Intact RSA on 1 July 2026. This represents a change in operational and support ownership rather than a migration or redesign of the SailPoint platform, infrastructure or underlying technology. The existing IAM processes and control activities continue to operate, with responsibility for process execution, operational support and evidence production transferring to the relevant Intact RSA personnel.</p>
+    <p><b>References</b> &nbsp;UK&amp;I User Access &amp; Password Policy Control Framework Supporting Document 2026 &nbsp;&nbsp; Intact Insurance UK &amp; International Information Technology Policy &nbsp;&nbsp; Data Management Policy &nbsp;&nbsp; Information Technology Policy Control Framework &nbsp;&nbsp; Information Security Policy</p>
+  </div>
+</footer>
+
+<script>
+const I = {
+  policy:'<path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M9 13h7M9 17h5"/>',
+  profile:'<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/><path d="M18 4h4M20 2v4"/>',
+  join:'<path d="M3 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/><circle cx="10" cy="8" r="3.4"/><path d="M18 8h5M20.5 5.5v5"/>',
+  modify:'<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14 6.5l3.5 3.5"/>',
+  revoke:'<path d="M3 20c0-3.6 3.1-5.6 7-5.6 1.3 0 2.5.2 3.5.6"/><circle cx="10" cy="8" r="3.4"/><path d="M16 17h6"/>',
+  periodic:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/><path d="M20 4.5v4h-4"/>',
+  uar:'<path d="M4 5h16v14H4z"/><path d="M8 10h8M8 14h5"/><circle cx="17.4" cy="15.4" r="3"/><path d="M19.6 17.6L22 20"/>',
+  priv:'<path d="M12 3l7.5 3.2v5.3c0 4.4-3.1 8.2-7.5 9.5-4.4-1.3-7.5-5.1-7.5-9.5V6.2z"/><path d="M12 11v3"/><circle cx="12" cy="9" r=".6" fill="currentColor"/>',
+  monitor:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>',
+  auth:'<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9"/><circle cx="12" cy="15.3" r="1.3"/>',
+  sod:'<circle cx="8.5" cy="12" r="5"/><circle cx="15.5" cy="12" r="5"/><path d="M12 8.2v7.6"/>',
+  ruleset:'<path d="M4 6h16M4 12h11M4 18h7"/><circle cx="19" cy="15.6" r="3.2"/><path d="M17.7 15.6l.9.9 1.8-1.9"/>',
+  hr:'<path d="M4.5 20V9.5L12 4l7.5 5.5V20"/><path d="M9.5 20v-5.5h5V20"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/>',
+  ticket:'<path d="M3.5 8.5A2 2 0 0 1 5.5 6.5h13a2 2 0 0 1 2 2v1.6a2.4 2.4 0 0 0 0 4.8v1.6a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-1.6a2.4 2.4 0 0 0 0-4.8z"/><path d="M10 9.5v5"/>',
+  approve:'<path d="M4.5 12.5l4.5 4.5 10-10.5"/>',
+  deliver:'<path d="M3.5 7.5l8.5-4.5 8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
+  key:'<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3.5M15.5 12v2.5"/>',
+  cycle:'<path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4.5V10h-5.5"/>',
+  exit:'<path d="M14.5 4.5h4a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-4"/><path d="M10 8l-4 4 4 4M6 12h9"/>'
+};
+const svg = p => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+
+/* ============================================================
+   APPLICATION LISTS  (verbatim from the narrative)
+   ============================================================ */
+const ALL_APPS = ["Blackline","S360","PTX","AIS","UKRIS","FDS","Global IP","Synergy","Eclipse","Atlas","SAP GL","SAP HR","DXC Assure","Guidewire","CCS","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+
+const FULL = ALL_APPS.slice();
+const C03_APPLIC = ["FDS","SAP GL","SAP HR","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const C03_ALT    = ["Blackline","S360","PTX","AIS","UKRIS","Global IP","Synergy","Eclipse","Atlas","DXC Assure","Guidewire","CCS"];
+const C05_APPLIC = ["UKRIS","FDS","SAP GL","SAP HR","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const C05_ALT    = ["Blackline","S360","PTX","AIS","Global IP","Synergy","Eclipse","Atlas","DXC Assure","Guidewire","CCS"];
+const C07_APPLIC = ["S360","PTX","AIS","UKRIS","FDS","Global IP","Synergy","Atlas","SAP GL","SAP HR","DXC Assure","Guidewire","CCS","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","OPC","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const C07_ALT    = ["Blackline","Eclipse","ServiceNow","ICM","PLC","Endevor","Globalscape"];
+const C08_APPLIC = ["FDS","SAP GL","SAP HR","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const C08_ALT    = ["Blackline","AIS","S360","PTX","UKRIS","Global IP","Synergy","Eclipse","Atlas","DXC Assure","Guidewire","CCS"];
+
+/* SailPoint integration types — from the Overview table */
+const CONNECTORS = [
+  ["AIS","Globalscape + Direct Connection (service accounts)"],
+  ["Atlas","Direct Connection"],
+  ["UKRIS","Globalscape"],
+  ["Blackline","To be updated by Intact — standalone process"],
+  ["CCS","Direct Connection"],
+  ["SAP GL","Globalscape"],
+  ["FCCS","Direct Connection via AD Groups"],
+  ["Tagetik","Direct Connection"],
+  ["PTX","To be updated by Intact"],
+  ["SAP Ariba","To be updated by Intact"],
+  ["Guidewire","Direct Connection"],
+  ["Anaplan","Direct Connection"],
+  ["Azure Data Platform","To be updated by Intact"],
+  ["DXC Assure","Direct Connection via AD Groups"],
+  ["FDS","Direct Connection"],
+  ["Global IP","Direct Connection"],
+  ["Synergy","Globalscape"],
+  ["eTC / Wallstreet","Globalscape"],
+  ["Eclipse","To be updated by Intact — standalone process"],
+  ["Igloo","Direct Connection via AD"],
+  ["360","Direct Connection via AD"],
+  ["RESQ","Direct Connection via AD"],
+  ["Mainframe","RACF Connector"]
+];
+
+/* ============================================================
+   THE TWELVE CONTROLS
+   ============================================================ */
+const CONTROLS = [
+{
+  id:"APD.C01", n:1, name:"Access management policies and procedures", key:false, icon:I.policy,
+  freq:"Annual", theme:"govern",
+  objective:"To confirm that access management policies and procedures are formally documented, approved, communicated, and periodically reviewed to support effective internal controls over financial reporting.",
+  roles:["Security Governance","SailPoint / Manage Access / LAMS Team","Application Owner / System Owner"],
+  exception:"Material changes trigger an earlier policy review. Policy non-compliance and exceptions require ownership, risk assessment and governance through the applicable GRC process.",
+  applic:FULL, alt:[],
+  applicNote:"Applies across the full application population.",
+  how:[
+    "Access management is governed through the <b>UK&amp;I User Access and Password Policy Control Framework Supporting Document</b> together with the supporting IAM and ITSM processes.",
+    "The framework requires a documented user access management process covering creation, allocation, modification, suspension and deletion of access entitlements, use of passwords and strong authentication, privileged access management, access recertification, RBAC, and third-party and customer access management.",
+    "It is operated through the common IAM and ITSM model using <b>SAP HR</b>, <b>SailPoint / LAMS</b>, <b>ServiceNow</b>, <b>Active Directory</b> and application-specific fulfilment routes, depending on the user population, application integration and support model.",
+    "Where a system is not onboarded to the centrally managed identity governance, authentication or privileged access management platform, the <b>business owner</b> remains responsible for the access lifecycle, periodic access review, access administration and adherence to Intact UK&amp;I policy.",
+    "The supporting document is reviewed at least annually, or following material change, as part of Security Governance activity. The approved policy name, version, owner, review cycle and authoritative link are retained as evidence items."
+  ],
+  points:[
+    "<b>Framework scope.</b> Creation, allocation, modification, suspension and deletion of entitlements; passwords and strong authentication; privileged access; recertification; RBAC; third-party and customer access.",
+    "<b>Review trigger.</b> At least annually, or on material change, through Security Governance.",
+    "<b>Retention of design.</b> Evidence of annual review, approval or re-approval should confirm whether control design, control ownership, process ownership and evidence ownership remain unchanged or have been updated through governance.",
+    "<b>Operating model.</b> Operational responsibility for SailPoint transitioned from Wipro to Intact RSA on 1 July 2026 — a change in operational and support ownership, not a platform migration or redesign."
+  ],
+  evPri:["Approved UK&I User Access & Password Policy Control Framework Supporting Document, including version, owner, approval date, effective date and review cycle","IAM policies, standards and procedures","Access-management operating-model documentation","Access-management RACI documentation","Policy review and approval records","Evidence-retention requirements","Central repository evidence confirming the approved version is held in the authoritative location"],
+  evSec:["Information Security Policy and Access Management Standards","Policy communications and supporting guidance","ERM policy-lifecycle records","Security Governance review records","Previous and current operating-model documentation","Supporting process maps and procedural guidance"],
+  tod:"As part of SOX TOD, the approved policy name, version, owner, approval date, annual review evidence and authoritative repository will be validated. The updated operating model RACI will be reviewed to confirm current activity ownership, control-operation responsibility and evidence ownership following the transfer of SailPoint responsibilities from Wipro to Intact RSA."
+},
+{
+  id:"APD.C02", n:2, name:"User profile and roles management", key:true, icon:I.profile,
+  freq:"Ad hoc / on occurrence", theme:"design",
+  objective:"To ensure that user access is granted, modified, and revoked in alignment with role-based access principles and organisational policies, minimising unauthorised access risks.",
+  roles:["HR / SAP HR Process Owners","Application Owner / System Owner","SailPoint / Manage Access / LAMS Team","Third-Party Administrators"],
+  exception:"Application-specific role, profile, entitlement, AD-group and ownership exceptions are managed by the relevant Application Owner or Business Owner.",
+  applic:FULL, alt:[],
+  applicNote:"Role and profile management remains relevant across the full population, although the role model, owner, AD-group mapping and review process vary by application.",
+  how:[
+    "User profile management spans several populations and identity sources. <b>Permanent employees</b> originate through HR onboarding, with manager, job code, start date and termination information held in SAP HR and consumed by SailPoint.",
+    "<b>Third-party users</b> are created directly within SailPoint by authorised third-party administrators. <b>Global and overseas users</b> may originate from regional HR systems and local onboarding, and require identity correlation before access to UK-owned applications can be managed through the common process.",
+    "Application access is managed through <b>application-specific profiles</b> rather than a single enterprise-wide profile structure. Each application maintains its own role model, approval workflow, access attributes and fulfilment process.",
+    "<b>ServiceNow forms</b> capture the application, requested role, business justification and relevant access attributes to support approval decisions. Where approved role matrices or segregation of duties requirements exist, these are reflected in the request workflows and access models.",
+    "For Windows-based applications, authorisation is underpinned by <b>Active Directory groups, organisational units and administrative tiering</b>. The AD uplift introduced a structured tiered model designed to strengthen segregation between administrative tiers, reduce lateral movement risk and enforce CIS-aligned policies."
+  ],
+  points:[
+    "<b>Ownership.</b> Role matrices, access models, entitlement catalogues, AD group mappings and SoD rules are owned and maintained by the relevant application or business owner.",
+    "<b>No single enterprise profile.</b> Access is modelled per application, not through one enterprise-wide profile structure.",
+    "<b>AD as a profile layer.</b> AD groups, OUs and tiered administration form an important component of profile management for AD-integrated applications."
+  ],
+  evPri:["Role matrices and access-model documentation","Profile definitions and entitlement structures","Active Directory group-to-application mappings","Role and profile ownership records","Sensitive-access definitions","Profile creation and modification approvals","Role validation and entitlement approval evidence","Evidence that role and profile changes were approved by the relevant application or business owner"],
+  evSec:["User-profile creation audit trails","User-profile modification audit trails","Application access-model guidance","Entitlement catalogues","Role-review records","ServiceNow form configurations","SailPoint entitlement configurations","Evidence of segregation between requestor and approver","Governance or change records supporting updates to roles, profiles or access models"],
+  tod:"As part of SOX TOD, application-specific role matrices, profile and role ownership, AD-group mappings, approval evidence, review triggers and continued appropriateness of roles and entitlements will be validated."
+},
+{
+  id:"APD.C03", n:3, name:"Access provisioning — joiners", key:true, icon:I.join,
+  freq:"Ad hoc / on occurrence", theme:"lifecycle",
+  objective:"To confirm that access creation of user accounts is in line with the user's roles and responsibilities.",
+  roles:["HR / SAP HR Process Owners","Line Manager","Application Owner / System Owner","UAM / Service Desk Team","SailPoint / Manage Access / LAMS Team","Third-Party Administrators","Supplier / Intact Supply Chain Approver","Claims Platform Team","Wipro"],
+  exception:"Access is not provisioned without documented approval. The provisioner cannot approve their own access request. Manual or legacy-process exceptions require business ownership, documented rationale, approval and monitoring. Failed or delayed provisioning is escalated and tracked through closure.",
+  applic:C03_APPLIC, alt:C03_ALT,
+  applicNote:"",
+  how:[
+    "For permanent employees, joiner processing begins with onboarding recorded in <b>SAP HR</b>. Manager, job code and start date are provided to SailPoint to initiate lifecycle processing and create <b>birthright access</b> such as Active Directory and email accounts.",
+    "Notifications telling line managers that joiner setup is complete are provided through operational support activity rather than automated SailPoint notifications.",
+    "Additional application access is requested <b>separately through ServiceNow</b> once birthright access exists. The requester selects the relevant application form, role and access attributes, and the request then follows the application-specific approval and fulfilment route.",
+    "<b>Third-party users</b> are created directly within SailPoint by authorised third-party administrators rather than through SAP HR. <b>Global and overseas users</b> originate through regional HR processes and local onboarding, and are governed through the UK access process where access to UK-owned applications is required.",
+    "Users are assigned unique account identifiers. Account IDs are not re-used and shared accounts are not provisioned under the policy requirement. Where application constraints or legacy processes create exceptions, the exception requires business ownership, documented rationale and retained evidence of approval and monitoring."
+  ],
+  points:[
+    "<b>Approval before fulfilment.</b> Access is provisioned only following documented approval from an authorised approver in accordance with the application workflow.",
+    "<b>Segregation.</b> Individuals performing fulfilment must not approve their own access requests; approval and fulfilment responsibilities are segregated.",
+    "<b>One request per application.</b> Because role structures and approval requirements differ between applications, requests are submitted individually for each application.",
+    "<b>Route depends on the connector.</b> Two-way SailPoint connectors support direct provisioning. Read-only or one-way connectors support aggregation only, with fulfilment performed through ServiceNow requests (RITMs) or manual processes by Intact RSA, UAM, systems analysts or application support teams.",
+    "<b>Approvers vary.</b> Line managers, application owners, claims approvers, supply chain approvers or other designated approvers, depending on the application and access type."
+  ],
+  evPri:["SAP HR employee records","HR / IAM feed evidence","SAP HR-to-SailPoint feed reconciliation","Record-count validation","Failed-feed reports","Exception-resolution records","Manager-data validation","Lifecycle-processing outcomes","ServiceNow requests and RITMs","Access-request forms and business justification","Approval history and workflow approvals","SailPoint provisioning records","IAM automation-workflow evidence","Application role, group or profile assignment evidence","UAM execution evidence","Application-support fulfilment evidence","Fulfiller identity and completion date","Closure confirmation"],
+  evSec:["Provisioning-workflow configurations","Connector-activity logs","Application-administration screenshots","Access-activation notifications","Access-activation timeliness monitoring","SLA-monitoring evidence where an approved SLA applies","Manual fulfilment emails or mailbox records","Exception and escalation evidence","Non-production or UAT evidence where provisioning configuration is introduced through a change"],
+  tod:"As part of SOX TOD, the completeness and accuracy of the joiner population and selected provisioning requests will be reviewed to validate authorised approval before fulfilment, segregation between approval and provisioning, alignment of access to business need, fulfiller identity, completion date and retained evidence."
+},
+{
+  id:"APD.C04", n:4, name:"Access modification — movers", key:true, icon:I.modify,
+  freq:"Ad hoc / on occurrence", theme:"lifecycle",
+  objective:"To confirm that access modifications to user accounts are in line with changes to the user's roles and responsibilities.",
+  roles:["HR / SAP HR Process Owners","Line Manager","Application Owner / System Owner","UAM / Service Desk Team","SailPoint / Manage Access / LAMS Team","Supplier / Intact Supply Chain Approver","Claims Platform Team","Wipro"],
+  exception:"Existing access that is no longer appropriate is removed or remediated. Copy ID or mirror-ID functionality may be used only as an administrative aid; each copied role, profile, queue, licence and entitlement must be validated against the approved request and business need.",
+  applic:FULL, alt:[],
+  applicNote:"Applies across the full application population.",
+  how:[
+    "Mover processing is triggered when <b>manager, job code, role or organisational information changes within SAP HR</b>. SailPoint identifies the update and routes an access review to the <b>new manager</b> to assess whether existing access remains appropriate following the change in responsibilities.",
+    "Application access changes resulting from the role change are processed through <b>ServiceNow</b> and follow the relevant application approval and fulfilment workflow.",
+    "For applications requiring manual fulfilment, <b>copy ID or mirror ID</b> references are used in certain scenarios to support access setup. This is particularly relevant for applications such as <b>AIS</b> where profiles, queues, licences and access attributes are complex.",
+    "Copy ID functionality acts as an administrative aid and does not replace role-based approval or independent validation. Where it is used, the fulfiller validates that copied roles, profiles, queues, licences and entitlements are appropriate for the requester, supported by the approved request and aligned to the user's role and business requirements before access is provisioned."
+  ],
+  points:[
+    "<b>Two things must happen.</b> New entitlements are assigned for the revised role, and previously held access that is no longer appropriate is removed.",
+    "<b>Application owner involvement.</b> Where specialist or elevated access is involved, application owners may participate in addition to the line manager review.",
+    "<b>Copy ID is not an approval.</b> It is an administrative aid only, and each copied attribute must be validated against the approved request."
+  ],
+  evPri:["SAP HR job-code, manager, role or organisational-change records","Role-change requests","Manager-reassignment records","SailPoint mover-event and mover-review evidence","Access-modification approvals","Application role-modification records","Role-appropriateness reviews","Updated entitlement-assignment records","Evidence of removal of access no longer appropriate to the user's revised responsibilities"],
+  evSec:["Copy ID or mirror-ID validation evidence","Evidence that copied roles, profiles, queues, licences and entitlements were validated against the approved request and business need","New-manager review evidence","Application-owner review for specialist, privileged or SoD-sensitive access","ServiceNow fulfilment records","SailPoint workflow records","SLA-tracking evidence where applicable","Exceptions, escalation and closure evidence"],
+  tod:"As part of SOX TOD, selected mover and modification requests will be reviewed to validate the lifecycle trigger, reassessment of existing access, approval of revised access, timely removal of inappropriate entitlements and validation of any Copy ID or mirror-ID access."
+},
+{
+  id:"APD.C05", n:5, name:"Access revocation — leavers", key:true, icon:I.revoke,
+  freq:"Ad hoc / on occurrence", theme:"lifecycle",
+  objective:"To confirm access right revocation is performed on a timely basis upon the user's last working day.",
+  roles:["HR / SAP HR Process Owners","UAM / Service Desk Team","SailPoint / Manage Access / LAMS Team","Third-Party Administrators","Claims Platform Team","Wipro","Relevant Business Owner for applications outside centrally managed identity governance"],
+  exception:"Delayed, failed or incomplete removals are identified, escalated and tracked through closure. Removal of Active Directory access alone is not treated as evidence that separate local or non-SSO application access has been removed.",
+  applic:C05_APPLIC, alt:C05_ALT,
+  applicNote:"",
+  how:[
+    "Leaver processing varies by population. It may be initiated through <b>SAP HR termination data</b>, SailPoint lifecycle events, approved third-party leaver notifications, user access review outcomes, or inactivity processing.",
+    "Permanent employee terminations are processed through SAP HR and consumed by SailPoint to initiate lifecycle processing and removal of birthright access. <b>Third-party users</b> are administered directly within SailPoint by authorised third-party administrators. <b>Global and overseas users</b> follow regional HR and local access removal processes.",
+    "<b>Luxembourg</b> users primarily follow SAP-driven lifecycle processing, whereas <b>Ireland</b> users follow separate regional processes and are not integrated with UK SailPoint in the same manner as UK employees.",
+    "Application access removal is performed in accordance with the application's connector and fulfilment model. Removal of Active Directory access removes birthright access and access to AD-dependent applications, but <b>does not by itself demonstrate removal of all application-level entitlements</b>.",
+    "For applications not fully integrated with the centrally managed identity governance solution, responsibility for access revocation remains with the relevant business owner. Deprovisioning is completed through ServiceNow workflows, workflow automation, or manual fulfilment by the responsible support team."
+  ],
+  points:[
+    "<b>Triggers.</b> Termination, role transfer, user access review outcomes, inactivity processing, or notifications relating to third-party or global users.",
+    "<b>The critical caveat.</b> AD disablement is not evidence of application-level removal. Application-level access removal remains dependent on each application's connector and fulfilment model.",
+    "<b>Escalation.</b> Delayed, failed or incomplete removals are identified, escalated and tracked through closure."
+  ],
+  evPri:["SAP HR termination records","Approved third-party or regional leaver notifications","SailPoint leaver events","Termination-feed validation","Last-working-day records","Active Directory disablement evidence","Active Directory deletion evidence","Application-level deprovisioning records","ServiceNow fulfilment records","Access-removal dates","Delayed or failed-removal exceptions","Exception-remediation, escalation and closure evidence"],
+  evSec:["Leaver-processing notifications","SailPoint connector-removal records","RITM generation and fulfilment evidence","Manual application-removal confirmations","Revocation-SLA evidence where an approved SLA applies","Support-team or application-owner confirmation","Failed connector or workflow records","Service account or ownership-transfer records where applicable","Exception trackers"],
+  tod:"As part of SOX TOD, selected leaver records will be reviewed to validate the termination trigger, removal of birthright and application-level access, removal timing, responsible fulfiller, delayed or failed removals, escalation and closure evidence."
+},
+{
+  id:"APD.C06", n:6, name:"Periodic review of terminated and transferred users", key:true, icon:I.periodic,
+  freq:"Daily · Monthly · Ad hoc · 30 / 90 day", theme:"assure",
+  objective:"To confirm that access to non-SSO in-scope financially relevant systems is periodically reviewed to ensure that all terminated or transferred users have their access disabled.",
+  roles:["HR / SAP HR Process Owners","SailPoint / Manage Access / LAMS Team","Third-Party Administrators","Application Owner / System Owner","Line Manager or designated reviewer, depending on the population"],
+  exception:"Residual access, failed lifecycle processing, failed inactivity tasks and other exceptions are investigated and remediated through the applicable deprovisioning route, with aged exceptions, escalation and final closure retained as evidence.",
+  applic:FULL, alt:[],
+  applicNote:"Applies across the full population where periodic residual-access review is required.",
+  freqDetail:["<b>Daily</b> — SAP leaver lifecycle processing","<b>Monthly</b> — non-SAP leaver reviews","<b>Ad hoc / on occurrence</b> — mover reviews","<b>30-day disablement, 90-day deletion</b> — inactivity processing"],
+  how:[
+    "This operates as a <b>detective control</b> over accounts where access removal is not fully automated through SailPoint, Active Directory, SSO or direct application deprovisioning. It is particularly relevant for non-SSO applications, manually administered applications, read-only connector applications, and applications where removal of AD access does not automatically remove all application-level entitlements.",
+    "For <b>terminated users</b>, permanent employee termination data flows from SAP HR into SailPoint and triggers lifecycle processing for birthright access. Where applications retain separate application-level accounts, local profiles or non-SSO access, removal relies on the application deprovisioning route — ServiceNow RITMs, workflow automation, connector-based removal, or manual action by the responsible support team.",
+    "For <b>transferred users</b>, SAP HR job code, role, manager or organisational changes trigger mover processing in SailPoint, which routes the access review to the new manager. For applications with critical, specialist, privileged or SoD-sensitive access, application-specific review remains relevant because the line manager assesses business appropriateness while the application owner understands detailed system roles and access conflicts.",
+    "<b>Inactive account processing</b> is supported through SailPoint task and rule configuration and includes 30-day disablement and 90-day deletion. Users are not prompted to log in before disablement, because this would undermine the objective of identifying genuinely inactive accounts. Control evidence is based on task execution, processed population, exception handling and final account status — notification emails support operational awareness but are not the primary evidence."
+  ],
+  points:[
+    "<b>Population source.</b> SAP HR termination and transfer records, SailPoint lifecycle data, inactivity processing outputs and, where applicable, application-level account inventories.",
+    "<b>The SOX focus.</b> Whether residual access remains for terminated, transferred or inactive users where automatic removal is not performed.",
+    "<b>Monitoring.</b> Confirms that the inactivity task runs, that failed or exception items are identified, and that the resulting disablement or deletion is evidenced."
+  ],
+  evPri:["Terminated-user population","HR termination reports","SAP HR and SailPoint lifecycle data","User-account status reports","Application access extracts","Residual-access review evidence","Revocation-date validation","Access-removal validation","Reviewer sign-off","Aged-exception tracker","Exception-remediation and closure evidence","Mover populations and manager-review evidence","Role-reassessment records","Access-correction evidence and review sign-off"],
+  evSec:["Daily SAP leaver-processing outputs","Monthly non-SAP leaver-review evidence","Ad-hoc mover-review evidence","Inactivity-processing outputs supporting 30-day disablement and 90-day deletion","Failed-task or exception reports","Application-owner review for specialist, privileged or SoD-sensitive access","ServiceNow remediation records","Final account-status screenshots or reports","Evidence supporting the completeness and accuracy of the review population"],
+  tod:"As part of SOX TOD, the terminated, transferred and inactive user populations, source completeness and accuracy, review frequency, reviewer, residual-access criteria, exceptions, remediation and closure evidence will be validated for each applicable application."
+},
+{
+  id:"APD.C07", n:7, name:"User access reviews — standard and privileged", key:true, icon:I.uar,
+  freq:"Semi-annual · Annual · Ad hoc", theme:"assure",
+  objective:"To confirm underlying access of users is authorised.",
+  roles:["Line Manager","Application Owner / System Owner","SailPoint / Manage Access / LAMS Team","Supplier / Intact Supply Chain Approver","Designated reviewers for third-party, external and uncorrelated users"],
+  exception:"Access identified as no longer appropriate is removed through the relevant deprovisioning process. Unauthorised entitlements are removed within four weeks of notification, with remediation tracked through closure. Failed aggregations, excluded users and inappropriate reviewer assignments are resolved before certification closure.",
+  applic:C07_APPLIC, alt:C07_ALT,
+  applicNote:"",
+  freqDetail:["<b>Semi-annual</b> — standard and privileged access","<b>Annual</b> — service accounts","<b>Semi-annual additional review</b> — high-risk service accounts","<b>Ad hoc / on occurrence</b> — mover reviews","<b>Three times per year</b> — owner recertifications"],
+  how:[
+    "Reviews are performed through <b>SailPoint recertification</b> and application-specific review processes to confirm that access remains appropriate, aligned to business responsibilities and supported by a complete and accurate user population.",
+    "The common SailPoint review process includes <b>manager-based reviews, system owner reviews, and uncorrelated user reviews</b> for external users. Certain applications instead rely on application-generated access listings, system owner reviews, AD group reviews or other application-specific mechanisms.",
+    "<b>Reviewer assignment.</b> For internal employees, manager information is received from SAP HR through the daily feed and used by SailPoint to assign certifications to the line manager. For third-party users and external accounts, reviewer assignment is managed through designated reviewer configurations because those users do not follow the SAP HR management hierarchy.",
+    "<b>Population.</b> Application access data is obtained through application-specific aggregation tasks, each with its own schedule and configuration. Completeness and accuracy is typically demonstrated through feed validation, aggregation monitoring, record or row count comparisons, reconciliation activities, and review of aggregation outputs. SailPoint, LAMS and UAR teams review the certification population and aggregation outputs before certification launch.",
+    "<b>Remediation</b> is application specific — immediate revocation, ServiceNow RITM generation, bulk-removal activities, or manual action by the application support team. Remediation evidence links the reviewer decision, removal method, responsible fulfiller, completion evidence and closure date."
+  ],
+  points:[
+    "<b>Four-week rule.</b> Unauthorised entitlements identified through review are removed within four weeks of notification, in accordance with the access governance framework.",
+    "<b>Coverage.</b> Internal users, external users, uncorrelated users, privileged users, service accounts, high-risk service accounts and elevated access.",
+    "<b>Additional reviews.</b> Mover reviews, leaver reviews, owner recertification activities, and review of identified SoD conflicts where applicable."
+  ],
+  evPri:["Source-application access populations","SailPoint aggregation results","Record-count reconciliations","Feed-validation evidence","Failed-aggregation reports","Excluded-user populations","Reviewer-assignment validation","Certification-launch approval","Certification-campaign configuration","Reviewer assignments and review decisions","Reviewer sign-off","Access-removal evidence","Remediation tracking","Certification-closure records"],
+  evSec:["System-owner reviews","Manager reviews","Uncorrelated-user reviews","External-user reviews","Service-account reviews","High-risk service-account reviews","Privileged-account reviews","Owner-recertification evidence","Aggregation-task outputs and screenshots","ServiceNow RITMs generated from revoke decisions","Bulk or manual-removal records","Exception and escalation evidence","Application-specific UAR extracts where SailPoint certification is not used"],
+  tod:"As part of SOX TOD, the UAR source, review frequency, population completeness and accuracy, reviewer assignment, review decisions, privileged and service-account coverage, four-week remediation requirement and certification closure will be validated for each applicable application."
+},
+{
+  id:"APD.C08", n:8, name:"Privileged account access management", key:true, icon:I.priv,
+  freq:"Semi-annual · Annual", theme:"privileged",
+  objective:"To confirm no unauthorised and inappropriate user has administrator access in the system.",
+  roles:["Modern Workplace / AD Team","Relevant Business Owner","Application Owner / System Owner","SailPoint / Manage Access / LAMS Team","Privileged-account or service-account owner"],
+  exception:"Unnecessary or inappropriate privileged access is removed or remediated. Temporary, emergency or exceptional privileged access requires documented ownership, approval, monitoring and removal or expiry. Identified inventory or ownership discrepancies are investigated through the applicable governance process.",
+  applic:C08_APPLIC, alt:C08_ALT,
+  applicNote:"Applies where privileged, administrative, elevated or service accounts exist.",
+  freqDetail:["<b>Semi-annual</b> — privileged access","<b>Annual</b> — service accounts","<b>Semi-annual additional review</b> — high-risk service accounts"],
+  how:[
+    "Privileged access is governed through a combination of access request and approval workflows, <b>privileged account inventories</b>, service account governance, periodic recertification, Active Directory administration controls and application-specific privileged access processes.",
+    "Standard and privileged access are reviewed bi-annually through the common recertification process; service accounts annually; high-risk service accounts are subject to an additional bi-annual review.",
+    "<b>Business owners</b> are responsible for identifying privileged accounts relevant to their information systems, maintaining privileged account inventories, and assigning ownership for privileged and service accounts.",
+    "<b>Active Directory privileged access</b> is strengthened through the AD Uplift Programme. The legacy AD environment operated with a flat administrative structure and increased lateral movement risk. The uplift introduces a tiered administration model aligned to Microsoft and CIS security principles, separates administrative access across tiers, and reduces redundant administrative pathways. Tier 0, Tier 1 and Tier 2 structures support segregation of administrative activity.",
+    "Where technically feasible, privileged access is managed through centrally controlled privileged access management capabilities and is subject to enhanced authentication, monitoring and governance requirements."
+  ],
+  points:[
+    "<b>Distinct from standard access.</b> Where access relates to privileged roles, administrative capabilities, service accounts or other sensitive access, the request, approval, ownership and review activities are governed through the privileged access framework.",
+    "<b>Registers.</b> High-risk privileged accounts and service accounts are identified through formal inventories and registers, reviewed on the defined schedule, and supported by documented ownership, approval and remediation.",
+    "<b>Discrepancies.</b> Inventory maintenance and ownership validation are performed periodically; discrepancies identified through review are investigated and remediated through the established governance process."
+  ],
+  evPri:["Privileged-account inventory and reconciliation","Service-account register","High-risk account register","Administrative-role inventory","Account-ownership records and owner attestations","Privileged-access requests and approvals","Privileged-access reviews","Service-account owner validation","Annual service-account review evidence","Additional bi-annual high-risk service-account review evidence","Privileged-review sign-off","Recertification evidence","Privileged-access remediation evidence"],
+  evSec:["Active Directory tier mapping","Tier 0, Tier 1 and Tier 2 administrative-role evidence","PAM / PIM records where implemented","SailPoint privileged-entitlement records","CyberArk access and safe-membership records where applicable","Application-specific System Administrator listings","Privileged-group membership reports","Temporary or emergency privileged-access approvals","Evidence of removal or expiry of temporary access","AD Uplift administrative-access review and remediation records"],
+  tod:"As part of SOX TOD, privileged and service-account inventories, account ownership, access approval, source reconciliation, review frequency, privileged recertification, high-risk service-account review and remediation evidence will be validated for each applicable application or platform."
+},
+{
+  id:"APD.C09", n:9, name:"Privileged and sensitive activity monitoring", key:true, icon:I.monitor, gap:true, cond:"In-scope applications and platforms where privileged or sensitive activities are performed and relevant activity logging is available.",
+  freq:"Not currently performed", theme:"privileged",
+  objective:"To confirm that elevated privileged accounts are not misused.",
+  roles:["Not applicable — a formal periodic privileged and sensitive activity monitoring control has not been established"],
+  exception:"Not applicable — a formal periodic privileged and sensitive activity monitoring control has not been established.",
+  applic:[], alt:[],
+  applicNote:"In-scope applications and platforms where privileged or sensitive activities are performed and relevant activity logging is available.",
+  how:[
+    "<b>No formal process currently exists</b> for the monitoring or review of privileged and sensitive activities.",
+    "Operational monitoring mechanisms do exist — <b>batch-job failure alerts, SailPoint configuration-based notifications, inactivity-task monitoring, and platform-specific exception reports</b>. These support operational monitoring and exception handling, but they do not constitute a formal review of privileged activities such as administrator actions, privileged transactions, sensitive configuration changes, or privileged group membership changes.",
+    "The <b>AD Uplift Programme</b> strengthens security, governance and visibility through CIS-aligned policies, administrative tiering, pre- and post-migration scanning, removal of redundant administrative pathways, and identification of insecure protocol dependencies. These enhance the overall privileged access control environment, but they do not operate as an ongoing review of privileged and sensitive activity.",
+    "The control objective therefore remains <b>only partially addressed</b> through existing preventative and governance controls — privileged access approvals, privileged account inventories, account ownership, privileged access recertification and related monitoring activities."
+  ],
+  points:[
+    "<b>What is missing.</b> A formal periodic review of privileged and sensitive activities has not been evidenced within the current-state operating model.",
+    "<b>What exists instead.</b> Operational alerting and exception reporting, plus the preventative privileged access controls under APD.C08.",
+    "<b>Next step.</b> Application-level impact, available monitoring, and required remediation will be assessed through the SOX gap assessment and TOD procedures."
+  ],
+  evPri:["Monitoring-configuration evidence","Detection-policy configurations","Security and audit logs","Administrator-activity reports","Privileged-activity reports","Privileged-group membership reports","Monitoring-review records","Alert investigations and investigation outcomes","Remediation evidence","Exception tracking","Management sign-off"],
+  evSec:["Evidence demonstrating restricted access to monitoring configurations","Batch-job failure alerts","SailPoint notifications","Inactivity-task monitoring","Platform-specific exception reports","SIEM or security-monitoring outputs where applicable","AD privileged-group-change records","Sensitive-configuration-change records","Investigation or incident records","Gap-assessment and remediation-plan evidence"],
+  evNote:"These artefacts represent the evidence expected where an application or platform-level monitoring control operates or is introduced.",
+  tod:"APD.C09 is a known SOX control gap because a formal periodic review of privileged and sensitive activities has not been established. Application-level impact, available monitoring, and required remediation will be assessed through the SOX gap assessment and TOD procedures."
+},
+{
+  id:"APD.C10", n:10, name:"Access authentication", key:true, icon:I.auth,
+  freq:"Ad hoc / on occurrence", theme:"privileged",
+  objective:"To confirm that password complexity and account management practices, including the handling of default user accounts, comply with the organisation's security policy.",
+  roles:["Modern Workplace / AD Team","Wipro","Relevant Service Owner, Platform Owner or Application Owner"],
+  exception:"Authentication exceptions arising from technical limitations, legacy dependencies or business requirements require an identified owner, risk management through the established governance process, documented approval and periodic exception review.",
+  applic:FULL, alt:[],
+  applicNote:"Authentication is relevant across the population; however, the authentication mechanism may be centrally managed or application-specific and is documented within the relevant application Control Narrative.",
+  how:[
+    "Authentication is supported through <b>Active Directory</b>, application-specific authentication models and <b>Single Sign-On</b> where implemented. SailPoint governs identity lifecycle management, aggregation and certification, but <b>is not the authentication mechanism for every application</b>.",
+    "Active Directory remains the primary authentication dependency for many Windows-based and AD-integrated applications and provides a centrally managed authentication framework for a significant portion of the estate.",
+    "The <b>AD uplift</b> strengthens the identity layer by introducing a secure tiered structure within the existing AD environment — it does not create a new AD environment. CIS-aligned policies are applied through structured organisational units; objects are scanned before migration, moved into the new structure, and rescanned afterwards to validate uplift status and identify exceptions.",
+    "Applications integrated with common authentication services inherit the associated password, account management and authentication controls. Applications operating outside those services remain subject to application-level governance and oversight by the relevant business or application owner.",
+    "The model supports password-based authentication, strong authentication mechanisms and, where applicable, <b>multi-factor authentication</b>. The policy framework requires additional authentication controls for remote network access, externally facing applications, and privileged or administrative accounts."
+  ],
+  points:[
+    "<b>Insecure protocols identified through the AD uplift:</b> NTLMv1; legacy or insecure SMB configurations; RC4 encryption used by service accounts.",
+    "<b>Exception handling.</b> Settings that affect legacy applications are managed through approved exceptions while remediation continues. Remediation assesses application dependencies and removes insecure protocols as impacted applications are modernised.",
+    "<b>Future state.</b> Microsoft Entra represents the strategic future-state authentication direction. Entra onboarding is application dependent and remains a phased activity."
+  ],
+  evPri:["Authentication-policy configurations","Password-policy, complexity and history settings","Password-expiry settings where applicable","Account-lockout configurations","MFA configuration evidence","Conditional Access configurations","Privileged-account MFA enforcement evidence","Remote-access and externally facing application MFA evidence","Service-account authentication settings","Authentication-exception approvals","Exception register and periodic exception-review evidence"],
+  evSec:["SSO and directory-integration configurations","Application-level authentication settings for non-SSO applications","Session-timeout configurations","Lists of users able to modify authentication configurations","Configuration-review evidence","Last-modification and review records","Remote-access configurations","Administrative-access configuration evidence","Password-reset and unlock procedures","Approved legacy-protocol exceptions","Remediation evidence for NTLMv1, legacy SMB or RC4 dependencies where applicable"],
+  evNote:"Inclusion within APD.C10 does not imply that every application uses corporate SSO, Active Directory, Entra or MFA. The evidence should reflect the authentication model actually operating for the application.",
+  tod:"As part of SOX TOD, the authentication source, password and account-lockout settings, SSO integration, MFA enforcement for applicable privileged, remote and externally facing access, configuration ownership, approved exceptions and exception review will be validated for each application or platform."
+},
+{
+  id:"APD.C11", n:11, name:"Segregation of duties — periodic detective checks", key:true, icon:I.sod, cond:"In-scope applications where defined incompatible roles, toxic combinations or sensitive-access conflicts exist, and a periodic detective review is required.",
+  freq:"Ad hoc / application-specific", theme:"sod",
+  objective:"To confirm segregation of duties violations are identified periodically.",
+  roles:["Application Owner / System Owner","Business Owner","Access approver","Relevant fulfiller or application support team"],
+  exception:"Identified conflicts require assessment, mitigation approval, access remediation or formally approved exception handling. The common process does not currently establish one enterprise-wide conflict population, review frequency or mitigation workflow.",
+  applic:[], alt:[],
+  applicNote:"In-scope applications where defined incompatible roles, toxic combinations or sensitive-access conflicts exist, and a periodic detective review is required.",
+  how:[
+    "SoD is managed through application role design, <b>RBAC, ServiceNow form logic, SailPoint / LAMS governance, approval workflow, role matrices, access reviews</b>, and business-owner review of conflicts.",
+    "ServiceNow forms capture role selection, access requirements and relevant access attributes so that approvers assess whether requested access is appropriate before fulfilment. Financial control frameworks and claims control frameworks provide access matrices for relevant applications and define permitted role combinations.",
+    "The earlier <b>toxic combination list was limited</b>, and validation logic has since been expanded and embedded in application request forms where applicable. Application and business owners provide input into role design and access logic when roles, permissions or access requirements change.",
+    "The current-state model is <b>not one single enterprise-wide detective review</b>. It is a mixed model: preventive logic within request forms, approver review before provisioning, application-owner input into role matrices, and post-provisioning review through access certification.",
+    "For legacy and manually fulfilled applications, SoD risk is higher where access is configured outside automated workflow controls — where <b>copy ID</b> is used, where <b>external CCS roles</b> are added after initial view-only provisioning, or where <b>AIS profiles, queues and licences</b> are complex. In these cases the fulfiller validates that approved access aligns to the applicable role matrix and does not introduce inappropriate access combinations before completing the request."
+  ],
+  points:[
+    "<b>What the control actually asks.</b> Whether SoD conflicts are prevented, detected or reviewed through the combination of request form logic, approval workflow, role matrices, fulfilment validation and access review activity.",
+    "<b>Higher-risk routes.</b> Copy ID use, external CCS role additions after view-only provisioning, and complex AIS profile / queue / licence structures.",
+    "<b>Not enterprise-wide.</b> Identification, review and remediation of SoD conflicts vary by application and control design."
+  ],
+  evPri:["SoD conflict reports, where produced","Toxic-combination reports, where maintained","Application-specific SoD review documentation","Defined incompatible-role or access-combination population","Reviewer sign-off","Exception reviews","Mitigation approvals","Conflict-remediation tracker","Access-removal evidence","Exception register"],
+  evSec:["Preventive ServiceNow form logic","Approver review evidence","Role-matrix checks","SailPoint certification decisions","Application-owner review of sensitive or conflicting access","Manual fulfiller validation for legacy or complex applications","Copy ID or mirror-ID validation evidence","Compensating-control evidence","Risk acceptance or exception approvals","Closure evidence for identified conflicts"],
+  evNote:"Applicability is application-specific. The Common APD process does not evidence one enterprise-wide SoD detective review.",
+  tod:"As part of SOX TOD, application-specific APD.C11 applicability will be validated, including defined SoD conflicts, conflict population, identification method, review frequency, reviewer, mitigation approval, access remediation, exceptions and retained evidence."
+},
+{
+  id:"APD.C12", n:12, name:"Segregation of duties — ruleset review", key:true, icon:I.ruleset, cond:"In-scope applications where a formal role matrix, toxic-combination definition, sensitive-access model, SoD ruleset, or conflict logic is maintained.",
+  freq:"Ad hoc / on occurrence", theme:"sod",
+  objective:"To confirm that the appropriateness of the segregation of duties ruleset is periodically confirmed by management / information owners.",
+  roles:["Application Owner / System Owner","Designated Business Owner","SailPoint / Manage Access / LAMS Team where SailPoint governance rules are affected"],
+  exception:"Changes required due to new roles, process changes, application changes or control exceptions follow the applicable approval, testing and change-management process. A formal enterprise-wide periodic review covering all SoD and sensitive-access rulesets is not currently defined.",
+  applic:[], alt:[],
+  applicNote:"In-scope applications where a formal role matrix, toxic-combination definition, sensitive-access model, SoD ruleset, or conflict logic is maintained.",
+  how:[
+    "<b>Application owners</b> are responsible for maintaining role structures, role combinations, sensitive-access definitions and toxic-combination logic for their applications, because they understand the application access model, business processes and the impact of conflicting access.",
+    "Role design, role mappings and access rules are maintained as part of the application access governance process and are updated when new roles are introduced, existing role definitions change, or business requirements require amendments to the access model.",
+    "While APD.C12 is defined as a common control area, <b>ownership, maintenance and implementation operate at the application level</b> — role matrices, sensitive-access definitions, toxic-combination rules, ServiceNow request logic and SailPoint governance configurations.",
+    "ServiceNow request forms, approval workflows and SailPoint governance configurations are updated to reflect the approved application access model. Where forms contain validation logic, role restrictions, entitlement dependencies or access attributes, those controls are maintained to align with the current approved role structure.",
+    "Changes to role logic, access rules, approval requirements or access models follow the applicable governance and change-management processes before implementation."
+  ],
+  points:[
+    "<b>No single enterprise ruleset.</b> Approved role matrices, toxic-combination definitions, application access models, ServiceNow request logic and SailPoint governance configurations are maintained and aligned at the application level.",
+    "<b>Event-driven, not calendar-driven.</b> A formal enterprise-wide periodic review and approval process covering all SoD and sensitive-access rulesets is not currently defined as a common control. The current process relies on maintenance triggered by application changes, role changes, process changes, access-governance requirements or identified control exceptions.",
+    "<b>Least privilege.</b> Role ownership remains with the application or designated business owner, who ensures role definitions, entitlements and SoD logic continue to reflect current business requirements and least-privilege principles.",
+    "<b>Controlled change.</b> Where changes are required, updates are reviewed, approved, tested and implemented before becoming available within the access-request and governance processes."
+  ],
+  evPri:["Approved role and access matrices","Role-matrix review evidence","Toxic-combination definitions","Sensitive-access definitions","SoD ruleset configurations","Application and business-owner approval evidence","ServiceNow form and workflow-rule reviews where applicable","SailPoint governance-rule reviews","Ruleset approval evidence","Governance change records","Testing and implementation records","Formal review sign-off where a periodic review operates"],
+  evSec:["Access-matrix reviews","Profile and entitlement catalogues","Generic and shared-account definitions","System and service-account definitions","AD group-to-application mappings","ServiceNow request-form logic","SailPoint role, entitlement and certification configurations","Change requests supporting ruleset or workflow updates","Exception-remediation records","Event-driven review evidence following role, process or application changes","Application-specific access-governance documentation"],
+  evNote:"APD.C12 operates as a common control area, but the underlying role matrices, toxic combinations, sensitive-access definitions and governance rules are application-specific.",
+  tod:"As part of SOX TOD, application-specific role matrices, toxic-combination definitions, sensitive-access rules, ServiceNow form logic and SailPoint governance rules will be reviewed to validate ownership, approval, review trigger or frequency, controlled changes, testing and retained evidence."
+}
+];
+
+/* ============================================================
+   LIFECYCLE STAGES
+   ============================================================ */
+const STAGES = [
+{
+  name:"Identity is created", tool:"SAP HR · SailPoint · Regional HR", icon:I.hr, ctrls:["APD.C02","APD.C03"],
+  body:[
+    "<b>SAP HR is the authoritative source</b> of permanent employee lifecycle information — joiner, mover and leaver data, including manager, job code, start date and termination information. This feeds SailPoint through a daily feed.",
+    "<b>Third-party users</b> are created directly within SailPoint by authorised third-party administrators, rather than through SAP HR.",
+    "<b>Global and overseas users</b> originate from regional HR systems and local onboarding processes, and require identity correlation before access to UK-owned applications can be managed through the common process. Luxembourg users primarily follow SAP-driven lifecycle processing; Ireland users follow separate regional processes and are not integrated with UK SailPoint in the same manner as UK employees."
+  ],
+  who:[["Permanent employees","SAP HR onboarding"],["Third-party / supplier users","Created directly in SailPoint"],["Global / overseas users","Regional HR and local onboarding"],["Service accounts","Non-personal accounts for automated processing"],["Privileged users","Elevated administrative, security or business access"]],
+  whoLabel:"User populations"
+},
+{
+  name:"Birthright access is provisioned", tool:"SailPoint → Active Directory, email", icon:I.gear, ctrls:["APD.C02","APD.C03"],
+  body:[
+    "SailPoint consumes the SAP HR lifecycle event and can <b>automatically provision baseline birthright access</b> — Active Directory and email accounts, and other standard corporate services where configured.",
+    "Notifications telling line managers that joiner setup is complete are provided through <b>operational support activity</b>, not automated SailPoint notifications.",
+    "Birthright access is assigned based on approved HR attributes and role assignment. <b>Application entitlements are not provisioned automatically</b> — they require a separate request."
+  ],
+  who:[["Birthright","Network, Active Directory, email and other standard corporate services"],["Provisioned by","SailPoint lifecycle processing where configured"],["Where not automated","Fulfilment completed by operational support teams"]],
+  whoLabel:"What lands automatically"
+},
+{
+  name:"Application access is requested", tool:"ServiceNow", icon:I.ticket, ctrls:["APD.C03","APD.C04","APD.C02"],
+  body:[
+    "Additional application access is requested <b>separately through ServiceNow</b> once birthright access has been established. The requester — the line manager or an authorised requester — selects the relevant application form, role and access attributes.",
+    "ServiceNow forms capture the <b>application, requested role, business justification</b> and relevant access attributes to support the approval decision. Where approved role matrices or SoD requirements exist, these are reflected within the request workflow and supporting access models.",
+    "Because role structures and approval requirements differ between applications, <b>requests are submitted individually for each application</b>.",
+    "Where ServiceNow is not used — for example where access is administered directly within a third-party system — the relevant business owner retains an audit trail of the request, approval and fulfilment activity."
+  ],
+  who:[["Application","Which system the access is for"],["Requested role","Selected from the application role model"],["Business justification","Why the access is needed"],["Access attributes","Application-specific fields supporting the decision"]],
+  whoLabel:"What the form captures"
+},
+{
+  name:"Access is approved", tool:"ServiceNow workflow", icon:I.approve, ctrls:["APD.C03","APD.C04","APD.C11","APD.C12"],
+  body:[
+    "Requests follow <b>workflow-driven approval routes determined by the target application</b>. Approvals are provided by line managers, application owners, claims approvers, supply chain approvers or other designated approvers depending on the application and access type.",
+    "Access is provisioned or modified <b>only following documented approval</b> from an authorised approver in accordance with the application workflow.",
+    "Individuals performing fulfilment activities <b>must not approve their own access requests</b>. Approval and fulfilment responsibilities are segregated.",
+    "SoD is assessed at this point through form logic, role restrictions and approver review against the applicable role matrix, before fulfilment."
+  ],
+  who:[["Line Manager","Employee access requests"],["Application Owner / System Owner","Application role and entitlement decisions"],["Claims Platform Team","Selected legacy claims applications"],["Supplier / Intact Supply Chain Approver","External user access, for example CCS"],["Designated reviewers","Third-party, external and uncorrelated users"]],
+  whoLabel:"Who can approve"
+},
+{
+  name:"Access is fulfilled", tool:"SailPoint connector · ServiceNow RITM · manual", icon:I.deliver, ctrls:["APD.C03","APD.C04"],
+  body:[
+    "Provisioning and deprovisioning capability <b>varies by application and connector type</b>.",
+    "Applications integrated through <b>two-way connectors</b> support direct provisioning and revocation through SailPoint.",
+    "<b>One-way or read-only integrations</b> support aggregation only, requiring fulfilment through ServiceNow requests (RITMs) and / or manual activities.",
+    "Depending on the application, those activities are performed by <b>UAM, Intact RSA, Wipro, application support teams, or systems analysts</b>. For applications such as AIS, copy ID or mirror ID may be used as an administrative aid, with each copied attribute validated against the approved request."
+  ],
+  who:[["Two-way connector","SailPoint provisions and revokes directly"],["One-way connector","Imports account or entitlement data for governance; no automated provisioning"],["Read-only integration","Retrieves data for certification and reporting only"],["Manual fulfilment","Intact RSA, UAM, systems analysts, application support teams"]],
+  whoLabel:"Fulfilment routes"
+},
+{
+  name:"The user authenticates", tool:"Active Directory · SSO · application-specific", icon:I.auth, ctrls:["APD.C10","APD.C08"],
+  body:[
+    "Authentication is supported through <b>Active Directory</b>, application-specific authentication models and <b>Single Sign-On</b> where implemented. SailPoint governs identity lifecycle, aggregation and certification, but is not the authentication mechanism for every application.",
+    "Applications integrated with common authentication services inherit the associated password, account management and authentication controls. Applications outside those services remain subject to application-level governance by the relevant business or application owner.",
+    "The framework requires additional authentication controls for <b>remote network access, externally facing applications, and privileged or administrative accounts</b>. Microsoft Entra is the strategic future-state direction, with onboarding phased and application dependent."
+  ],
+  who:[["NTLMv1","Insecure protocol identified through the AD uplift"],["Legacy / insecure SMB","Configurations identified for remediation"],["RC4 encryption","Used by service accounts; identified for remediation"],["Managed through","Approved exceptions while remediation activity continues"]],
+  whoLabel:"Known authentication exceptions"
+},
+{
+  name:"Access is reviewed", tool:"SailPoint certifications · application reviews", icon:I.cycle, ctrls:["APD.C06","APD.C07","APD.C08","APD.C11","APD.C12"],
+  body:[
+    "Access reviews are performed at least every six months under the common access governance process. <b>Standard and privileged access are reviewed bi-annually, service accounts annually, and high-risk service accounts are subject to an additional review.</b> Owner recertifications are performed three times per year.",
+    "The common SailPoint review process includes <b>manager-based reviews, system owner reviews, and uncorrelated user reviews</b> for external accounts that cannot be linked to the standard employee feed.",
+    "Alongside certification, a <b>detective residual-access review</b> runs for terminated, transferred and inactive users: daily SAP leaver lifecycle processing, monthly non-SAP leaver reviews, ad-hoc mover reviews, and 30-day disablement with 90-day deletion for inactivity.",
+    "Unauthorised entitlements identified through review are <b>removed within four weeks of notification</b>, with remediation tracked through closure."
+  ],
+  who:[["Standard access","Semi-annual"],["Privileged access","Semi-annual"],["Service accounts","Annual"],["High-risk service accounts","Additional semi-annual review"],["Owner recertification","Three times per year"],["Mover reviews","Ad hoc, on occurrence"]],
+  whoLabel:"Review cadence"
+},
+{
+  name:"Access is removed", tool:"SailPoint · ServiceNow · manual removal", icon:I.exit, ctrls:["APD.C05","APD.C06"],
+  body:[
+    "Revocations are triggered by <b>employee termination, role transfer, user access review outcomes, inactivity processing, or notifications relating to third-party or global users</b>.",
+    "Permanent employee terminations are processed through SAP HR and consumed by SailPoint to remove birthright access. Removal of Active Directory access removes birthright access and access to AD-dependent applications.",
+    "<b>AD removal alone does not demonstrate removal of all application-level entitlements.</b> Application-level access removal remains dependent on each application's connector and fulfilment model, and therefore requires additional automated or manual deprovisioning.",
+    "For applications not fully integrated with centrally managed identity governance, responsibility for revocation remains with the relevant business owner, completed through ServiceNow workflows, workflow automation, or manual fulfilment by the responsible support team."
+  ],
+  who:[["Termination","SAP HR leaver record"],["Role transfer","Mover event where access is no longer appropriate"],["UAR outcome","Reviewer revoke decision"],["Inactivity","30-day disablement, 90-day deletion"],["Third-party / global notification","Regional or supplier leaver notification"]],
+  whoLabel:"What triggers removal"
+}
+];
+
+/* ============================================================
+   JOINER / MOVER / LEAVER JOURNEYS
+   ============================================================ */
+const JOURNEYS = {
+Joiners:{
+  ctrl:"APD.C03",
+  lanes:[
+    {lane:"HR", sub:"SAP HR process owners", steps:[
+      {t:"Record the joiner", d:"Onboarding activities are recorded within SAP HR with manager, job code and start date.", tools:["SAP HR"]}
+    ]},
+    {lane:"Identity", sub:"SailPoint / Manage Access / LAMS", steps:[
+      {t:"Consume the HR feed", d:"Employee attributes are provided to SailPoint to initiate lifecycle processing.", tools:["SailPoint","Daily feed"]},
+      {t:"Create birthright access", d:"Active Directory, email and other standard corporate services are provisioned where configured.", tools:["Active Directory","Email"]},
+      {t:"Create third-party identities", d:"Third-party users are created directly in SailPoint by authorised third-party administrators, not through SAP HR.", tools:["SailPoint","Third-Party Administrators"]}
+    ]},
+    {lane:"Request", sub:"Line manager or authorised requester", steps:[
+      {t:"Raise the access request", d:"A separate ServiceNow request is raised for each application, selecting the form, role and access attributes.", tools:["ServiceNow"]},
+      {t:"State the justification", d:"Business justification and relevant access attributes are captured to support the approval decision.", tools:["ServiceNow form"]}
+    ]},
+    {lane:"Approval", sub:"Application-specific route", steps:[
+      {t:"Route by application", d:"Workflow-driven approval routes are determined by the target application.", tools:["ServiceNow workflow"]},
+      {t:"Approve", d:"Line manager, application owner, claims approver, supply chain approver or other designated approver.", tools:["Line Manager","Application Owner","Supply Chain Approver"]}
+    ]},
+    {lane:"Fulfilment", sub:"Connector or manual", steps:[
+      {t:"Two-way connector", d:"SailPoint provisions the entitlement directly into the target application.", tools:["SailPoint"]},
+      {t:"One-way or read-only", d:"Aggregation only. Fulfilment runs through a ServiceNow RITM or a manual step.", tools:["ServiceNow RITM"]},
+      {t:"Manual fulfilment", d:"Performed by Intact RSA, UAM, systems analysts, application support teams or Wipro depending on the application.", tools:["UAM","Intact RSA","Wipro"]}
+    ]},
+    {lane:"Evidence", sub:"Retained for audit", steps:[
+      {t:"Retain the trail", d:"Requests, approvals and fulfilment activities are retained within ServiceNow, SailPoint or other approved repositories.", tools:["ServiceNow","SailPoint"]},
+      {t:"Notify completion", d:"Notification that joiner setup is complete is provided through operational support activity rather than automated SailPoint notifications.", tools:["Operational support"]}
+    ]}
+  ]
+},
+Movers:{
+  ctrl:"APD.C04",
+  lanes:[
+    {lane:"HR", sub:"SAP HR process owners", steps:[
+      {t:"Record the change", d:"Manager, job code, role or organisational information changes within SAP HR.", tools:["SAP HR"]}
+    ]},
+    {lane:"Identity", sub:"SailPoint / Manage Access / LAMS", steps:[
+      {t:"Detect the mover event", d:"SailPoint identifies the update from the HR feed.", tools:["SailPoint"]},
+      {t:"Route a review to the new manager", d:"An access review is routed to assess whether existing access remains appropriate after the change in responsibilities.", tools:["SailPoint","New line manager"]}
+    ]},
+    {lane:"Request", sub:"Access change", steps:[
+      {t:"Raise the modification", d:"Application access changes resulting from the role change are processed through ServiceNow.", tools:["ServiceNow"]}
+    ]},
+    {lane:"Approval", sub:"Application-specific route", steps:[
+      {t:"Approve revised access", d:"Follows the relevant application approval and fulfilment workflow.", tools:["ServiceNow workflow"]},
+      {t:"Application owner input", d:"Application owners may participate where specialist or elevated access requires additional assessment.", tools:["Application Owner"]}
+    ]},
+    {lane:"Fulfilment", sub:"Connector or manual", steps:[
+      {t:"Assign new entitlements", d:"New entitlements are assigned based on the user's revised role.", tools:["SailPoint","ServiceNow"]},
+      {t:"Copy ID / mirror ID", d:"Used in certain manual-fulfilment scenarios, particularly for AIS where profiles, queues, licences and attributes are complex. It is an administrative aid only.", tools:["AIS","Copy ID"]},
+      {t:"Validate what was copied", d:"The fulfiller validates that copied roles, profiles, queues, licences and entitlements are appropriate, supported by the approved request and aligned to the user's role.", tools:["Fulfiller validation"]},
+      {t:"Remove what is no longer needed", d:"Previously held access that is no longer appropriate is removed or remediated.", tools:["ServiceNow","SailPoint"]}
+    ]},
+    {lane:"Evidence", sub:"Retained for audit", steps:[
+      {t:"Mover review evidence", d:"SailPoint mover-event and mover-review evidence, access-modification approvals and updated entitlement records.", tools:["SailPoint","ServiceNow"]}
+    ]}
+  ]
+},
+Leavers:{
+  ctrl:"APD.C05 · APD.C06",
+  lanes:[
+    {lane:"Trigger", sub:"Several possible sources", steps:[
+      {t:"SAP HR termination", d:"Permanent employee termination data flows into SailPoint.", tools:["SAP HR"]},
+      {t:"Third-party notification", d:"Approved third-party leaver notifications administered directly in SailPoint.", tools:["Third-Party Administrators"]},
+      {t:"Regional process", d:"Global and overseas users follow regional HR and local access removal processes.", tools:["Regional HR"]},
+      {t:"UAR outcome", d:"Access identified as no longer appropriate through a user access review.", tools:["SailPoint UAR"]},
+      {t:"Inactivity", d:"Dormant accounts identified through SailPoint task and rule configuration.", tools:["SailPoint"]}
+    ]},
+    {lane:"Identity", sub:"SailPoint / Manage Access / LAMS", steps:[
+      {t:"Process the leaver event", d:"Lifecycle processing removes birthright access such as Active Directory and email.", tools:["SailPoint","Active Directory"]},
+      {t:"30-day disablement", d:"Inactive accounts are disabled. Users are not prompted to log in beforehand, as this would undermine the objective of identifying genuinely inactive accounts.", tools:["SailPoint rule"]},
+      {t:"90-day deletion", d:"Disabled accounts are deleted in accordance with the inactivity rule configuration.", tools:["SailPoint rule"]}
+    ]},
+    {lane:"Application", sub:"Per connector and fulfilment model", steps:[
+      {t:"Connector-based removal", d:"Two-way connectors revoke application entitlements directly.", tools:["SailPoint"]},
+      {t:"ServiceNow RITM", d:"Where removal is not automated, deprovisioning is completed through a ServiceNow request.", tools:["ServiceNow RITM"]},
+      {t:"Manual removal", d:"Performed by the responsible support team, with evidence retained per the application's operating model.", tools:["Application support","UAM","Wipro"]},
+      {t:"AD removal is not enough", d:"Removal of Active Directory access removes birthright and AD-dependent access, but does not by itself evidence removal of separate local or non-SSO application accounts.", tools:["APD.C05 exception"], gap:true}
+    ]},
+    {lane:"Detective review", sub:"APD.C06 residual access", steps:[
+      {t:"Daily — SAP leavers", d:"Automated daily lifecycle activities for SAP leaver processing.", tools:["Daily"]},
+      {t:"Monthly — non-SAP leavers", d:"Non-SAP leaver populations are reviewed monthly.", tools:["Monthly"]},
+      {t:"Ad hoc — movers", d:"Mover reviews are performed following qualifying SAP HR lifecycle events.", tools:["Ad hoc"]},
+      {t:"Check for residual access", d:"Population derived from SAP HR termination and transfer records, SailPoint lifecycle data, inactivity outputs and, where applicable, application-level account inventories.", tools:["SailPoint","Application extracts"]}
+    ]},
+    {lane:"Closure", sub:"Exceptions through to closure", steps:[
+      {t:"Escalate and track", d:"Delayed, failed or incomplete removals are identified, escalated and tracked through closure.", tools:["Exception tracker"]},
+      {t:"Evidence the outcome", d:"Review outcomes, exceptions and remediation are retained in SailPoint, ServiceNow or the relevant approved repository.", tools:["SailPoint","ServiceNow"]}
+    ]}
+  ]
+}
+};
+
+/* ============================================================
+   ROLES
+   ============================================================ */
+const ROLES = [
+ {r:"HR / SAP HR Process Owners", c:["APD.C02","APD.C03","APD.C04","APD.C05","APD.C06"],
+  d:"Maintain permanent employee lifecycle data including start date, job code, manager information and termination data that feeds SailPoint.",
+  e:"SAP HR records, daily feed evidence, manager data, job code and termination feed details."},
+ {r:"Line Manager", c:["APD.C03","APD.C04","APD.C07"],
+  d:"Raises or approves application access requests for employees, and reviews access where SailPoint assigns manager-based certification.",
+  e:"ServiceNow approval record, SailPoint certification decision, email and workflow evidence."},
+ {r:"Application Owner / System Owner", c:["APD.C02","APD.C03","APD.C04","APD.C07","APD.C11","APD.C12"],
+  d:"Owns the application access model, role matrix or system-specific access guidance where applicable, and may review access during system owner reviews.",
+  e:"Role matrix, reviewer certification, access approval and review evidence."},
+ {r:"UAM / Service Desk Team", c:["APD.C03","APD.C04","APD.C05"],
+  d:"Executes provisioning, modification and deprovisioning for applications where access changes are fulfilled outside SailPoint — through ServiceNow requests, application administration, mailbox-driven requests or application support team processes.",
+  e:"ServiceNow fulfilment record, provisioning evidence, closure details."},
+ {r:"SailPoint / Manage Access / LAMS Team", c:["APD.C02","APD.C03","APD.C04","APD.C05","APD.C06","APD.C07"],
+  d:"Maintains SailPoint configuration, lifecycle events, aggregation tasks, certification campaigns, reviewer assignments, certification configuration, data integrity checks and application connector evidence.",
+  e:"SailPoint configuration screenshots, aggregation task output, certification configuration, rule evidence."},
+ {r:"Third-Party Administrators", c:["APD.C02","APD.C03","APD.C05","APD.C06"],
+  d:"Create or maintain third-party user data in SailPoint and perform monthly self-validation of third-party users.",
+  e:"SailPoint third-party user records, monthly validation evidence, reviewer evidence."},
+ {r:"Supplier / Intact Supply Chain Approver", c:["APD.C03","APD.C04","APD.C07"],
+  d:"Approves external user access — for example CCS — and supplier-related access requirements.",
+  e:"SailPoint approval record, supply chain approval evidence."},
+ {r:"Claims Platform Team", c:["APD.C03","APD.C04","APD.C05"],
+  d:"Performs selected access activities for legacy applications — AIS and CCS external role additions where applicable.",
+  e:"Mailbox evidence, ServiceNow tickets, role update evidence, confirmation emails."},
+ {r:"Wipro", c:["APD.C03","APD.C04","APD.C05","APD.C10"],
+  d:"Performs or historically performed UAM and service desk activities, manual emails, password resets and AD operations depending on the process.",
+  e:"Service desk records, email notifications, fulfilment evidence, operational artefacts."},
+ {r:"Modern Workplace / AD Team", c:["APD.C08","APD.C09","APD.C10"],
+  d:"Owns the AD uplift, AD security policy application, tiering, object migration, exception tracking and ServiceNow AD change governance.",
+  e:"Design documents, migration evidence, pre and post scan results, ServiceNow change records, exception trackers."}
+];
+
+/* ============================================================
+   SCOPE
+   ============================================================ */
+const SCOPE = [
+ {h:"Applications on the common process", p:"Out of the Elevate programme scope, the applications currently operating under, or leveraging aspects of, the common APD process are AIS, Atlas, UKRIS, CCS, SAP GL, PTX, SAP Ariba, Guidewire, Azure Data Platform, DXC Assure, FDS, Global IP, Synergy, Eclipse, Igloo, S360, RESQ and Mainframe."},
+ {h:"Systems and platforms referenced", p:"SailPoint, SAP HR, ServiceNow, Active Directory, Azure AD / Microsoft Entra, LAMS / Manage Access, and application-specific fulfilment routes."},
+ {h:"Environments", p:"The common APD process primarily governs access to production environments and the user populations with access to them. Non-production environments are outside scope unless access to those environments can directly impact production processing, support production migrations, contain production or financially relevant data, or provide privileged access pathways to production."},
+ {h:"Explicit exclusions", p:"Application-specific ITGCs outside the common access management lifecycle are addressed in the respective application control narratives. Operating system, database and infrastructure controls are outside this common APD narrative unless directly relevant to AD or access administration."},
+ {h:"Adjacent domains", p:"Change Management and Third-Party Risk Management are separate ITGC control domains. Their interaction with APD is signposted here, while the detailed control activities sit in the separate common Change Management and TPRM control narratives."},
+ {h:"Active Directory uplift", p:"The AD Uplift Programme is a security and governance initiative rather than a standalone APD control. It introduced a tiered structure within the existing AD environment rather than a new forest, applied CIS-aligned policy settings, migrated objects into secure organisational units, and performed pre- and post-scan activity. Recurring activities arising from it are reflected within APD.C08, APD.C09 and APD.C10."}
+];
+
+
+const CHAIN=[
+ ["SAP HR", "Authoritative source for permanent employee joiner, mover and leaver data", I.hr],
+ ["SailPoint", "Identity lifecycle, birthright provisioning, aggregation and recertification", I.gear],
+ ["ServiceNow", "Application access requests, approvals and workflow evidence", I.ticket],
+ ["Active Directory", "Authentication and group-based authorisation for Windows applications", I.auth],
+ ["The application", "Entitlement applied by connector, ServiceNow request, or manual fulfilment", I.deliver]
+];
+
+
+/* ---------- page configuration ---------- */
+const CHAIN_TITLE='Systems and platforms referenced';
+const APPS=ALL_APPS;
+const STORAGE_KEY='intact-apd-applicability-v2';
+const TOOLS=["Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const isTool=a=>TOOLS.indexOf(a)>-1;
+
+const ICO={gear:I.gear, check:I.approve, box:I.deliver, doc:I.policy};
+const FILTERS=[
+ {k:'all',l:'All twelve'},
+ {k:'key',l:'Key controls'},
+ {k:'govern|design',l:'Policy and role design'},
+ {k:'lifecycle',l:'Joiner, mover, leaver'},
+ {k:'assure',l:'Reviews'},
+ {k:'privileged',l:'Privileged and authentication'},
+ {k:'sod',l:'Segregation of duties'}
+];
+function BASELINE_FOR(c,a){
+  if(c.cond) return 2;
+  if(c.alt.indexOf(a)>-1) return 1;
+  if(c.applic.indexOf(a)>-1) return 0;
+  return 3;
+}
+function APPLIC_HTML(c){
+  let h='';
+  if(c.applicNote) h+='<p style="margin-bottom:14px">'+c.applicNote+'</p>';
+  if(c.applic.length) h+='<p class="sublabel">Applications and tools applicable — '+c.applic.length+'</p><div class="applist">'+c.applic.map(a=>'<span class="app'+(isTool(a)?' tool':'')+'">'+a+'</span>').join('')+'</div>';
+  if(c.alt.length) h+='<p class="sublabel" style="margin-top:18px">Standalone process applications — '+c.alt.length+'</p><div class="applist">'+c.alt.map(a=>'<span class="app alt">'+a+'</span>').join('')+'</div>';
+  return h;
+}
+
+/* ---------- joiner / mover / leaver ---------- */
+const jmlTabs=document.getElementById('jmlTabs'), lanesEl=document.getElementById('lanes');
+Object.keys(JOURNEYS).forEach((k,i)=>{
+  const b=document.createElement('button');
+  b.className='tab'+(i===0?' on':''); b.textContent=k;
+  b.addEventListener('click',()=>{jmlTabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));b.classList.add('on');renderLanes(k)});
+  jmlTabs.appendChild(b);
+});
+function renderLanes(k){
+  lanesEl.innerHTML=JOURNEYS[k].lanes.map(l=>
+    '<div class="lane"><div class="lane-h"><b>'+l.lane+'</b><small>'+l.sub+'</small></div>'+
+    '<div class="lane-steps">'+l.steps.map(s=>
+      '<div class="step"><b>'+s.t+'</b><p>'+s.d+'</p><div class="tools">'+
+      s.tools.map((t,ix)=>'<span class="tool'+(ix===0?' k':'')+'">'+t+'</span>').join('')+'</div></div>'
+    ).join('<span class="stepsep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></span>')+'</div></div>'
+  ).join('');
+}
+renderLanes('Joiners');
+
+/* ============================================================
+   HERO CHAIN
+   ============================================================ */
+document.getElementById('chain').innerHTML =
+  '<h6>'+CHAIN_TITLE+'</h6>'+
+  CHAIN.map(c=>'<div class="clink"><span class="cnode">'+svg(c[2])+'</span><span class="ctext"><b>'+c[0]+'</b><span>'+c[1]+'</span></span></div>').join('');
+
+/* ============================================================
+   LIFECYCLE SPINE
+   ============================================================ */
+const spine=document.getElementById('spine'), stagePanel=document.getElementById('stagePanel');
+let openStage=-1;
+STAGES.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='stage'; d.dataset.i=i;
+  d.innerHTML=
+    '<button class="stage-btn" aria-expanded="false">'+
+      '<span class="stage-idx"><span class="bead"></span>Stage '+(i+1)+'</span>'+
+      '<span class="stage-ico">'+svg(s.icon)+'</span>'+
+      '<span class="stage-name">'+s.name+'</span>'+
+      '<span class="stage-tool">'+s.tool+'</span>'+
+      '<span class="stage-chips">'+s.ctrls.map(c=>'<span class="cchip">'+c+'</span>').join('')+'</span>'+
+    '</button>'+
+    '<svg class="connector" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>';
+  d.querySelector('.stage-btn').addEventListener('click',()=>toggleStage(i));
+  spine.appendChild(d);
+});
+function toggleStage(i){
+  const stages=spine.querySelectorAll('.stage');
+  if(openStage===i){
+    openStage=-1; stagePanel.classList.remove('open'); stagePanel.innerHTML='';
+    stages.forEach(x=>{x.classList.remove('active');x.querySelector('.stage-btn').setAttribute('aria-expanded','false')});
+    return;
+  }
+  openStage=i;
+  stages.forEach(x=>{const on=+x.dataset.i===i;x.classList.toggle('active',on);x.querySelector('.stage-btn').setAttribute('aria-expanded',on?'true':'false')});
+  const s=STAGES[i];
+  stagePanel.innerHTML=
+    '<div class="sp-grid"><div class="sp-body"><div class="sp-h">'+s.name+'</div>'+
+      s.body.map(p=>'<p>'+p+'</p>').join('')+
+      '<div class="jump-row" style="margin-top:18px">'+s.ctrls.map(c=>'<button class="jump" data-jump="'+c+'">Open '+c+'</button>').join('')+'</div>'+
+    '</div><div class="sp-side"><h5>'+s.whoLabel+'</h5><ul>'+
+      s.who.map(w=>'<li><b style="color:#DCEFEF;font-weight:580;flex:0 0 auto;min-width:36%;max-width:44%;overflow-wrap:anywhere">'+w[0]+'</b><span>'+w[1]+'</span></li>').join('')+
+    '</ul></div></div>';
+  stagePanel.classList.add('open');
+  stagePanel.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>{
+    const idx=CONTROLS.findIndex(c=>c.id===b.dataset.jump);
+    if(idx>-1) openReader(idx);
+  }));
+}
+
+/* ============================================================
+   CONTROL GRID
+   ============================================================ */
+const cgrid=document.getElementById('cgrid'), filterbar=document.getElementById('filterbar');
+filterbar.innerHTML=FILTERS.map((f,i)=>'<button class="fchip'+(i===0?' on':'')+'" data-f="'+f.k+'">'+f.l+'</button>').join('')+'<span class="fcount" id="fcount"></span>';
+cgrid.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="ccard" data-i="'+i+'" data-theme="'+c.theme+'" data-key="'+(c.key?'key':'nonkey')+'">'+
+    '<span class="cc-glow"></span>'+
+    '<div class="cc-top"><span class="cc-id">'+c.id+'</span><span class="cc-ico">'+svg(c.icon)+'</span></div>'+
+    '<div class="cc-name">'+c.name+'</div>'+
+    '<div class="cc-obj">'+c.objective+'</div>'+
+    '<div class="cc-cov"><div class="covbar" data-ci="'+i+'"></div><div class="covlbl" data-cl="'+i+'"></div></div>'+
+    '<div class="cc-foot">'+
+      '<span class="badge '+(c.key?'key':'nonkey')+'">'+(c.key?'Key':'Non-key')+'</span>'+
+      '<span class="badge '+(c.gap?'alt':'freq')+'">'+c.freq+'</span>'+
+      '<span class="cc-more">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></span>'+
+    '</div></button>').join('');
+cgrid.querySelectorAll('.ccard').forEach(el=>{
+  el.addEventListener('click',()=>openReader(+el.dataset.i));
+  el.addEventListener('pointermove',ev=>{
+    const r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(ev.clientX-r.left)+'px');
+    el.style.setProperty('--my',(ev.clientY-r.top)+'px');
+  });
+  el.addEventListener('pointerleave',()=>{el.style.setProperty('--mx','50%');el.style.setProperty('--my','50%')});
+});
+
+/* coverage meter on each card, driven by the live applicability grid */
+const COVLBL=['common process','standalone process','criteria-based','not applicable'];
+function paintCoverage(){
+  CONTROLS.forEach((c,i)=>{
+    const bar=cgrid.querySelector('.covbar[data-ci="'+i+'"]');
+    if(!bar||typeof grid==='undefined')return;
+    const n=[0,0,0,0]; grid[i].forEach(v=>n[v]++);
+    const t=APPS.length;
+    bar.innerHTML=n.map((v,k)=>v?'<span class="seg k'+k+'" style="--w:'+(v/t*100)+'%" title="'+v+' '+COVLBL[k]+'"></span>':'').join('');
+    const parts=[];
+    n.forEach((v,k)=>{ if(v) parts.push(v+' '+COVLBL[k]); });
+    cgrid.querySelector('.covlbl[data-cl="'+i+'"]').textContent=parts.join(' · ');
+  });
+}
+const covObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('lit');covObs.unobserve(e.target)}}),{threshold:.25});
+cgrid.querySelectorAll('.ccard').forEach(el=>covObs.observe(el));
+filterbar.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click',()=>{
+  filterbar.querySelectorAll('.fchip').forEach(x=>x.classList.remove('on'));b.classList.add('on');applyFilter(b.dataset.f)}));
+function applyFilter(f){
+  let n=0;
+  cgrid.querySelectorAll('.ccard').forEach(el=>{
+    const show = f==='all'||(f==='key'&&el.dataset.key==='key')||f.split('|').indexOf(el.dataset.theme)>-1;
+    el.classList.toggle('hide',!show); if(show)n++;
+  });
+  document.getElementById('fcount').textContent=n+' of '+CONTROLS.length+' shown';
+}
+applyFilter('all');
+
+/* ============================================================
+   IN-PAGE CONTROL READER
+   ============================================================ */
+const rail=document.getElementById('rail'), rbody=document.getElementById('rbody');
+const rPrev=document.getElementById('rPrev'), rNext=document.getElementById('rNext');
+let cur=-1, revealObs=null;
+
+rail.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="railitem" data-i="'+i+'"><span class="rid">'+c.id+'</span><span class="rnm">'+c.name+'</span></button>').join('');
+rail.querySelectorAll('.railitem').forEach(el=>el.addEventListener('click',()=>openReader(+el.dataset.i,true)));
+
+function chips(list,cls){return list.map(a=>'<span class="app'+(cls||'')+'">'+a+'</span>').join('')}
+
+function openReader(i, keepScroll){
+  cur=i; const c=CONTROLS[i];
+  document.body.classList.add('reading');
+  rail.querySelectorAll('.railitem').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+
+  let h='';
+  h+='<div class="rhead"><span class="rico">'+svg(c.icon)+'</span>'+
+     '<div class="rid-big">'+c.id+
+       '<span class="badge '+(c.key?'key':'nonkey')+'">'+(c.key?'Key control':'Non-key control')+'</span>'+
+     '</div><h3>'+c.name+'</h3><div class="rprog"><i id="rprogbar"></i></div></div>';
+  h+='<div class="rsub" id="rsub">'+
+     [['sObj','Attributes'],['sCur','Current state'],['sReq','Key requirements'],['sApp','Where it applies'],['sEvi','Evidence'],['sVal','Validation']]
+       .map((t,k)=>'<button data-t="'+t[0]+'"'+(k===0?' class="on"':'')+'>'+t[1]+'</button>').join('')+
+     '</div>';
+  h+='<div class="rcontent">';
+
+  h+='<div class="attr rv" id="sObj">'+
+    '<div class="cell wide"><h6>Control objective</h6><p>'+c.objective+'</p></div>'+
+    '<div class="cell'+(c.gap?' alert':'')+'"><h6>Frequency</h6><p>'+c.freq+'</p>'+
+      (c.freqDetail?'<div style="margin-top:9px">'+c.freqDetail.map(f=>'<p style="font-size:13px;color:var(--text-2);padding:3px 0">'+f+'</p>').join('')+'</div>':'')+'</div>'+
+    '<div class="cell"><h6>Roles involved</h6><p>'+c.roles.join(' · ')+'</p></div>'+
+    '<div class="cell wide'+(c.gap?' alert':'')+'"><h6>Exception handling</h6><p>'+c.exception+'</p></div>'+
+  '</div>';
+
+  h+='<div class="blk rv" id="sCur"><h4>'+svg(ICO.gear)+'Current state</h4>'+c.how.map(p=>'<p>'+p+'</p>').join('')+'</div>';
+  h+='<div class="blk rv" id="sReq"><h4>'+svg(ICO.check)+'Key requirements</h4><ul class="plist">'+c.points.map(p=>'<li>'+p+'</li>').join('')+'</ul></div>';
+  h+='<div class="blk rv" id="sApp"><h4>'+svg(ICO.box)+'Where it applies</h4>'+APPLIC_HTML(c)+'</div>';
+  h+='<div class="blk rv" id="sEvi"><h4>'+svg(ICO.doc)+'Evidence expected</h4>'+
+      (c.evNote?'<p style="margin-bottom:14px">'+c.evNote+'</p>':'')+
+      '<div class="evid"><div class="evbox pri"><h6>Primary evidence</h6><ul>'+c.evPri.map(e=>'<li>'+e+'</li>').join('')+'</ul></div>'+
+      '<div class="evbox"><h6>Secondary evidence</h6><ul>'+c.evSec.map(e=>'<li>'+e+'</li>').join('')+'</ul></div></div></div>';
+  h+='<div class="tod rv'+(c.gap?' altnote':'')+'" id="sVal"><h6>'+(c.gap?'Current state position':'To be validated through SOX test of design')+'</h6><p>'+c.tod+'</p></div>';
+  h+='</div>';
+
+  rbody.innerHTML=h;
+  document.getElementById('rposLabel').textContent=c.id+' — '+(i+1)+' of '+CONTROLS.length;
+  rPrev.disabled=i===0; rNext.disabled=i===CONTROLS.length-1;
+
+  if(revealObs) revealObs.disconnect();
+  revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revealObs.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+  rbody.querySelectorAll('.rv').forEach((el,k)=>{el.style.transitionDelay=Math.min(k*55,260)+'ms';revealObs.observe(el)});
+
+  const active=rail.querySelector('.railitem.on');
+  if(active&&window.innerWidth<=940) setTimeout(()=>{
+    rail.scrollTo({left:Math.max(0,active.offsetLeft-rail.clientWidth/2+active.offsetWidth/2),behavior:'smooth'});
+  },120);
+  if(!keepScroll){
+    const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+    window.scrollTo({top:y,behavior:'smooth'});
+  } else {
+    const y=document.getElementById('reader').getBoundingClientRect().top+window.scrollY-60;
+    if(window.scrollY>y+300||window.scrollY<y-300) window.scrollTo({top:y,behavior:'smooth'});
+  }
+}
+document.getElementById('backAll').addEventListener('click',()=>{
+  document.body.classList.remove('reading'); cur=-1;
+  const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+  window.scrollTo({top:y,behavior:'smooth'});
+});
+rPrev.addEventListener('click',()=>openReader(cur-1,true));
+rNext.addEventListener('click',()=>openReader(cur+1,true));
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('reading'))return;
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowLeft'&&cur>0)openReader(cur-1,true);
+  if(e.key==='ArrowRight'&&cur<CONTROLS.length-1)openReader(cur+1,true);
+  if(e.key==='Escape')document.getElementById('backAll').click();
+});
+
+/* ============================================================
+   APPLICABILITY MATRIX — editable and saved
+   ============================================================ */
+const STATES=[
+ {k:0,l:'Applicable — common process'},
+ {k:1,l:'Standalone process'},
+ {k:2,l:'Applies where stated criteria are met'},
+ {k:3,l:'Not applicable'}
+];
+const baseline = CONTROLS.map(c=>APPS.map(a=>BASELINE_FOR(c,a)));
+let grid = baseline.map(r=>r.slice());
+let editing=false, q='', view='applic', kind='all';
+
+function storeGet(){
+  try{ const v=localStorage.getItem(STORAGE_KEY); return v?JSON.parse(v):null; }catch(e){ return null; }
+}
+function storeSet(v){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); return true; }catch(e){ return false; }
+}
+(function load(){
+  const saved=storeGet();
+  if(saved&&Array.isArray(saved)&&saved.length===CONTROLS.length&&saved[0].length===APPS.length) grid=saved;
+})();
+
+function dirtyCount(){
+  let n=0;
+  for(let i=0;i<grid.length;i++) for(let j=0;j<grid[i].length;j++) if(grid[i][j]!==baseline[i][j]) n++;
+  return n;
+}
+function persist(){
+  const ok=storeSet(grid);
+  try{paintCoverage()}catch(e){}
+  const n=dirtyCount(), el=document.getElementById('savestat');
+  el.classList.toggle('dirty',n>0);
+  el.querySelector('span:last-child').textContent = !ok
+    ? (n?n+' change'+(n===1?'':'s')+' — use Export to keep them':'Session only — use Export to keep changes')
+    : (n?'Saved · '+n+' change'+(n===1?'':'s')+' from the documented position':'Saved · matches the documented position');
+}
+
+const tablewrap=document.getElementById('tablewrap');
+function renderMatrix(){
+  if(view==='conn'&&typeof CONNECTORS!=='undefined'){
+    document.getElementById('legend').style.display='none';
+    document.getElementById('editbar').style.display='none';
+    const rows=CONNECTORS.filter(r=>r[0].toLowerCase().includes(q));
+    tablewrap.innerHTML='<table><thead><tr><th>Application</th><th>SailPoint integration type</th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+r[0]+'</td><td><span class="conn'+(r[1].indexOf('To be updated')===0?' tbc':'')+'">'+r[1]+'</span></td></tr>').join('')+
+      '</tbody></table>';
+    if(!rows.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">No application of that name appears in the connector table.</div>';
+    return;
+  }
+  document.getElementById('legend').style.display='flex';
+  document.getElementById('editbar').style.display='flex';
+  const idx=APPS.map((a,j)=>[a,j]).filter(p=>p[0].toLowerCase().includes(q)
+      && (kind==='all' || (kind==='tool')===isTool(p[0])));
+  tablewrap.innerHTML='<table><thead><tr><th>Application or tool</th>'+
+    CONTROLS.map(c=>'<th class="ch" data-full="'+c.id+'" title="'+esc(c.name)+(c.applicNote?' — '+esc(c.applicNote):(c.qual?' — '+esc(c.qual):''))+'">'+c.id+'</th>').join('')+
+    '</tr></thead><tbody>'+
+    idx.map(([a,j])=>'<tr class="'+(isTool(a)?'r-tool':'r-app')+'"><td><span class="kdot"></span>'+a+'</td>'+CONTROLS.map((c,i)=>{
+      const st=grid[i][j], mod=st!==baseline[i][j];
+      return '<td class="c"><span class="cellbtn'+(mod?' mod':'')+'" data-i="'+i+'" data-j="'+j+'" role="button" tabindex="-1" '+
+        'title="'+c.id+' · '+esc(a)+' — '+STATES[st].l+(mod?' (changed)':'')+'"><span class="ring"></span><span class="cellmark d-'+st+'"></span></span></td>';
+    }).join('')+'</tr>').join('')+'</tbody></table>';
+  if(!idx.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">Nothing matches that name in the current view.</div>';
+  tablewrap.querySelectorAll('.cellbtn').forEach(el=>el.addEventListener('click',()=>{
+    if(!editing) return;
+    const i=+el.dataset.i, j=+el.dataset.j;
+    grid[i][j]=(grid[i][j]+1)%4;
+    const st=grid[i][j], mod=st!==baseline[i][j];
+    el.classList.toggle('mod',mod);
+    el.querySelector('.cellmark').className='cellmark d-'+st;
+    el.title=CONTROLS[i].id+' · '+APPS[j]+' — '+STATES[st].l+(mod?' (changed)':'');
+    persist();
+  }));
+}
+function esc(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+document.getElementById('editToggle').addEventListener('click',function(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  this.classList.toggle('toggled',editing);
+  this.querySelector('span').textContent = editing?'Editing on — click a cell to change it':'Edit applicability';
+});
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const payload={file:STORAGE_KEY,savedAt:new Date().toISOString(),controls:CONTROLS.map(c=>c.id),applications:APPS,states:['Applicable','Standalone process','Criteria-based','Not applicable'],grid:grid};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=STORAGE_KEY+'.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+});
+document.getElementById('importFile').addEventListener('change',function(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const g=p.grid||p;
+      if(Array.isArray(g)&&g.length===CONTROLS.length&&g[0].length===APPS.length){ grid=g; persist(); renderMatrix(); }
+      else alert('That file does not match this matrix (expected '+CONTROLS.length+' controls by '+APPS.length+' applications).');
+    }catch(err){ alert('That file could not be read as saved applicability data.'); }
+  };
+  r.readAsText(f); e.target.value='';
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('Reset every cell back to the position stated in the control narrative?')) return;
+  grid=baseline.map(r=>r.slice()); persist(); renderMatrix();
+});
+document.getElementById('appSearch').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();renderMatrix()});
+const vA=document.getElementById('viewApplic'), vC=document.getElementById('viewConn');
+if(vA) vA.addEventListener('click',()=>{view='applic';vA.classList.add('on');if(vC)vC.classList.remove('on');renderMatrix()});
+if(vC) vC.addEventListener('click',()=>{view='conn';vC.classList.add('on');vA.classList.remove('on');renderMatrix()});
+
+document.getElementById('legend').innerHTML=STATES.map(s=>'<i><span class="key-dot d-'+s.k+'"></span>'+s.l+'</i>').join('')+
+  '<i style="margin-left:10px;padding-left:16px;border-left:1px solid var(--line)"><span class="key-dot kd-app"></span>Application</i>'+
+  '<i><span class="key-dot kd-tool"></span>Tool</i>';
+document.getElementById('kindseg').addEventListener('click',e=>{
+  const b=e.target.closest('.kbtn'); if(!b)return;
+  kind=b.dataset.k;
+  document.querySelectorAll('#kindseg .kbtn').forEach(x=>x.classList.toggle('on',x===b));
+  renderMatrix();
+});
+renderMatrix(); persist();
+
+/* ============================================================
+   ROLES / SCOPE / NAV
+   ============================================================ */
+document.getElementById('rolegrid').innerHTML=ROLES.map(r=>
+  '<div class="role"><b>'+r.r+'</b><p>'+r.d+'</p><div class="rc">'+r.c.map(x=>'<span>'+x+'</span>').join('')+'</div>'+
+  '<div class="ev"><b style="display:block">Typical evidence produced</b>'+r.e+'</div></div>').join('');
+document.getElementById('scope').innerHTML=SCOPE.map(s=>
+  '<div class="scard"><h5>'+s.h+'</h5><p>'+s.p+'</p></div>').join('');
+
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>topbar.classList.toggle('stuck',window.scrollY>10),{passive:true});
+const links=[...document.querySelectorAll('.navlinks a')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id))}})},
+  {rootMargin:'-20% 0px -70% 0px'});
+[...document.querySelectorAll('section[id]')].forEach(s=>io.observe(s));
+
+
+
+/* ============================================================
+   READER — scroll spy and reading progress
+   ============================================================ */
+const SECS=['sObj','sCur','sReq','sApp','sEvi','sVal'];
+function readerScroll(){
+  if(!document.body.classList.contains('reading'))return;
+  const bar=document.getElementById('rprogbar'), sub=document.getElementById('rsub');
+  if(!bar||!sub)return;
+  const r=rbody.getBoundingClientRect(), vh=window.innerHeight;
+  const total=r.height-vh;
+  const done=Math.min(1,Math.max(0,(-r.top)/(total>0?total:1)));
+  bar.style.width=(done*100).toFixed(1)+'%';
+  let active=SECS[0];
+  SECS.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<170)active=id});
+  sub.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===active));
+}
+window.addEventListener('scroll',readerScroll,{passive:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#rsub button'); if(!b)return;
+  const el=document.getElementById(b.dataset.t); if(!el)return;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-150,behavior:'smooth'});
+});
+
+/* ============================================================
+   MATRIX — crosshair highlight and click ripple
+   ============================================================ */
+tablewrapCrosshair();
+function tablewrapCrosshair(){
+  tablewrap.addEventListener('pointerover',e=>{
+    const cell=e.target.closest('.cellbtn'); if(!cell)return;
+    clearCross();
+    const ci=+cell.dataset.i;
+    cell.closest('tr').classList.add('xrow');
+    const th=tablewrap.querySelectorAll('thead th')[ci+1];
+    if(th) th.classList.add('xcol');
+    tablewrap.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[ci+1]; if(td) td.classList.add('xc');
+    });
+  });
+  tablewrap.addEventListener('pointerleave',clearCross);
+}
+function clearCross(){
+  tablewrap.querySelectorAll('.xrow').forEach(x=>x.classList.remove('xrow'));
+  tablewrap.querySelectorAll('.xcol').forEach(x=>x.classList.remove('xcol'));
+  tablewrap.querySelectorAll('.xc').forEach(x=>x.classList.remove('xc'));
+}
+const _origRender=renderMatrix;
+tablewrap.addEventListener('click',e=>{
+  const cell=e.target.closest('.cellbtn'); if(!cell||!editing)return;
+  cell.classList.remove('pop'); void cell.offsetWidth; cell.classList.add('pop');
+});
+
+/* ============================================================
+   HERO — count up
+   ============================================================ */
+(function(){
+  const ns=[...document.querySelectorAll('.ledger .n')];
+  if(!ns.length)return;
+  ns.forEach(el=>{
+    const target=parseInt(el.textContent,10); if(isNaN(target))return;
+    el.textContent='0'; let t0=null;
+    const step=ts=>{ if(!t0)t0=ts; const p=Math.min(1,(ts-t0)/900);
+      el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+      if(p<1)requestAnimationFrame(step); };
+    setTimeout(()=>requestAnimationFrame(step),260);
+  });
+})();
+
+paintCoverage();
+
+</script>
+</body>
+</html>
