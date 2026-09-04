@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Common Incident Management — Control Narrative | Intact Insurance UK&amp;I</title>
+<style>
+:root{
+  /* Intact palette */
+  --ink:#001A1B;
+  --deep:#052429;
+  --pacific:#00AEBD;
+  --pacific-dim:#0B7C86;
+  --pacific-glow:rgba(0,174,189,.16);
+
+  /* Intact red — change this one value to match the exact brand hex */
+  --red:#D81E28;
+  --red-deep:#A81620;
+  --red-lite:#FF6E75;
+  --red-tint:#FDECEE;
+  --red-glow:rgba(216,30,40,.14);
+
+  --paper:#EFF3F3;
+  --card:#FFFFFF;
+  --line:#D6DEDE;
+  --line-soft:#E6ECEC;
+  --text:#0B2226;
+  --text-2:#4A6165;
+  --text-3:#7C9296;
+  --amber:#B87A12;
+  --amber-bg:#FBF1DE;
+  --slate:#5B7A80;
+  --r-lg:22px; --r-md:14px;
+  --shadow-1:0 1px 2px rgba(0,26,27,.05), 0 4px 14px rgba(0,26,27,.05);
+  --shadow-2:0 12px 34px rgba(0,26,27,.14), 0 2px 6px rgba(0,26,27,.07);
+  --ease:cubic-bezier(.22,.85,.28,1);
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 34px}
+@media(max-width:760px){.wrap{padding:0 20px}}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(239,243,243,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
+.topbar.stuck{border-bottom-color:var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:26px;height:56px}
+.brandmark{display:flex;align-items:center;gap:11px;font-weight:640;letter-spacing:-.015em;white-space:nowrap}
+.brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px var(--red-glow)}
+.brandmark small{display:block;font-weight:450;font-size:11.5px;color:var(--text-3);letter-spacing:0}
+.navlinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{text-decoration:none;font-size:13.5px;color:var(--text-2);font-weight:520;padding:7px 12px;border-radius:999px;white-space:nowrap;transition:.2s var(--ease)}
+.navlinks a:hover{color:var(--text);background:var(--red-tint)}
+.navlinks a.on{color:var(--ink);background:#fff;box-shadow:var(--shadow-1)}
+.navlinks a.on::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:middle}
+@media(max-width:900px){.navlinks{display:none}}
+
+/* ---------- dark canvas ---------- */
+.dark{background:var(--ink);color:#DFEAEA;position:relative;overflow:hidden;border-top:3px solid var(--red)}
+.dark::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(760px 380px at 8% -12%, rgba(0,174,189,.20), transparent 62%),radial-gradient(620px 420px at 96% 6%, rgba(216,30,40,.12), transparent 58%)}
+.dark .wrap{position:relative}
+.hero{padding:80px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:560;color:var(--red-lite);border:1px solid rgba(255,110,117,.36);border-radius:999px;padding:5px 13px 5px 9px;background:rgba(216,30,40,.10)}
+.eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:var(--red-lite)}
+h1{font-size:clamp(34px,4.9vw,58px);line-height:1.04;letter-spacing:-.036em;font-weight:660;color:#fff;margin:26px 0 0;max-width:16ch}
+h1 .thin{display:block;font-weight:280;color:#8FB4B8;letter-spacing:-.02em;font-size:.46em;margin-top:14px;line-height:1.15}
+.hero-lede{margin-top:24px;max-width:60ch;color:#A9C4C7;font-size:17px;line-height:1.62;font-weight:380}
+.hero-lede b{color:#DDECEC;font-weight:560}
+.herogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media(max-width:980px){.herogrid{grid-template-columns:1fr;gap:38px}}
+.chain{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:24px 24px 20px}
+.chain h6{font-size:11.5px;font-weight:640;color:var(--pacific);margin-bottom:16px}
+.clink{display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:16px}
+.clink:last-child{padding-bottom:0}
+.clink::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:1.5px;background:linear-gradient(180deg,rgba(0,174,189,.55),rgba(0,174,189,.12))}
+.clink:last-child::before{display:none}
+.cnode{width:31px;height:31px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;background:rgba(0,174,189,.16);border:1px solid rgba(0,174,189,.4);color:var(--pacific);transition:.3s var(--ease)}
+.clink:hover .cnode{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.12)}
+.cnode svg{width:16px;height:16px}
+.ctext b{display:block;font-size:13.5px;font-weight:600;color:#E2F0F0;letter-spacing:-.012em;line-height:1.3}
+.ctext span{display:block;font-size:12px;color:#89AEB2;line-height:1.45;margin-top:3px}
+
+.ledger{margin-top:50px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--red)}
+.ledger div{padding:22px 22px 22px 0;border-right:1px solid rgba(255,255,255,.10)}
+.ledger div:last-child{border-right:0}
+.ledger .n{font-size:40px;font-weight:600;letter-spacing:-.04em;color:#fff;line-height:1}
+.ledger .l{margin-top:9px;font-size:13px;color:#8FB4B8;line-height:1.4;max-width:22ch}
+@media(max-width:760px){.ledger{grid-template-columns:1fr 1fr}.ledger div:nth-child(2){border-right:0}}
+
+/* ---------- section chrome ---------- */
+section{scroll-margin-top:64px}
+.band{padding:76px 0}
+.band-tight{padding:54px 0 76px}
+.shead{max-width:64ch;margin-bottom:36px}
+.shead .kick{font-size:12.5px;font-weight:640;color:var(--red-deep);margin-bottom:12px;display:flex;align-items:center;gap:9px;letter-spacing:.01em}
+.shead .kick::before{content:"";width:24px;height:2px;background:var(--red);border-radius:2px}
+.dark .shead .kick{color:var(--red-lite)}
+.dark .shead .kick::before{background:var(--red-lite)}
+h2{font-size:clamp(27px,3.5vw,40px);letter-spacing:-.032em;font-weight:640;line-height:1.1}
+.dark h2{color:#fff}
+.shead p{margin-top:15px;color:var(--text-2);font-size:16.5px;line-height:1.62}
+.dark .shead p{color:#9DBABE}
+
+/* ---------- lifecycle spine ---------- */
+.spine-scroll{overflow-x:auto;padding:6px 0 22px;-webkit-overflow-scrolling:touch}
+.spine{display:flex;gap:0;min-width:1080px;position:relative}
+.stage{flex:1 1 0;position:relative;padding:0 7px}
+.stage-btn{width:100%;text-align:left;position:relative;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:17px 15px 15px;transition:transform .38s var(--ease),background .28s,border-color .28s,box-shadow .38s var(--ease);transform-origin:center bottom;height:100%;display:flex;flex-direction:column;gap:10px}
+.stage-btn:hover{transform:translateY(-7px) scale(1.045);z-index:5;background:rgba(216,30,40,.16);border-color:rgba(255,110,117,.55);box-shadow:0 20px 44px rgba(0,0,0,.45)}
+.stage.active .stage-btn{background:var(--red);border-color:var(--red);box-shadow:0 18px 40px rgba(216,30,40,.34)}
+.stage.active .stage-btn *{color:#fff!important}
+.stage.active .cchip{background:rgba(255,255,255,.22)}
+.stage-idx{font-size:11px;font-weight:640;color:var(--pacific);display:flex;align-items:center;gap:7px}
+.stage-idx .bead{width:5px;height:5px;border-radius:50%;background:currentColor}
+.stage-ico{width:26px;height:26px;color:#fff;opacity:.92}
+.stage-name{font-size:14.5px;font-weight:620;color:#fff;letter-spacing:-.016em;line-height:1.25}
+.stage-tool{font-size:11.5px;color:#8CB0B4;line-height:1.4;font-weight:450}
+.stage-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}
+.cchip{font-size:10.5px;font-weight:640;padding:2.5px 6px;border-radius:5px;background:rgba(255,255,255,.11);color:#B7D6D9}
+.connector{position:absolute;top:50%;right:-6px;width:12px;height:12px;z-index:2;color:rgba(255,255,255,.26)}
+.stage:last-child .connector{display:none}
+.stage-panel{margin-top:6px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-left:3px solid var(--red);border-radius:20px;padding:0 30px;max-height:0;overflow:hidden;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .35s;opacity:0}
+.stage-panel.open{max-height:1400px;padding:30px;opacity:1}
+.sp-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:34px}
+@media(max-width:860px){.sp-grid{grid-template-columns:1fr;gap:24px}}
+.sp-h{font-size:20px;font-weight:620;color:#fff;letter-spacing:-.022em;margin-bottom:12px}
+.sp-body p{color:#A9C6C9;font-size:15px;line-height:1.68;margin-bottom:12px}
+.sp-body p:last-child{margin-bottom:0}
+.sp-body b{color:#E3F1F1;font-weight:580}
+.sp-side h5{font-size:12px;font-weight:640;color:var(--red-lite);margin-bottom:10px}
+.sp-side li{font-size:13.5px;color:#B3CDD0;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:10px;line-height:1.45}
+.sp-side li:last-child{border-bottom:0}
+.sp-side li span{color:#7FA5A9;flex:1 1 auto;min-width:0;font-size:12px;padding-top:1px;overflow-wrap:anywhere}
+.jump-row{display:flex;flex-wrap:wrap;gap:7px}
+.jump{font-size:12px;font-weight:640;padding:6px 12px;border-radius:8px;background:rgba(216,30,40,.18);color:#FF9095;border:1px solid rgba(255,110,117,.34);transition:.2s var(--ease)}
+.jump:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+.hint{font-size:12.5px;color:#7BA0A4;margin-top:16px;display:flex;align-items:flex-start;gap:9px;max-width:96ch}
+.hint svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;color:var(--red-lite)}
+
+/* ---------- tabs / lanes ---------- */
+.tabs{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:4px;gap:3px;margin-bottom:26px}
+.tab{font-size:14px;font-weight:580;padding:9px 20px;border-radius:9px;color:var(--text-2);transition:.25s var(--ease)}
+.tab.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.lanes{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.lane{display:grid;grid-template-columns:190px 1fr;border-bottom:1px solid var(--line-soft)}
+.lane:last-child{border-bottom:0}
+.lane-h{padding:20px;background:#F7FAFA;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;gap:5px;justify-content:center;position:relative}
+.lane-h::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:var(--red);border-radius:0 3px 3px 0;opacity:.55}
+.lane-h b{font-size:13.5px;font-weight:640;letter-spacing:-.01em}
+.lane-h small{font-size:11.5px;color:var(--text-3);line-height:1.35}
+.lane-steps{display:flex;gap:10px;padding:16px;overflow-x:auto;align-items:stretch}
+.step{flex:0 0 auto;max-width:290px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;transition:transform .32s var(--ease),box-shadow .32s var(--ease),border-color .25s}
+.step:hover{transform:translateY(-5px) scale(1.02);box-shadow:var(--shadow-2);border-color:var(--red);z-index:3;position:relative}
+.step b{display:block;font-size:13.5px;font-weight:620;letter-spacing:-.012em;margin-bottom:5px}
+.step p{font-size:12.5px;color:var(--text-2);line-height:1.5}
+.step .tools{margin-top:9px;display:flex;flex-wrap:wrap;gap:4px}
+.tool{font-size:10.5px;font-weight:640;padding:2.5px 7px;border-radius:5px;background:#EAF1F1;color:var(--slate)}
+.tool.k{background:var(--red-tint);color:var(--red-deep)}
+.stepsep{flex:0 0 auto;align-self:center;color:#C3CFD0;display:flex;align-items:center}
+.stepsep svg{width:14px;height:14px}
+
+/* ---------- control grid ---------- */
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:26px}
+.fchip{font-size:13px;font-weight:560;padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease)}
+.fchip:hover{border-color:var(--red);color:var(--red-deep)}
+.fchip.on{background:var(--red);border-color:var(--red);color:#fff}
+.fcount{margin-left:auto;font-size:13px;color:var(--text-3)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1000px){.cgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.cgrid{grid-template-columns:1fr}}
+.ccard{position:relative;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 22px 18px;overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s var(--ease),border-color .3s;display:flex;flex-direction:column;min-height:212px}
+.ccard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.ccard:hover{transform:translateY(-6px) scale(1.017);box-shadow:var(--shadow-2);border-color:#C6B2B4;z-index:2}
+.ccard:hover::after{transform:scaleY(1)}
+.ccard.hide{display:none}
+.cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cc-id{font-size:12.5px;font-weight:680;color:var(--red-deep);letter-spacing:.02em}
+.cc-ico{width:30px;height:30px;color:var(--ink);opacity:.8;flex:0 0 auto;transition:.35s var(--ease)}
+.ccard:hover .cc-ico{color:var(--red);opacity:1;transform:scale(1.08)}
+.cc-name{font-size:18.5px;font-weight:620;letter-spacing:-.026em;line-height:1.22}
+.cc-obj{margin-top:9px;font-size:13.5px;color:var(--text-2);line-height:1.52;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cc-foot{margin-top:auto;padding-top:15px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{font-size:10.5px;font-weight:660;padding:3.5px 9px;border-radius:6px;letter-spacing:.015em}
+.badge.key{background:var(--red);color:#fff}
+.badge.nonkey{background:#E7EDED;color:var(--slate)}
+.badge.freq{background:#EEF4F4;color:var(--text-2);font-weight:560}
+.badge.alt{background:var(--amber-bg);color:var(--amber)}
+.cc-more{margin-left:auto;font-size:12px;font-weight:640;color:var(--text-3);display:flex;align-items:center;gap:5px;transition:.25s var(--ease)}
+.ccard:hover .cc-more{color:var(--red)}
+.cc-more svg{width:13px;height:13px;transition:transform .3s var(--ease)}
+.ccard:hover .cc-more svg{transform:translateX(4px)}
+body.reading .cgrid, body.reading .filterbar{display:none}
+
+/* ---------- in-page control reader ---------- */
+.reader-sec{display:none;animation:rise .5s var(--ease)}
+body.reading .reader-sec{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.reader-top{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.backbtn{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:620;padding:9px 16px;border-radius:999px;background:var(--ink);color:#fff;transition:.24s var(--ease)}
+.backbtn:hover{background:var(--red);transform:translateX(-3px)}
+.backbtn svg{width:14px;height:14px}
+.rnav{margin-left:auto;display:flex;align-items:center;gap:8px}
+.rnav button{font-size:13px;font-weight:600;padding:8px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--text-2);display:flex;align-items:center;gap:7px;transition:.22s var(--ease)}
+.rnav button:hover:not(:disabled){background:var(--red);border-color:var(--red);color:#fff}
+.rnav button:disabled{opacity:.34;cursor:default}
+.rnav svg{width:13px;height:13px}
+.rpos{font-size:12.5px;color:var(--text-3);font-weight:600;padding:0 6px}
+.reader{display:grid;grid-template-columns:250px 1fr;gap:26px;align-items:start}
+.reader>*{min-width:0}
+@media(max-width:940px){.reader{grid-template-columns:1fr;gap:18px}}
+.rail{position:sticky;top:74px;display:flex;flex-direction:column;gap:3px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:4px}
+@media(max-width:940px){.rail{position:static;flex-direction:row;overflow-x:auto;max-height:none;padding-bottom:6px}}
+.railitem{text-align:left;display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:11px;border:1px solid transparent;transition:.24s var(--ease);flex:0 0 auto}
+.railitem:hover{background:#fff;border-color:var(--line);transform:translateX(3px)}
+@media(max-width:940px){.railitem{min-width:190px}.railitem:hover{transform:translateY(-3px)}}
+.railitem .rid{font-size:11px;font-weight:700;color:var(--text-3);flex:0 0 auto;padding-top:2px;letter-spacing:.02em}
+.railitem .rnm{font-size:12.8px;font-weight:560;color:var(--text-2);line-height:1.35}
+.railitem.on{background:#fff;border-color:var(--line);box-shadow:var(--shadow-1);position:relative}
+.railitem.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--red);border-radius:0 3px 3px 0}
+.railitem.on .rid{color:var(--red)}
+.railitem.on .rnm{color:var(--ink);font-weight:640}
+
+.rbody{background:#fff;border:1px solid var(--line);border-radius:26px}
+.rhead{padding:34px 38px 28px;border-bottom:1px solid var(--line-soft);background:linear-gradient(160deg,#FEFAFA,#fff 55%);position:relative}
+.rhead::before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:linear-gradient(90deg,var(--red),var(--pacific))}
+@media(max-width:680px){.rhead{padding:26px 22px 22px}}
+.rhead .rid-big{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rhead h3{font-size:clamp(24px,3.6vw,36px);font-weight:660;letter-spacing:-.032em;line-height:1.12;max-width:22ch}
+.rhead .rico{position:absolute;right:34px;top:32px;width:56px;height:56px;color:var(--red);opacity:.16}
+@media(max-width:680px){.rhead .rico{display:none}}
+.rcontent{padding:30px 38px 40px}
+@media(max-width:680px){.rcontent{padding:24px 22px 34px}}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+.attr{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:680px){.attr{grid-template-columns:1fr}}
+.attr .cell{background:#F6FAFA;border:1px solid var(--line-soft);border-radius:var(--r-md);padding:16px 18px;transition:.3s var(--ease)}
+.attr .cell:hover{transform:translateY(-3px);box-shadow:var(--shadow-1);border-color:var(--red);background:#fff}
+.attr .cell.wide{grid-column:1/-1}
+.attr h6{font-size:11.5px;font-weight:660;color:var(--red-deep);margin-bottom:7px;letter-spacing:.015em}
+.attr p{font-size:14px;line-height:1.58;color:var(--text)}
+.attr .cell.alert{background:var(--amber-bg);border-color:#EEDBB6}
+.attr .cell.alert h6{color:var(--amber)}
+
+.blk{margin-bottom:28px}
+.blk>h4{font-size:15px;font-weight:660;letter-spacing:-.018em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.blk>h4 svg{width:17px;height:17px;color:var(--red)}
+.blk>h4::after{content:"";flex:1 1 auto;height:1px;background:var(--line-soft)}
+.blk p{font-size:14.8px;line-height:1.7;color:var(--text-2);margin-bottom:12px}
+.blk p:last-child{margin-bottom:0}
+.blk p b{color:var(--text);font-weight:620}
+.plist li{font-size:14.2px;line-height:1.62;color:var(--text-2);padding:11px 0 11px 24px;position:relative;border-bottom:1px solid var(--line-soft);transition:.26s var(--ease)}
+.plist li:last-child{border-bottom:0}
+.plist li::before{content:"";position:absolute;left:5px;top:19px;width:6px;height:6px;border-radius:50%;background:var(--red);transition:.26s var(--ease)}
+.plist li:hover{color:var(--text);padding-left:30px}
+.plist li:hover::before{transform:scale(1.5)}
+.plist li b{color:var(--text);font-weight:620}
+.applist{display:flex;flex-wrap:wrap;gap:6px}
+.app{font-size:12px;font-weight:560;padding:5px 10px;border-radius:7px;background:#EDF3F3;color:var(--text-2);border:1px solid transparent;transition:.2s var(--ease)}
+.app:hover{background:var(--red-tint);color:var(--red-deep);border-color:rgba(216,30,40,.25)}
+.app.alt{background:var(--amber-bg);color:var(--amber);border-color:#EEDBB6}
+.sublabel{font-size:12.5px;color:var(--text-3);margin:0 0 9px;font-weight:600}
+.evid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.evid{grid-template-columns:1fr}}
+.evbox{border:1px solid var(--line);border-radius:var(--r-md);padding:17px 18px;background:#fff;transition:.3s var(--ease)}
+.evbox:hover{box-shadow:var(--shadow-2);transform:translateY(-3px)}
+.evbox.pri{background:#FFF8F8;border-color:#F0D3D5}
+.evbox h6{font-size:11.5px;font-weight:660;margin-bottom:11px;color:var(--text-2)}
+.evbox.pri h6{color:var(--red-deep)}
+.evbox li{font-size:12.9px;line-height:1.5;color:var(--text-2);padding:5px 0 5px 15px;position:relative}
+.evbox li::before{content:"";position:absolute;left:0;top:12px;width:6px;height:1.5px;background:var(--text-3)}
+.evbox.pri li::before{background:var(--red)}
+.tod{background:#F4F8F8;border-left:3px solid var(--pacific);border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 20px}
+.tod h6{font-size:11.5px;font-weight:660;color:var(--pacific-dim);margin-bottom:7px}
+.tod p{font-size:13.6px;line-height:1.62;color:var(--text-2)}
+.tod.altnote{background:var(--amber-bg);border-left-color:var(--amber)}
+.tod.altnote h6{color:var(--amber)}
+
+/* ---------- matrix ---------- */
+.mtools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 14px;min-width:240px}
+.search svg{width:15px;height:15px;color:var(--text-3);flex:0 0 auto}
+.search input{border:0;outline:0;font:inherit;font-size:14px;width:100%;background:none;color:var(--text)}
+.editbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:16px}
+.ebtn{font-size:12.5px;font-weight:620;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--text-2);transition:.22s var(--ease);display:inline-flex;align-items:center;gap:7px}
+.ebtn:hover{border-color:var(--red);color:var(--red-deep)}
+.ebtn svg{width:13px;height:13px}
+.ebtn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.ebtn.primary:hover{background:var(--red-deep);border-color:var(--red-deep);color:#fff}
+.ebtn.toggled{background:var(--red);border-color:var(--red);color:#fff}
+.savestat{margin-left:auto;font-size:12.5px;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.savestat .sdot{width:7px;height:7px;border-radius:50%;background:#BFCBCB}
+.savestat.dirty .sdot{background:var(--red);box-shadow:0 0 0 3px var(--red-glow)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px;font-size:12.5px;color:var(--text-2)}
+.legend i{display:inline-flex;align-items:center;gap:7px;font-style:normal}
+.key-dot{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+.d-0{background:var(--pacific)}
+.d-1{background:#E5B860}
+.d-2{background:transparent;border:2px solid var(--pacific-dim)}
+.d-3{background:#E1E8E8}
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);overflow:auto;max-height:660px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+thead th{position:sticky;top:0;z-index:3;background:#F7FAFA;text-align:left;padding:12px 10px;font-weight:660;font-size:11.5px;color:var(--text-2);border-bottom:2px solid var(--line);white-space:nowrap}
+thead th:first-child{left:0;z-index:4;min-width:172px}
+thead th.ch{text-align:center;cursor:default}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FFF6F6}
+tbody td:first-child{position:sticky;left:0;background:#fff;font-weight:620;font-size:13px;z-index:2;border-right:1px solid var(--line-soft)}
+tbody tr:hover td:first-child{background:#FFF6F6}
+td.c{text-align:center;padding:6px 4px}
+.cellbtn{width:30px;height:26px;border-radius:7px;display:inline-grid;place-items:center;position:relative;transition:.2s var(--ease);cursor:default}
+body.editing .cellbtn{cursor:pointer}
+body.editing .cellbtn:hover{background:var(--red-tint);transform:scale(1.12)}
+.cellmark{width:14px;height:14px;border-radius:4px;display:block}
+.cellbtn.mod::after{content:"";position:absolute;top:2px;right:2px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+.conn{font-size:12px;color:var(--text-2)}
+.conn.tbc{color:var(--amber);font-weight:560}
+
+/* ---------- roles / scope ---------- */
+.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.rolegrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.rolegrid{grid-template-columns:1fr}}
+.role{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:19px 20px;transition:transform .34s var(--ease),box-shadow .34s var(--ease),border-color .28s;position:relative;overflow:hidden}
+.role::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .38s var(--ease)}
+.role:hover{transform:translateY(-5px) scale(1.014);box-shadow:var(--shadow-2);border-color:#DEC7C9}
+.role:hover::before{transform:scaleY(1)}
+.role b{font-size:15px;font-weight:630;letter-spacing:-.018em;display:block;margin-bottom:9px}
+.role p{font-size:13px;line-height:1.55;color:var(--text-2)}
+.role .ev{margin-top:12px;padding-top:11px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--text-3);line-height:1.5}
+.role .ev b{font-size:11.5px;color:var(--red-deep);font-weight:660;margin-bottom:4px}
+.role .rc{display:flex;flex-wrap:wrap;gap:4px;margin-top:11px}
+.rc span{font-size:10.5px;font-weight:660;padding:2.5px 6px;border-radius:5px;background:var(--red-tint);color:var(--red-deep)}
+.scope{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:840px){.scope{grid-template-columns:1fr}}
+.scard{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:20px 22px;transition:.3s var(--ease)}
+.scard:hover{box-shadow:var(--shadow-2);transform:translateY(-4px);border-color:#DEC7C9}
+.scard h5{font-size:12px;font-weight:660;color:var(--red-deep);margin-bottom:10px}
+.scard p{font-size:13.5px;line-height:1.62;color:var(--text-2)}
+
+footer{padding:42px 0 58px;border-top:3px solid var(--red);background:var(--paper)}
+footer p{font-size:12.5px;color:var(--text-3);line-height:1.68;max-width:96ch}
+footer p+p{margin-top:11px}
+footer b{color:var(--text-2);font-weight:640}
+
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* ===== interaction layer ===== */
+.cgrid{perspective:1400px}
+.cgrid:has(.ccard:hover) .ccard:not(:hover){opacity:.72;filter:saturate(.78)}
+.ccard{--mx:50%;--my:50%;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .3s,opacity .35s,filter .35s;transform-style:preserve-3d}
+.ccard::after{display:none}
+.ccard::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:radial-gradient(360px circle at var(--mx) var(--my), rgba(216,30,40,.11), transparent 62%);
+  opacity:0;transition:opacity .45s var(--ease)}
+.ccard:hover::before{opacity:1}
+.cc-glow{position:absolute;inset:0;border-radius:inherit;padding:1.6px;pointer-events:none;z-index:0;
+  background:radial-gradient(240px circle at var(--mx) var(--my), var(--red), rgba(216,30,40,0) 64%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .4s var(--ease)}
+.ccard:hover .cc-glow{opacity:1}
+.cc-top,.cc-name,.cc-obj,.cc-foot,.cc-cov{position:relative;z-index:1}
+.ccard:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 60px rgba(0,26,27,.17),0 3px 8px rgba(0,26,27,.07);border-color:#E2C9CC}
+.cc-cov{margin-top:16px}
+.covbar{display:flex;height:5px;border-radius:99px;overflow:hidden;background:#EDF2F2;gap:1.5px}
+.covbar .seg{height:100%;width:0;transition:width .8s var(--ease)}
+.ccard.lit .covbar .seg{width:var(--w)}
+.covbar .seg.k0{background:var(--pacific)}
+.covbar .seg.k1{background:#E5B860}
+.covbar .seg.k2{background:#9AD0D6}
+.covbar .seg.k3{background:#DDE5E5}
+.covlbl{margin-top:8px;font-size:11px;color:var(--text-3);font-weight:560;letter-spacing:.005em;transition:color .3s}
+.ccard:hover .covlbl{color:var(--red-deep)}
+.cc-id{transition:letter-spacing .35s var(--ease)}
+.ccard:hover .cc-id{letter-spacing:.09em}
+
+/* ===== reader sub-navigation and progress ===== */
+.rprog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.rprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--pacific));transition:width .12s linear}
+.rsub{position:sticky;top:56px;z-index:20;display:flex;gap:4px;align-items:center;overflow-x:auto;
+  padding:11px 38px;background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line-soft);scrollbar-width:none}
+.rsub::-webkit-scrollbar{display:none}
+@media(max-width:680px){.rsub{padding:10px 20px}}
+.rsub button{font-size:12.5px;font-weight:580;color:var(--text-3);padding:6px 12px;border-radius:999px;white-space:nowrap;transition:.24s var(--ease)}
+.rsub button:hover{color:var(--red-deep);background:var(--red-tint)}
+.rsub button.on{color:#fff;background:var(--ink)}
+.rbody{position:relative;overflow:visible}
+.rhead{border-radius:25px 25px 0 0;overflow:hidden}
+.rcontent{border-radius:0 0 25px 25px;overflow:hidden}
+.rhead{position:relative}
+
+/* ===== reveal ===== */
+.rv{opacity:0;transform:translateY(20px);filter:blur(6px);transition:opacity .7s var(--ease),transform .7s var(--ease),filter .7s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* ===== matrix crosshair and ripple ===== */
+tbody tr.xrow td{background:#FFF4F5}
+tbody tr.xrow td:first-child{background:#FFF4F5;color:var(--red-deep)}
+td.xc{background:#FFF4F5!important}
+thead th.xcol{color:#fff;background:var(--red)}
+tbody td:first-child.xname{color:var(--red-deep)}
+.cellbtn{transition:transform .22s var(--ease),background .22s}
+.cellbtn.pop{animation:cellpop .5s var(--ease)}
+@keyframes cellpop{0%{transform:scale(1)}35%{transform:scale(1.55)}100%{transform:scale(1)}}
+.cellbtn .ring{position:absolute;inset:0;border-radius:8px;border:2px solid var(--red);opacity:0;pointer-events:none}
+.cellbtn.pop .ring{animation:ringout .55s var(--ease)}
+@keyframes ringout{0%{opacity:.85;transform:scale(.6)}100%{opacity:0;transform:scale(2)}}
+
+/* ===== rail with full control ids ===== */
+.railitem{flex-direction:column;gap:4px}
+.railitem .rid{font-size:10.5px;letter-spacing:.07em}
+@media(max-width:940px){.railitem{min-width:210px}}
+
+/* ===== stage chips with full ids ===== */
+.cchip{font-size:10px;letter-spacing:.02em}
+.rc span{letter-spacing:.02em}
+
+/* ===== application / tool categories ===== */
+.kdot{display:inline-block;width:8px;height:8px;border-radius:2.5px;margin-right:9px;vertical-align:middle}
+tr.r-app .kdot{background:var(--pacific)}
+tr.r-tool .kdot{background:#2B4A72}
+tr.r-tool td:first-child{color:#24405F}
+.kd-app{background:var(--pacific)}
+.kd-tool{background:#2B4A72}
+.kindseg{display:inline-flex;background:#E3E9E9;border-radius:12px;padding:3px;gap:3px}
+.kbtn{font-size:12.5px;font-weight:580;padding:8px 15px;border-radius:9px;color:var(--text-2);transition:.22s var(--ease);white-space:nowrap}
+.kbtn:hover{color:var(--red-deep)}
+.kbtn.on{background:#fff;color:var(--red-deep);box-shadow:var(--shadow-1)}
+.app.tool{background:#E9EFF6;color:#24405F}
+.app.tool:hover{background:#DCE6F2;color:#1A3350;border-color:rgba(43,74,114,.28)}
+</style>
+<style>
+.classgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1080px){.classgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.classgrid{grid-template-columns:1fr}}
+.klass{text-align:left;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 20px 17px;position:relative;overflow:hidden;transition:transform .38s var(--ease),box-shadow .38s var(--ease),border-color .3s;display:flex;flex-direction:column;min-height:200px}
+.klass::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.klass:hover{transform:translateY(-6px) scale(1.02);box-shadow:var(--shadow-2);border-color:#DEC7C9;z-index:2}
+.klass:hover::after,.klass.on::after{transform:scaleY(1)}
+.klass.on{border-color:var(--red);box-shadow:var(--shadow-2)}
+.klass .kico{width:28px;height:28px;color:var(--ink);opacity:.8;margin-bottom:13px;transition:.35s var(--ease)}
+.klass:hover .kico,.klass.on .kico{color:var(--red);opacity:1;transform:scale(1.08)}
+.klass b{font-size:16.5px;font-weight:640;letter-spacing:-.022em;display:block;margin-bottom:7px}
+.klass p{font-size:12.8px;line-height:1.52;color:var(--text-2)}
+.klass .kfoot{margin-top:auto;padding-top:14px;font-size:11px;font-weight:660;color:var(--red-deep)}
+.kpanel{margin-top:14px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);border-radius:var(--r-lg);max-height:0;overflow:hidden;opacity:0;padding:0 30px;transition:max-height .5s var(--ease),padding .5s var(--ease),opacity .35s}
+.kpanel.open{max-height:1200px;padding:28px 30px;opacity:1}
+.krow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.krow{grid-template-columns:1fr}}
+.kcell{background:#F6FAFA;border:1px solid var(--line-soft);border-radius:var(--r-md);padding:16px 18px;transition:.3s var(--ease)}
+.kcell:hover{transform:translateY(-3px);background:#fff;border-color:var(--red);box-shadow:var(--shadow-1)}
+.kcell h6{font-size:11.5px;font-weight:660;color:var(--red-deep);margin-bottom:8px}
+.kcell p{font-size:13.5px;line-height:1.6;color:var(--text-2)}
+.kdetail{margin-top:18px;font-size:14.5px;line-height:1.7;color:var(--text-2)}
+.kdetail b{color:var(--text);font-weight:620}
+</style>
+<style>
+.badge.na{background:#E7EDED;color:var(--slate)}
+.ccard[data-theme="excluded"]{background:#FAFBFB}
+.ccard[data-theme="excluded"] .cc-name{color:var(--text-2)}
+.klass .kfoot{color:var(--red-deep)}
+.klass.emg{background:#FFFBF4;border-color:#EEDCBC}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar">
+  <div class="wrap">
+    <div class="brandmark"><span class="dot"></span>
+      <span>Incident Management<small>Intact Insurance UK&amp;I · Common control narrative</small></span>
+    </div>
+    <nav class="navlinks">
+      <a href="#lifecycle">Incident lifecycle</a>
+      <a href="#severity">Severity model</a>
+      <a href="#escalation">Escalation</a>
+      <a href="#controls">Controls</a>
+      <a href="#matrix">Applicability</a>
+      <a href="#roles">Roles</a>
+      <a href="#scope">Scope</a>
+    </nav>
+  </div>
+</div>
+
+<div class="dark">
+  <div class="wrap hero">
+    <div class="herogrid">
+      <div>
+        <span class="eyebrow"><span class="pulse"></span>CO.C01 – CO.C06 · Current state</span>
+        <h1>Common Incident Management<span class="thin">Control Narrative</span></h1>
+        <p class="hero-lede">Defines the governance, control design and operational procedures supporting Incident Management controls under the Computer Operations domain. The process ensures that incidents are <b>logged, categorised, prioritised, investigated, escalated, resolved, communicated and closed</b> in a timely manner, with sufficient evidence retained to support ICFR, SOX readiness and audit requirements.</p>
+      </div>
+      <div class="chain" id="chain"></div>
+    </div>
+    <div class="ledger">
+      <div><div class="n">6</div><div class="l">Computer Operations controls assessed</div></div>
+      <div><div class="n">2</div><div class="l">Applicable to this control narrative</div></div>
+      <div><div class="n">5</div><div class="l">Incident severity classifications</div></div>
+      <div><div class="n">13</div><div class="l">Applications named as applicable</div></div>
+    </div>
+  </div>
+
+  <section id="lifecycle" class="wrap band-tight">
+    <div class="shead">
+      <div class="kick">Process model</div>
+      <h2>The incident lifecycle</h2>
+      <p>The common Incident Management process is operated as an enterprise IT service-management process and applies across IT services rather than to a single application. Select a stage for the detail.</p>
+    </div>
+    <div class="spine-scroll"><div class="spine" id="spine"></div></div>
+    <div class="stage-panel" id="stagePanel"></div>
+    <div class="hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Categorisation and prioritisation criteria determine the applicable incident path, support assignment and escalation requirements. Incidents requiring a technology change route to Change Management, incidents linked to an existing problem route to Problem Management, and potential disaster events are considered for ITSCM and Disaster Recovery invocation.
+    </div>
+  </section>
+</div>
+
+<section id="severity" class="wrap band">
+  <div class="shead">
+    <div class="kick">Severity drives everything</div>
+    <h2>Five severity classifications</h2>
+    <p>Incident resolution expectations are aligned to severity and business impact. The severity selected determines the coverage window, the resolution target and the escalation route. Select a severity for the detail.</p>
+  </div>
+  <div class="classgrid" id="classgrid"></div>
+  <div class="kpanel" id="kpanel"></div>
+</section>
+
+<section id="escalation" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Escalation matrix</div>
+    <h2>Who is engaged, and when</h2>
+    <p>The escalation matrix objective is to maintain accurate and current escalation contact details for Wipro and RSA stakeholders, enabling reachability and swift escalation during urgent or critical requirements.</p>
+  </div>
+  <div class="tabs" id="jmlTabs"></div>
+  <div class="lanes" id="lanes"></div>
+</section>
+
+<section class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Supporting components</div>
+    <h2>Technology landscape</h2>
+    <p>Application or platform monitoring tools may generate events or incident inputs, but their application-specific configuration and operation are outside this common process.</p>
+  </div>
+  <div class="scope" id="tech"></div>
+</section>
+
+<section id="controls" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">The control set</div>
+    <h2>Computer Operations controls</h2>
+    <p>CO.C01 to CO.C06. Two controls are applicable to this common Incident Management narrative; the remaining four are documented separately. Select a control for its objective, frequency, roles involved, exception handling, applicability and evidence requirements.</p>
+  </div>
+  <div class="filterbar" id="filterbar"></div>
+  <div class="cgrid" id="cgrid"></div>
+
+  <div id="reader" class="reader-sec">
+    <div class="reader-top">
+      <button class="backbtn" id="backAll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>All controls</button>
+      <div class="rnav">
+        <button id="rPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>Previous</button>
+        <span class="rpos" id="rposLabel"></span>
+        <button id="rNext">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+    <div class="reader">
+      <aside class="rail" id="rail"></aside>
+      <div class="rbody" id="rbody"></div>
+    </div>
+  </div>
+</section>
+
+<section id="matrix" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Coverage</div>
+    <h2>Applicability by application</h2>
+    <p>The starting position is taken from the applicability statement under each control. CO.C01 and CO.C05 name thirteen applications; the remaining four controls are not applicable to this narrative. Turn on editing to set applicability yourself, control by control; changes are held in this browser and can be exported to a file.</p>
+  </div>
+  <div class="mtools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="appSearch" placeholder="Find an application or tool" aria-label="Search applications and tools">
+    </div>
+    <div class="kindseg" id="kindseg"><button class="kbtn on" data-k="all">All 39</button><button class="kbtn" data-k="app">Applications 24</button><button class="kbtn" data-k="tool">Tools 15</button></div>
+  </div>
+  <div class="editbar" id="editbar">
+    <button class="ebtn" id="editToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/><path d="M14 6.5l3.5 3.5"/></svg><span>Edit applicability</span></button>
+    <button class="ebtn" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Export</button>
+    <label class="ebtn" for="importFile" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 17V5M8 9l4-4 4 4"/><path d="M4 19h16"/></svg>Import</label>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="ebtn" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4.5V10h-5.5"/></svg>Reset to narrative</button>
+    <span class="savestat" id="savestat"><span class="sdot"></span><span></span></span>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="tablewrap" id="tablewrap"></div>
+</section>
+
+<section id="roles" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Accountability</div>
+    <h2>Roles and responsibility ownership</h2>
+    <p>Current-state incident management roles, including incident ownership, triage, escalation, evidence and service governance artefacts.</p>
+  </div>
+  <div class="rolegrid" id="rolegrid"></div>
+</section>
+
+<section id="scope" class="wrap band" style="padding-top:0">
+  <div class="shead">
+    <div class="kick">Boundaries</div>
+    <h2>Scope</h2>
+  </div>
+  <div class="scope" id="scope"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Process</b> Common Incident Management &nbsp;&nbsp;<b>Version</b> V0.1 &nbsp;&nbsp;<b>Description of changes</b> DRAFT &nbsp;&nbsp;<b>Document owner</b> TBC &nbsp;&nbsp;<b>Control owner</b> TBC &nbsp;&nbsp;<b>Author</b> TBC &nbsp;&nbsp;<b>Approver</b> TBC &nbsp;&nbsp;<b>Next review date</b> TBC &nbsp;&nbsp;<b>Classification</b> TBC</p>
+    <p>From 1 July 2026, accountability for Incident Management and Major Incident Management transfers from the earlier Wipro-managed service model to Intact under the revised operating model. Operational support continues to involve internal teams and third-party resources where applicable. P1 and P2 incidents follow the Major Incident Management route and P3 and P4 incidents follow the standard Incident Management route. ServiceNow supports the common incident-management process. As part of SOX Test of Design attribute testing, evidence will be obtained to support the final post-transition control owner, control operator, formal ownership RACI, control handover testing and control revalidation.</p>
+    <p><b>References</b> &nbsp;Intact Insurance UK Incident Management Process v1.8 &nbsp;&nbsp; Major Incident Management Process v7.0 &nbsp;&nbsp; Escalation Process v0.8 &nbsp;&nbsp; SLA Master Analysis dated 29 September 2023 &nbsp;&nbsp; Information Technology Policy &nbsp;&nbsp; Information Technology Policy Control Framework v4 &nbsp;&nbsp; Information Security Policy &nbsp;&nbsp; Data Management Policy &nbsp;&nbsp; Third Party Risk &amp; Outsourcing Policy &nbsp;&nbsp; Supplier Management &nbsp;&nbsp; Third Party Management (TPM) &nbsp;&nbsp; Cyber Security Assessment Questionnaire</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   ICONS
+   ============================================================ */
+const I = {
+  policy:'<path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v6h6M9 13h7M9 17h5"/>',
+  alert:'<path d="M12 3.5l9.2 16H2.8z"/><path d="M12 10v4.2"/><circle cx="12" cy="17" r=".7" fill="currentColor"/>',
+  siren:'<path d="M6 19v-6a6 6 0 0 1 12 0v6"/><path d="M3.5 19h17"/><path d="M12 3.5V2M5 6L4 5M19 6l1-1"/>',
+  intake:'<path d="M3.5 6.5h17v11h-17z"/><path d="M3.5 7l8.5 6 8.5-6"/>',
+  record:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
+  route:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h5a4 4 0 0 1 4 4v5.5"/><path d="M6 8.5V13"/>',
+  gauge:'<path d="M4 17a8.5 8.5 0 1 1 16 0"/><path d="M12 17l4-5"/><circle cx="12" cy="17" r="1.2"/>',
+  escal:'<path d="M4 19h16"/><path d="M7 16V11M12 16V7M17 16v-3"/><path d="M14.5 4.5H17V7"/>',
+  close:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/>',
+  report:'<path d="M5 4.5h14v15H5z"/><path d="M8.5 15v-3M12 15V9M15.5 15v-5"/>',
+  batch:'<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9h17M9 9v10.5M15 9v10.5"/>',
+  backup:'<ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"/><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/>',
+  dr:'<path d="M12 3l7.5 3.2v5.3c0 4.4-3.1 8.2-7.5 9.5-4.4-1.3-7.5-5.1-7.5-9.5V6.2z"/><path d="M9.5 12l2 2 3.5-3.8"/>',
+  restore:'<ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.7 3.4 3 7.5 3"/><path d="M20.5 12a5 5 0 1 1-1.6-3.6"/><path d="M20.5 7v3.5H17"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/>',
+  check:'<path d="M4.5 12.5l4.5 4.5 10-10.5"/>',
+  box:'<path d="M3.5 7.5l8.5-4.5 8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
+  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  people:'<circle cx="8" cy="8.5" r="2.6"/><circle cx="16" cy="8.5" r="2.6"/><path d="M3 19c0-2.8 2.2-4.4 5-4.4s5 1.6 5 4.4"/><path d="M13.5 15.2c.8-.4 1.7-.6 2.5-.6 2.8 0 5 1.6 5 4.4"/>',
+  shield:'<path d="M12 3l7.5 3.2v5.3c0 4.4-3.1 8.2-7.5 9.5-4.4-1.3-7.5-5.1-7.5-9.5V6.2z"/><path d="M12 11v3"/><circle cx="12" cy="9" r=".6" fill="currentColor"/>',
+  bolt:'<path d="M13 2.5L4.5 13.5H11l-1 8L19 10h-6.5z"/>',
+  low:'<path d="M4 19h16"/><circle cx="12" cy="11" r="4.5"/>',
+  star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>'
+};
+const svg = p => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+
+/* ============================================================
+   POPULATION
+   ============================================================ */
+const IM_APPS = ["Blackline","S360","PTX","AIS","UKRIS","FDS","Global IP","Synergy","Eclipse","Atlas","SAP GL","SAP HR","DXC Assure","Guidewire","CCS","RESQ","Igloo","Tagetik","Anaplan","Azure Data Platform","eTC/Wallstreet","FCCS","SAP Ariba","RSA Go","Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+
+/* applications named in the applicability statement of CO.C01 and CO.C05 */
+const NAMED = ["AIS","UKRIS","Atlas","CCS","FDS","SAP GL","SAP HR","Synergy","Global IP","Eclipse","DXC Assure","RSA Go","Guidewire"];
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+const CONTROLS = [
+{
+  id:"CO.C01", name:"Computer Operations policies and procedures", key:false, icon:I.policy, theme:"applicable",
+  freq:"Ad hoc / on occurrence",
+  applicable:"Applicable",
+  objective:"Computer Operations Policy and SOPs, describing computer operation management objective, control processes, and relevant service level agreements must be reviewed and approved by authorised personnel at least on an annual basis.",
+  roles:["UK&I IT Service Director","Head of Modern Workplace Services","Head of IT Partnerships &amp; Financial Management","Head of Infrastructure Operations &amp; Strategy","Relevant Platform Teams","Incident Management Process Owner","Major Incident Management Process Owner"],
+  exception:"Material process or operating-model changes trigger review and update of the applicable policy or procedure. Superseded procedures, ownership changes and process deviations are addressed through the applicable document-governance and approval process.",
+  qual:"Applications applicable — AIS, UKRIS, Atlas, CCS, FDS, SAP GL, SAP HR, Synergy, Global IP, Eclipse, DXC Assure C&amp;S, RSA Go and Guidewire.",
+  how:[
+    "The common Incident Management process is supported by <b>Incident Management Process v1.8</b> and <b>Major Incident Management Process v7.0</b>. The Incident Management Process describes the process for managing incidents relating to services provided at Intact UK (RSA), while the Major Incident Management Process describes the process for managing major incidents relating to services provided to Intact Insurance.",
+    "These process documents define the purpose, objectives, scope, inclusions, exclusions, inputs, outputs, roles and responsibilities, process descriptions, RACI, KPIs, meetings, reports, tailoring guidelines and referenced processes for Incident Management and Major Incident Management.",
+    "The current documented Incident Management procedure is <b>version 1.8 dated 30 July 2025</b>, with the revision history stating that the Scandinavian section was removed and the document was signed off by Vernini Vig, RSA Service Manager. The current documented Major Incident Management procedure is <b>version 7.0 dated 16 October 2025</b>, with the revision history stating that RSA was replaced with Intact Insurance.",
+    "The wider Intact UK&amp;I IT Policy Control Framework identifies the UK&amp;I IT Service Director, Head of Modern Workplace Services, Head of IT Partnerships &amp; Financial Management and Head of Infrastructure Operations &amp; Strategy, in collaboration with relevant Platform Teams, as responsible for ensuring that IT operational support process documents and operating procedures — including backups, incidents, change and problems — are documented, maintained and reviewed on an ad hoc basis or when a change occurs."
+  ],
+  points:[
+    "<b>Incident Management objectives.</b> Accurately record incidents, resolve incidents as quickly as possible within SLA timeframes, minimise the duration and impact of service outages, accurately record activities performed in relation to incidents, and provide information to Problem Management to prevent future recurrence.",
+    "<b>Major Incident Management objectives.</b> Accurately record major incidents, resolve major incidents as quickly as possible within SLA timeframes, minimise the duration and impact of major incidents, accurately record activities, provide information to Problem Management, and communicate appropriately with stakeholders.",
+    "<b>Operating model.</b> A transition from the Wipro-managed service model to Intact takes effect from 1 July 2026, with accountability for Major Incident Management and Incident Management moving to Intact and Wipro accountability changing under the contractual agreement.",
+    "<b>Route ownership.</b> Robert Kennedy is aligned to Major Incident Management for P1 / P2 incidents and Mark Craigs is aligned to Incident Management for P3 / P4 incidents. ServiceNow is identified as the supporting tool for the common incident-management process.",
+    "<b>Supporting documents.</b> Intact Insurance UK Incident Management Process v1.8; Major Incident Management Process v7.0; Escalation Process v0.8; SLA Master Analysis dated 29 September 2023."
+  ],
+  evPri:["Approved and current Incident Management Process and Major Incident Management Process, including document title, version number, revision history, document authorisation and sign-off, scope, objectives, roles and responsibilities, RACI, KPIs, meetings, reports and referenced processes"],
+  evSec:["Evidence of current document owner, control owner, control operator and review frequency","Latest review evidence","Central repository location","Evidence-retention requirement","Current Intact ownership and RACI","Wipro-to-Intact transition, handover and process revalidation evidence"],
+  tod:"As part of the SOX Test of Design assessment, the CO.C01 control attributes will be reviewed and evidenced to confirm that the current Incident Management and Major Incident Management procedures are approved, version-controlled, reviewed by authorised personnel, retained in a central shared repository, and aligned to the current Intact operating model. The TOD assessment will also validate the current control owner, control operator, document owner, review frequency, evidence-retention requirement, repository location, post-transition ownership and RACI, and Wipro-to-Intact handover and revalidation evidence."
+},
+{
+  id:"CO.C02", name:"Batch job failure resolution within timely manner", key:false, icon:I.batch, theme:"excluded", na:true,
+  freq:"Not applicable to this control narrative",
+  applicable:"Not applicable to this common Incident Management CN",
+  objective:"Batch scheduling, batch monitoring, OPC scheduler administration and batch-job control design are not part of the common Incident Management process.",
+  roles:["Documented separately in the application specific narrative"],
+  exception:"Where a batch failure results in an incident record, only the incident logging, classification, assignment, escalation, resolution and closure aspects are considered within scope of Incident Management.",
+  qual:"Not applicable to this common Incident Management control narrative.",
+  how:[
+    "Batch scheduling, batch monitoring, OPC scheduler administration and batch-job control design are <b>not part of the common Incident Management process</b>. The underlying batch scheduling and failure-monitoring are documented separately in the application specific narrative.",
+    "The scope section records the same position as an explicit exclusion: batch job scheduling, batch monitoring, batch job configuration, OPC scheduler administration and batch-control design are excluded from this common Incident Management control narrative.",
+    "<b>Where a batch failure results in an incident record</b>, only the incident logging, classification, assignment, escalation, resolution and closure aspects are considered within the scope of Incident Management."
+  ],
+  points:[
+    "<b>Where the control lives.</b> The underlying batch scheduling and failure-monitoring control design and evidence requirements are documented in the application specific narrative.",
+    "<b>What this narrative does cover.</b> Only the incident-management lifecycle applied to an incident record arising from a batch failure."
+  ],
+  tod:"The design, frequency, validation and evidence for batch job scheduling and failure monitoring are documented separately in the application specific control narrative."
+},
+{
+  id:"CO.C03", name:"Data backup failures resolution within timely manner and backup restoration", key:false, icon:I.backup, theme:"excluded", na:true,
+  freq:"Not applicable to this control narrative",
+  applicable:"Not applicable to this common Incident Management CN",
+  objective:"Backup execution, backup monitoring, backup-failure handling and backup restoration are separate Computer Operations control areas.",
+  roles:["Documented separately in the application specific narrative"],
+  exception:"Where a backup issue results in an incident record, only the incident-management lifecycle is considered within scope.",
+  qual:"Not applicable to this common Incident Management control narrative.",
+  how:[
+    "Backup execution, backup monitoring, backup-failure handling and backup restoration are <b>separate Computer Operations control areas</b>. The underlying backup control design and evidence requirements are documented separately in the application specific narrative.",
+    "The scope section records the same position as an explicit exclusion: backup execution, backup monitoring, backup failure handling, backup restoration and backup restoration testing are excluded from this common Incident Management control narrative.",
+    "<b>Where a backup issue results in an incident record</b>, only the incident-management lifecycle is considered within scope."
+  ],
+  points:[
+    "<b>Where the control lives.</b> Backup control design and evidence requirements are documented in the application specific narrative.",
+    "<b>What this narrative does cover.</b> Only the incident-management lifecycle applied to an incident record arising from a backup issue."
+  ],
+  tod:"The design, frequency, validation and evidence for backup execution, monitoring, failure handling and restoration are documented separately in the application specific control narrative."
+},
+{
+  id:"CO.C04", name:"Business continuity and disaster recovery", key:false, icon:I.dr, theme:"excluded", na:true,
+  freq:"Not applicable to this control narrative",
+  applicable:"Not applicable to this common Incident Management CN",
+  objective:"This control narrative does not document DR control design, DR testing, recovery validation or technology-resilience governance.",
+  roles:["Documented separately in the application or infrastructure specific narrative"],
+  exception:"The Major Incident Management process includes a route for identifying a potential disaster event and invoking the ITSCM / Disaster Recovery process.",
+  qual:"Not applicable to this common Incident Management control narrative.",
+  how:[
+    "The Major Incident Management process <b>includes a route for identifying a potential disaster event and invoking the ITSCM / Disaster Recovery process</b>. However, this control narrative does not document DR control design, DR testing, recovery validation or technology-resilience governance.",
+    "The scope section records the same position as an explicit exclusion: Disaster Recovery, Technology Resilience, Crisis Management and ITSCM invocation are excluded from this common Incident Management control narrative, except where the Major Incident Management process identifies a potential disaster event and routes the matter to the relevant ITSCM / DR process.",
+    "A potential disaster event is <b>routed to the ITSCM / Disaster Recovery invocation process</b> rather than managed as an Incident Management activity alone."
+  ],
+  points:[
+    "<b>The interface, not the control.</b> This narrative documents the routing decision made within Major Incident Management, not the DR process it hands over to.",
+    "<b>Where the control lives.</b> DR control design, testing, recovery validation and technology-resilience governance are documented in the application or infrastructure specific narrative."
+  ],
+  tod:"DR control design, DR testing, recovery validation and technology-resilience governance are documented separately in the application or infrastructure specific control narrative."
+},
+{
+  id:"CO.C05", name:"Incident management", key:true, icon:I.siren, theme:"applicable",
+  freq:"Monthly",
+  applicable:"Applicable",
+  objective:"To confirm that incidents impacting financial reporting-related system jobs, processes, and programs are identified and resolved in a timely manner.",
+  roles:["Service Desk","Service Desk Manager","Resolver Group / Resolver Group Lead","Incident Manager","Major Incident Manager","SI Manager / CFS Manager","Service Manager","Intact Service Manager","CISO Team and CISO Incident Lead for major cyber incidents","Gold and Silver Teams where cyber recovery approval is required"],
+  exception:"Incidents not resolved within the applicable SLA are escalated in accordance with the severity-based escalation matrix. Incorrectly assigned incidents are reassigned within 24 working hours. Incidents requiring a system change follow the Change Management process, incidents linked to an existing problem follow the Problem Management process, and potential disaster events are considered for ITSCM / DR invocation. Major cyber-incident recovery cannot commence until containment and eradication have been confirmed and the required recovery approvals have been obtained.",
+  qual:"Applications applicable — AIS, UKRIS, Atlas, CCS, FDS, SAP GL, SAP HR, Synergy, Global IP, Eclipse, DXC Assure C&amp;S, RSA Go and Guidewire.",
+  how:[
+    "<b>Intake, logging and classification.</b> Incidents are logged by end users, resolver groups and vendors through defined intake channels, including the Service Desk, email, end user portal, exception and warning events from Event Management, interfaces, SLA / OLA details, and categorisation and prioritisation criteria. The Service Desk collects relevant user and incident details — username, contact details, incident description, screenshots where applicable, and the impacted asset or service — and records the incident in the incident-management tool.",
+    "Where a user reports an issue for which an incident is already recorded, a <b>new incident is created and related to the parent incident</b> in the tool. This may provide input to Problem Management where relevant. The Service Desk checks whether the incident is a major incident based on the priority matrix and, where applicable, the Major Incident Management process is followed. The Service Desk also checks whether the matter is a service request and follows the Request Fulfilment process where applicable.",
+    "<b>Service Desk investigation and first-line resolution.</b> The Service Desk performs initial investigation by assessing incident details and checking whether a solution exists in the <b>KEDB</b>. Where first-line resolution is possible, the Service Desk provides the resolution, confirms with the end user whether the resolution is working, documents the steps taken and updates the knowledge base. Incident details are updated in the relevant databases, and user confirmation is obtained before closure where the user is satisfied.",
+    "<b>Assignment, prioritisation and resolver group activity.</b> Where the Service Desk cannot resolve or provide a workaround, the incident is assigned functionally to the next level of support. The resolver group checks whether the incident has been correctly assigned. If it has not, the resolver group <b>reassigns it within 24 working hours</b> to the relevant group based on the knowledge-management document in ServiceNow. If a knowledge-management document is not present, the incident is reassigned to the Service Desk within 24 working hours.",
+    "The Resolver Group Lead prioritises the incident based on the <b>priority matrix</b>, assigns resources and coordinates diagnosis and resolution. Resolver groups investigate and diagnose the incident and seek to provide a workaround as soon as possible to restore service and minimise business impact. Where input is required from other resolver groups, this is coordinated with the SI Manager / CFS Manager. Where the resolution requires a change, a Change Request is raised and the Change Management procedure is followed. Where the incident relates to an existing problem, the Problem Management process is followed.",
+    "<b>Major Incident Management.</b> The Service Desk identifies a major incident candidate based on the priority matrix and alerts the Major Incident Manager, who triages the candidate, confirms whether it is a major incident, assigns it to the relevant resolver group and alerts key stakeholders and end users according to the agreed communication plan. The Major Incident Manager acts as the <b>single point of contact</b>, steers the major incident lifecycle and facilitates closure. CMDB details are updated where applicable. The Intact Service Manager confirms major incident status where required, coordinates escalation for multi-vendor major incidents and interfaces with the Intact Crisis Management Framework where applicable.",
+    "<b>Major cyber incidents.</b> First approval for commencement of recovery must come from the <b>CISO team</b>. The CISO incident lead must provide evidence to CISO leadership that the incident has been successfully contained and eradicated before recovery can start. Where external security incident response providers are engaged, this evidence must be validated with those providers. Once confirmed, the Intact Service Manager handles further approvals from <b>Gold and Silver teams</b> before allowing recovery to commence.",
+    "<b>Monitoring, review meetings and reporting.</b> Incident Review Meetings are recommended <b>daily for Severity 1 incidents and weekly for other incidents</b>. Attendees include the Service Desk Manager, Incident Manager, Resolver Groups, SI Manager, CFS Manager and Service Managers. The UK&amp;I Information Technology Policy Control Framework states that incidents are reviewed monthly to ensure they are identified, reported, root-cause investigated and resolved in line with agreed SLAs."
+  ],
+  points:[
+    "<b>Reassignment rule.</b> Incorrectly assigned incidents are reassigned within 24 working hours using the applicable Knowledge Management information. Where the relevant document is not available, the incident is returned to the Service Desk within 24 working hours.",
+    "<b>Resolution targets.</b> P1 / Critical fix in under four hours on 24 x 7 coverage; P2 / High fix in under 12 hours within the service window; P3 / Medium 85% within three Business Days; P4 / Low 85% within five Business Days; Priority User 90% within 12 Business Hours with response within 15 minutes of allocation at 90%.",
+    "<b>Monthly averages.</b> In addition to individual resolution targets, the SLA framework includes monthly average mean time to resolution targets of four hours for Critical incidents and 12 hours for High incidents.",
+    "<b>Major Incident Report KPI.</b> The SLA framework includes a KPI for completing a Major Incident Report within two working days after resolution of a P1 incident.",
+    "<b>Incident Management KPIs.</b> Incidents opened and closed per month, incidents opened and closed by priority per month, average incident resolution time, first call resolution rate, percentage of incidents resolved within SLA, incidents in backlog, and reopened incidents as a percentage of the total.",
+    "<b>Major Incident KPIs.</b> Number of major incidents per month, average major incident resolution time, and number and percentage of major incidents resolved within SLA.",
+    "<b>Reporting.</b> Incident reports include number of incidents by status, incident-volume trend reports, ageing of open incidents, incidents opened by priority, mean time to resolution and average response time to telephone, chat and web incidents. Major Incident reports include a list of major incidents per configuration item and number of major incidents by operational categorisation."
+  ],
+  evPri:["ServiceNow incident evidence, including a system-generated incident population extract for the audit period","Sampled incident tickets showing incident ID, logged date and time, intake source, impacted user or service, classification, impact, urgency and priority, resolver group assignment, work notes, resolution date and time, closure status and SLA outcome"],
+  evSec:["Service Desk communications","KEDB and knowledge base references","Incident Owner Matrix or resolver-group routing logic","Resolver-group updates","Reassignment history including 24-working-hour reassignment where applicable","Escalation matrix and escalation evidence","CMDB updates","SLA reports","Live Service Committee or equivalent packs and minutes","Major Incident Reports where required","Stakeholder communications","Related problem records","Related change records where incident resolution requires a change","CISO containment and eradication plus Gold and Silver approval evidence for cyber-related major incident recovery where applicable"],
+  tod:"As part of the SOX Test of Design assessment, the CO.C05 control attributes will be reviewed and evidenced to confirm that incidents are completely captured in ServiceNow or the applicable incident-management tool, classified using the defined severity and priority model, assigned to the appropriate resolver group, investigated, resolved, closed and monitored against agreed SLA expectations. The TOD assessment will also validate the incident population extraction, extraction parameters, record count, completeness and accuracy checks, incident owner matrix or equivalent routing logic, ticket attribute completeness, escalation evidence, SLA review evidence, closed-incident review, major incident route, and linkage to Problem Management or Change Management where applicable."
+},
+{
+  id:"CO.C06", name:"Backup restoration testing and validation", key:false, icon:I.restore, theme:"excluded", na:true,
+  freq:"Not applicable to this control narrative",
+  applicable:"Not applicable to this common Incident Management CN",
+  objective:"Backup restoration testing and validation are not part of the common Incident Management process.",
+  roles:["Documented separately in the application or infrastructure specific narrative"],
+  exception:"This control narrative only covers restoration-related matters where a failed test or restoration issue results in an incident ticket.",
+  qual:"Not applicable to this common Incident Management control narrative.",
+  how:[
+    "Backup restoration testing and validation are <b>not part of the common Incident Management process</b>. Restoration testing may be relevant for backup, resilience, SaaS / vendor or application-specific Computer Operations controls.",
+    "This control narrative only covers restoration-related matters <b>where a failed test or restoration issue results in an incident ticket</b>.",
+    "The design, frequency, validation and evidence for restoration testing are documented separately in the application or infrastructure specific narrative."
+  ],
+  points:[
+    "<b>Where the control lives.</b> Restoration testing design, frequency, validation and evidence sit in the application or infrastructure specific narrative.",
+    "<b>What this narrative does cover.</b> Only the incident record arising from a failed restoration test or restoration issue."
+  ],
+  tod:"The design, frequency, validation and evidence for backup restoration testing are documented separately in the application or infrastructure specific control narrative."
+}
+];
+
+/* ============================================================
+   LIFECYCLE STAGES
+   ============================================================ */
+const STAGES = [
+{
+  name:"Detection and intake", tool:"Service Desk · email · portal · Event Management", icon:I.intake, ctrls:["CO.C05"],
+  body:[
+    "Incidents are logged by <b>end users, resolver groups and vendors</b> through defined intake channels, including the Service Desk, email, the end user portal, exception and warning events from Event Management, interfaces, SLA and OLA details, and categorisation and prioritisation criteria.",
+    "The <b>Service Desk provides the primary intake and first-line support function</b>. Incident records capture the relevant user and contact information, the incident description, screenshots where applicable, and the impacted asset or service.",
+    "Application or platform monitoring tools may generate events or incident inputs, but their application-specific configuration and operation are outside this common process."
+  ],
+  who:[["Service Desk","Contact, email and end-user portal"],["Event Management","Exception and warning events"],["Interfaces","Interface-generated information"],["Resolver groups","Raise incidents directly"],["Vendors","Raise incidents directly where applicable"]],
+  whoLabel:"Intake channels"
+},
+{
+  name:"Recording and classification", tool:"ServiceNow · priority matrix", icon:I.record, ctrls:["CO.C05"],
+  body:[
+    "The Service Desk collects the username, contact details, incident description, screenshots where applicable, and the impacted asset or service, and <b>records the incident in the incident-management tool</b>.",
+    "Where a user reports an issue for which an incident is already recorded, a <b>new incident is created and related to the parent incident</b> in the tool. Repeated reports concerning the same issue are associated with the relevant parent or master incident where applicable. This may provide input to Problem Management where relevant.",
+    "The Service Desk determines whether the matter is a <b>standard incident, a potential major incident, a Priority User incident or a service request</b>, and routes it through the relevant process. Where the matter is a service request, the Request Fulfilment process is followed."
+  ],
+  who:[["Username and contact details","Who reported it"],["Incident description","What is happening"],["Screenshots","Where applicable"],["Impacted asset or service","What is affected"],["Categorisation and priority","Determines the route"]],
+  whoLabel:"What the record captures"
+},
+{
+  name:"First-line investigation", tool:"Service Desk · Known Error Database", icon:I.search, ctrls:["CO.C05"],
+  body:[
+    "The Service Desk performs initial investigation by assessing incident details and <b>checking whether a solution exists in the KEDB</b>. The Known Error Database supports first-line investigation by enabling the Service Desk to identify known solutions or workarounds for previously recorded issues.",
+    "Where first-line resolution is possible, the Service Desk provides the resolution, <b>confirms with the end user whether the resolution is working</b>, documents the steps taken and updates the knowledge base.",
+    "The incident resolution is communicated to the user through the Service Desk, incident details are updated in the relevant databases, and <b>user confirmation is obtained before closure</b> where the user is satisfied."
+  ],
+  who:[["Known Error Database","Known solutions and workarounds"],["Knowledge Management Database","Support and resolution knowledge"],["Configuration Management Database","Configuration-item information"],["Update the knowledge base","After first-line resolution"]],
+  whoLabel:"Supporting databases"
+},
+{
+  name:"Assignment to resolver group", tool:"ServiceNow · Knowledge Management", icon:I.route, ctrls:["CO.C05"],
+  body:[
+    "Where the Service Desk cannot resolve the incident or provide a workaround, the incident is <b>assigned functionally to the next level of support</b>.",
+    "The resolver group checks whether the incident has been correctly assigned. If it has not been correctly assigned, the resolver group <b>reassigns it within 24 working hours</b> to the relevant group, based on the knowledge-management document in ServiceNow.",
+    "If a knowledge-management document is not present, the incident is <b>reassigned to the Service Desk within 24 working hours</b>."
+  ],
+  who:[["Validate the assignment","Resolver group checks it is correct"],["Reassign within 24 working hours","Using the knowledge-management document"],["No document available","Return to Service Desk within 24 working hours"],["Coordination","SI Manager / CFS Manager where several groups are involved"]],
+  whoLabel:"The reassignment rule"
+},
+{
+  name:"Prioritisation and diagnosis", tool:"Priority matrix · resolver groups", icon:I.gauge, ctrls:["CO.C05"],
+  body:[
+    "The <b>Resolver Group Lead prioritises the incident based on the priority matrix</b>, assigns resources and coordinates diagnosis and resolution.",
+    "Resolver groups investigate and diagnose the incident and <b>seek to provide a workaround as soon as possible</b> to restore service and minimise business impact.",
+    "Where input is required from other resolver groups, this is coordinated with the <b>SI Manager / CFS Manager</b>. Where the resolution requires a change, a Change Request is raised and the Change Management procedure is followed. Where the incident relates to an existing problem, the Problem Management process is followed."
+  ],
+  who:[["Priority matrix","Determines severity and the applicable route"],["Workaround","Provided as soon as possible to restore service"],["Change required","Change Request raised; Change Management followed"],["Existing problem","Problem Management process followed"],["Potential disaster event","Considered for ITSCM / DR invocation"]],
+  whoLabel:"Where the incident can route"
+},
+{
+  name:"Major Incident Management", tool:"Major Incident Manager · Intact Service Manager", icon:I.siren, ctrls:["CO.C05"],
+  body:[
+    "The Service Desk identifies a major incident candidate based on the priority matrix and alerts the Major Incident Manager. The Major Incident Manager <b>triages the candidate, confirms whether it is a major incident</b>, assigns it to the relevant resolver group and alerts key stakeholders and end users according to the agreed communication plan.",
+    "The Major Incident Manager acts as the <b>single point of contact</b> for the major incident lifecycle, steers it and facilitates major incident closure. Resolver groups prioritise and assign resources, investigate and diagnose, coordinate with other resolver groups where required and perform service resolution. CMDB details are updated where applicable.",
+    "The <b>Intact Service Manager</b> confirms major incident status where required, coordinates escalation for multi-vendor major incidents and interfaces with the Intact Crisis Management Framework where applicable.",
+    "<b>For major cyber incidents</b>, first approval for commencement of recovery must come from the CISO team. The CISO incident lead must provide evidence to CISO leadership that the incident has been successfully contained and eradicated before recovery can start. Where external security incident response providers are engaged, this evidence must be validated with those providers. Once confirmed, the Intact Service Manager handles further approvals from Gold and Silver teams before allowing recovery to commence."
+  ],
+  who:[["Major Incident Manager","Single point of contact for the lifecycle"],["Intact Service Manager","Confirms status, multi-vendor escalation, Crisis Management interface"],["CISO team","First approval for cyber recovery commencement"],["CISO incident lead","Evidences containment and eradication"],["Gold and Silver teams","Further approvals before recovery"]],
+  whoLabel:"Who acts on a major incident"
+},
+{
+  name:"Escalation", tool:"Escalation matrix · Escalation Process v0.8", icon:I.escal, ctrls:["CO.C05"],
+  body:[
+    "The escalation matrix objective is to <b>maintain accurate and current escalation contact details</b> for Wipro and RSA stakeholders, enabling reachability and swift escalation during urgent or critical requirements.",
+    "Escalation follows the agreed escalation matrix, with <b>time-based trigger points</b> defined separately for P1 / Critical, P2 / High and Medium / Low incidents.",
+    "Incidents not resolved within the applicable SLA are escalated in accordance with the severity-based escalation matrix."
+  ],
+  who:[["P1 / Critical","L1 immediate through to L4 after three hours"],["P2 / High","L1 immediate through to L4 after ten hours"],["Medium and Low","Tower Lead, Process Lead or Service Desk, then Incident Manager, then Service Delivery Manager"]],
+  whoLabel:"Escalation routes"
+},
+{
+  name:"Resolution, closure and reporting", tool:"ServiceNow · Live Service Committee · Major Incident Report", icon:I.close, ctrls:["CO.C05","CO.C01"],
+  body:[
+    "Resolver groups perform service resolution and the incident is closed once service restoration is confirmed. User confirmation is obtained before closure where the user is satisfied.",
+    "<b>Incident Review Meetings are recommended daily for Severity 1 incidents and weekly for other incidents.</b> Attendees include the Service Desk Manager, Incident Manager, Resolver Groups, SI Manager, CFS Manager and Service Managers.",
+    "Performance is reviewed through ServiceNow incident information, incident SLA reporting, <b>Live Service Committee</b> or equivalent packs and minutes, and Major Incident Reports for Critical incidents where required.",
+    "The UK&amp;I Information Technology Policy Control Framework requires incidents to be identified, reported, root-cause investigated and resolved in line with agreed SLAs, with <b>performance reviewed monthly</b>."
+  ],
+  who:[["Live Service Committee","Monthly oversight of SLA performance, unresolved incidents and escalations"],["Major Incident Report","Within two working days after resolution of a P1 incident"],["Incident Review Meetings","Daily for Severity 1, weekly for other incidents"],["Problem Management","Receives information to prevent recurrence"]],
+  whoLabel:"Review and reporting"
+}
+];
+
+/* ============================================================
+   SEVERITY MODEL
+   ============================================================ */
+const KLASS = [
+{
+  k:"Severity 1 · Critical", icon:I.bolt, tag:"Fix under 4 hours · 24 x 7", emg:true,
+  short:"Total loss of critical production service to the entire customer set.",
+  init:"24 x 7 coverage.",
+  appr:"Fix in less than four hours. Monthly average mean time to resolution target of four hours.",
+  exec:"L1 on-duty Major Incident Manager immediately; L2 LOB Service Manager on immediate notification; L3 Service Delivery Manager after two hours; L4 UK Delivery Head after three hours.",
+  detail:"Total loss of critical production service to the entire customer set; critical system, network or application outage with critical impact on service delivery; statutory or regulatory obligations compromised; severe and immediate revenue or market-credibility impact; one or more service-level commitments impacted; reassignment must be communicated and agreed directly. <b>The SLA framework includes a KPI for completing a Major Incident Report within two working days following resolution of a P1 incident.</b>"
+},
+{
+  k:"Severity 2 · High", icon:I.alert, tag:"Fix under 12 hours",
+  short:"Key infrastructure component, application or single-site network is down, degraded or unusable.",
+  init:"Business-day and service-window dependent.",
+  appr:"Fix in less than 12 hours. Monthly average mean time to resolution target of 12 hours.",
+  exec:"L1 on-duty Incident Manager immediately; L2 LOB Service Manager after six hours; L3 Service Delivery Manager after eight hours; L4 UK Delivery Head after ten hours.",
+  detail:"Key infrastructure component, application, critical end-user machine or single-site network is down, degraded or unusable; statutory or regulatory obligations could imminently be compromised; severe revenue or market-credibility impact could occur; potential critical service-delivery impact; critical service, server or application performance degradation; partial customer set affected."
+},
+{
+  k:"Severity 3 · Medium", icon:I.gauge, tag:"85% within 3 Business Days",
+  short:"Component, minor application or procedure down, unusable or difficult to use.",
+  init:"Monday to Friday, 08:00 to 18:00 GMT, excluding UK public holidays.",
+  appr:"85% resolved within three Business Days.",
+  exec:"General escalation route through the Tower Lead, Process Lead or Service Desk, the on-duty Incident Manager and the Service Delivery Manager as applicable.",
+  detail:"Component, minor application or procedure down, unusable or difficult to use; some operational impact but no immediate service-delivery impact; service outage with workaround available; degradation of key service, server or application without preventing delivery; scattered customers affected."
+},
+{
+  k:"Severity 4 · Low", icon:I.low, tag:"85% within 5 Business Days",
+  short:"Component or procedure not critical to the customer is unusable, with an alternative available.",
+  init:"Monday to Friday, 08:00 to 18:00 GMT, excluding UK public holidays.",
+  appr:"85% resolved within five Business Days.",
+  exec:"General escalation route through the Tower Lead, Process Lead or Service Desk, the on-duty Incident Manager and the Service Delivery Manager as applicable.",
+  detail:"Component or procedure not critical to customer is unusable; alternative available; deferred maintenance acceptable; no impact to service; no production affected; individual customer affected."
+},
+{
+  k:"Priority User", icon:I.star, tag:"90% within 12 Business Hours",
+  short:"Priority user incidents are treated as high urgency and reported separately each month.",
+  init:"Priority User service window.",
+  appr:"Resolution within 12 Business Hours and response within 15 minutes of allocation, both at 90%.",
+  exec:"Handled through the Priority User incident route where applicable.",
+  detail:"Priority users log tickets in the service management tool. <b>Priority User incidents are treated as high urgency and reported separately monthly.</b>"
+}
+];
+
+/* ============================================================
+   ESCALATION ROUTES
+   ============================================================ */
+const JOURNEYS = {
+"P1 / Critical":{
+  lanes:[
+    {lane:"Level 1", sub:"Immediate trigger", steps:[
+      {t:"On-duty Major Incident Manager", d:"Engaged immediately when a P1 or Critical major incident is confirmed.", tools:["Major Incident Manager","Immediate"]}
+    ]},
+    {lane:"Level 2", sub:"Immediate notification", steps:[
+      {t:"LOB Service Manager", d:"Immediate Major Incident Manager to Service Manager notification.", tools:["LOB Service Manager","Immediate"]}
+    ]},
+    {lane:"Level 3", sub:"After two hours", steps:[
+      {t:"Service Delivery Manager", d:"Engaged if the major incident is not resolved within two hours.", tools:["Service Delivery Manager","2 hours"]}
+    ]},
+    {lane:"Level 4", sub:"After three hours", steps:[
+      {t:"UK Delivery Head", d:"Engaged if the major incident is not resolved within three hours.", tools:["UK Delivery Head","3 hours"]}
+    ]}
+  ]
+},
+"P2 / High":{
+  lanes:[
+    {lane:"Level 1", sub:"Immediate trigger", steps:[
+      {t:"On-duty Incident Manager", d:"Engaged immediately when a P2 or High incident is raised.", tools:["Incident Manager","Immediate"]}
+    ]},
+    {lane:"Level 2", sub:"After six hours", steps:[
+      {t:"LOB Service Manager", d:"Engaged if the P2 incident is not resolved within six hours.", tools:["LOB Service Manager","6 hours"]}
+    ]},
+    {lane:"Level 3", sub:"After eight hours", steps:[
+      {t:"Service Delivery Manager", d:"Engaged if the P2 incident is not resolved within eight hours.", tools:["Service Delivery Manager","8 hours"]}
+    ]},
+    {lane:"Level 4", sub:"After ten hours", steps:[
+      {t:"UK Delivery Head", d:"Engaged if the P2 incident is not resolved within ten hours.", tools:["UK Delivery Head","10 hours"]}
+    ]}
+  ]
+},
+"Medium and Low":{
+  lanes:[
+    {lane:"General route", sub:"Medium and Low incidents", steps:[
+      {t:"Tower Lead, Process Lead or Service Desk", d:"First point in the general escalation route for Medium and Low incidents.", tools:["Tower Lead","Process Lead","Service Desk"]},
+      {t:"On-duty Incident Manager", d:"Engaged as the incident escalates through the general route.", tools:["Incident Manager"]},
+      {t:"Service Delivery Manager", d:"Engaged as applicable under the general escalation route.", tools:["Service Delivery Manager"]}
+    ]}
+  ]
+}
+};
+
+/* ============================================================
+   TECHNOLOGY LANDSCAPE
+   ============================================================ */
+const TECH = [
+ {h:"ServiceNow / enterprise ITSM platform", p:"Supports incident recording, categorisation, prioritisation, assignment, work-note updates, escalation, SLA measurement, resolution and closure. ServiceNow incident records provide evidence of resolution performance against agreed SLAs."},
+ {h:"Service Desk channels", p:"Provide incident intake through Service Desk contact, email and the end-user portal. The Service Desk performs initial classification, first-line investigation, user communication and routing."},
+ {h:"Event Management and interfaces", p:"Exception and warning events and interface-generated information may provide inputs to the Incident Management process."},
+ {h:"Known Error Database", p:"Supports first-line investigation by enabling the Service Desk to identify known solutions or workarounds for previously recorded issues."},
+ {h:"Knowledge Management Database", p:"Retains support information and resolution knowledge and supports assignment or reassignment to the appropriate resolver group."},
+ {h:"Configuration Management Database", p:"Retains configuration-item information associated with affected services. Configuration-item details are updated during incident or major incident resolution where applicable."},
+ {h:"Priority matrix", p:"Determines incident severity and whether an event follows the standard Incident Management or Major Incident Management route."},
+ {h:"Escalation matrix", p:"Defines escalation levels, responsible functions, stakeholders and time-based trigger points for P1, P2 and Medium / Low incidents."},
+ {h:"SLA framework and SLA Master Analysis", p:"Defines severity-based resolution measures, monthly reporting expectations, service windows and supporting operational KPIs."},
+ {h:"Live Service governance reporting", p:"Supports monthly oversight of SLA performance, unresolved incidents and escalations."},
+ {h:"Major Incident Report", p:"Captures the outcome and lessons learnt for Critical incidents where required. The SLA framework includes a KPI for completion within two working days following resolution of a P1 incident."}
+];
+
+/* ============================================================
+   ROLES
+   ============================================================ */
+const ROLES = [
+ {r:"UK&I IT Service Director or equivalent", c:["CO.C01","CO.C05"],
+  d:"Owns or oversees the common Incident Management process and ensures the process is documented, maintained and aligned to service-management requirements. Supported by the Incident Management function.",
+  e:"Approved incident-management procedure, process ownership evidence, review and approval evidence, service-governance records."},
+ {r:"Service Desk", c:["CO.C05"],
+  d:"Receives and records incidents, completes initial classification, checks for existing or master incidents, performs first-line investigation, reviews available KEDB information, assigns unresolved incidents, communicates progress and confirms resolution with the user before closure where applicable.",
+  e:"ServiceNow incident record, categorisation and priority, intake details, assignment history, work notes, user communications and closure confirmation."},
+ {r:"End users, business users or other incident reporters", c:["CO.C05"],
+  d:"Reports an interruption, degradation or service issue through the available intake channel and provides information needed to record and assess the incident.",
+  e:"Initial incident notification, contact details, incident description and supporting screenshot where applicable."},
+ {r:"Incident Manager", c:["CO.C05"],
+  d:"Triages incidents, coordinates assignment to the appropriate resolver group, monitors progress and escalates incidents through the agreed escalation route where required.",
+  e:"Triage record, escalation evidence, incident-review information and coordination updates."},
+ {r:"Major Incident Manager", c:["CO.C05"],
+  d:"Confirms and manages major incidents, acts as the single point of contact for the major incident lifecycle, coordinates resolver groups, manages stakeholder communication, monitors restoration and facilitates closure and review.",
+  e:"Major incident record, stakeholder communications, escalation history, service-restoration updates and Major Incident Review evidence where required."},
+ {r:"Resolver Group / Resolver Group Lead", c:["CO.C05"],
+  d:"Validates incident assignment, prioritises the incident, allocates resources, investigates and diagnoses the issue, coordinates with other resolver groups, provides a workaround or resolution, updates relevant records and supports service restoration.",
+  e:"Assignment and reassignment history, investigation notes, technical updates, workaround, resolution details and restoration evidence."},
+ {r:"SI Manager / CFS Manager", c:["CO.C05"],
+  d:"Coordinates across resolver groups and supports escalation where multiple technical teams or service components are involved.",
+  e:"Coordination updates, resolver engagement and escalation evidence."},
+ {r:"Service Manager", c:["CO.C05"],
+  d:"Coordinates incident resolution and provides escalation support where service-level or business-impact considerations require management attention.",
+  e:"Service-management updates, escalation decisions and service-restoration evidence."},
+ {r:"Intact Service Manager", c:["CO.C05"],
+  d:"Confirms major incident status where required, coordinates multi-vendor escalation and interfaces with the Intact Crisis Management Framework. For major cyber incidents, manages further Gold and Silver approvals after the CISO team confirms successful containment and eradication.",
+  e:"Major incident confirmation, multi-vendor escalation records, crisis-management communications and cyber-recovery approval evidence where applicable."},
+ {r:"UK&I IT Service Director, through Live Service Committee", c:["CO.C01","CO.C05"],
+  d:"Ensures incidents are identified, reported, investigated and resolved in accordance with agreed SLAs. Reviews incident performance through service-governance reporting.",
+  e:"Approved operating procedures, Live Service Committee packs and minutes, ServiceNow SLA reporting and Major Incident Reports."},
+ {r:"Major Incident Management route — P1 and P2", c:["CO.C05"],
+  d:"Aligned to Major Incident Management activities for P1 and P2 incidents under the current operating model. Robert Kennedy is aligned to this route.",
+  e:"Evidence to confirm final ownership, operator responsibility, RACI, handover activity and post-transition control design revalidation."},
+ {r:"Incident Management route — P3 and P4", c:["CO.C05"],
+  d:"Aligned to standard Incident Management activities for P3 and P4 incidents under the current operating model. Mark Craigs is aligned to this route.",
+  e:"Evidence to confirm final ownership, operator responsibility, RACI, handover activity and post-transition control design revalidation."},
+ {r:"Third-party or vendor support team", c:["CO.C05"],
+  d:"Supports investigation and resolution where the affected service or component is operated or supported by a third party, while maintaining the required incident updates and escalation evidence.",
+  e:"ServiceNow updates, linked vendor-support case where applicable, technical investigation notes, communications and closure evidence."}
+];
+
+/* ============================================================
+   SCOPE
+   ============================================================ */
+const SCOPE = [
+ {h:"Process covered", p:"Common IT Incident Management and Major Incident Management process governing incidents affecting Intact technology services and in-scope financially relevant applications."},
+ {h:"Process and activity types", p:"Incident detection, recording, categorisation, prioritisation, investigation and diagnosis, resolution and recovery, closure, monitoring, tracking, communication and reporting."},
+ {h:"Incident types", p:"Major Incidents, including Severity 1 / Critical and Severity 2 / High incidents; non-major incidents, including Severity 3 / Medium and Severity 4 / Low incidents; and Priority User incidents where applicable."},
+ {h:"User populations", p:"Internal users, business users, IT support teams, Service Desk personnel, Incident Managers, Major Incident Managers, resolver groups, Service Managers, SI and CFS Managers, Intact Service Managers and approved third-party or vendor support resources involved in identifying, logging, triaging, prioritising, investigating, escalating, resolving, communicating, closing, monitoring or reporting incidents."},
+ {h:"Environments", p:"Production environment and financially relevant IT services are in scope where incidents may affect system availability, service continuity, processing, reporting or other activities relevant to financial reporting. Non-production environments are not separately defined as in scope; incidents affecting them are only considered in scope where they impact, or have the potential to impact, production processing, financial reporting activities, incident resolution, release readiness, or evidence relied upon for SOX and ICFR purposes."},
+ {h:"In-scope ITGC domains", p:"Computer Operations, including incident management, operational monitoring considerations, backup reliance and SLA oversight where applicable. Third-Party Assurance, including SOC 1 Type II report reliance, complementary user entity controls, bridge coverage, and control-owner review of vendor assurance."},
+ {h:"Explicit exclusions", p:"Internal business processes that do not relate to IT services. Incidents outside the scope of IT services provided to Intact. Application-specific incident handling procedures, support-team runbooks, vendor-specific escalation paths and system-specific operational procedures, unless they operate through or are evidenced by the common process. Batch job scheduling, monitoring, configuration, OPC scheduler administration and batch-control design. Backup execution, monitoring, failure handling, restoration and restoration testing. Disaster Recovery, Technology Resilience, Crisis Management and ITSCM invocation, except where Major Incident Management routes a potential disaster event. Change Management as a separate ITGC domain. Mainframe-specific batch, backup, scheduler access, segregation of duties, environment segregation and code-promotion activities."},
+ {h:"Third-party assurance", p:"Third-party resources participate where they operate Service Desk, Incident Management, Major Incident Management or technical resolver-group activities, or where investigation and resolution require support from an application, infrastructure or hosted-service provider. They follow the common incident lifecycle where applicable through ServiceNow or the applicable linked support route. Application-specific arrangements involve providers such as Kyndryl, Guidewire, Capgemini, DXC or other third parties; those service-specific responsibilities are documented within the relevant application or platform control narrative."},
+ {h:"TPRM policies and procedures — TP.C01, Non-Key", p:"Intact's Third-Party Risk Management framework is governed through the approved Third-Party Risk and Outsourcing Policy and the supporting supplier-management and TPM processes. These establish the governance requirements for third-party due diligence, risk assessment, ongoing monitoring, issue management and oversight of outsourced services. Detailed TPRM control ownership, operating frequency, review criteria, evidence requirements and issue-management arrangements are documented in the separate Common TPRM Control Narrative."},
+ {h:"Review of third-party assurance reports — TP.C02, Key", p:"Wipro is referenced in the current-state Incident Management operating model as part of the historic managed service and support route, with accountability transitioning to Intact under the revised operating model. Third-party involvement in this common Incident Management narrative is limited to operational support, resolver-group involvement, ServiceNow ticket handling, escalation and major incident coordination where applicable. Vendor-specific SOC 1 Type II report analysis and application-specific SaaS SOC report assessment are treated as separate vendor-assurance or TPRM documentation."},
+ {h:"Cyber Security Management", p:"Data Classification and Cyber Security Management controls are not repeated in this common Incident Management narrative. Cyber Security Management controls are primarily operated as central Entity-Level Controls and are documented separately in the common Cyber Security Management Control Narrative, with the Cyber Security Assessment Questionnaire retained as supporting ERM-level evidence where applicable."},
+ {h:"Evidence governance", p:"Evidence owner; control owner; preparer and reviewer; repository location; repository access restrictions; applicable retention period; naming convention; version control; evidence date and period covered; approval and sign-off; completeness and accuracy checks; exception tracking; remediation ownership; target date; closure validation; audit-retrieval process; and evidence that submitted artefacts were reviewed before management or audit use."}
+];
+
+const CHAIN=[
+ ["Service Desk", "Primary intake and first-line support through contact, email and the end-user portal", I.intake],
+ ["ServiceNow", "Recording, categorisation, prioritisation, assignment, escalation, SLA measurement and closure", I.record],
+ ["Known Error Database", "Known solutions and workarounds supporting first-line investigation", I.search],
+ ["Priority matrix", "Determines severity and whether the standard or major incident route applies", I.gauge],
+ ["Escalation matrix", "Escalation levels, responsible functions and time-based trigger points", I.escal],
+ ["Live Service Committee", "Monthly oversight of SLA performance, unresolved incidents and escalations", I.report]
+];
+
+
+/* ---------- page configuration ---------- */
+const CHAIN_TITLE='Supporting the common process';
+const APPS=IM_APPS;
+const STORAGE_KEY='intact-im-applicability-v1';
+const TOOLS=["Active Directory UK","CyberArk","SailPoint","ServiceNow","ICM","PLC","Endevor","OPC","Globalscape","Cohesity","ServiceDesk Plus","IBM Infosphere-DataStage","JIRA","Entra ID","Power BI"];
+const isTool=a=>TOOLS.indexOf(a)>-1;
+const ICO={gear:I.gear, check:I.check, box:I.box, doc:I.policy};
+const FILTERS=[
+ {k:'all',l:'All six'},
+ {k:'applicable',l:'Applicable to this narrative'},
+ {k:'key',l:'Key controls'},
+ {k:'excluded',l:'Documented separately'}
+];
+function BASELINE_FOR(c,a){
+  if(c.na) return 3;
+  return NAMED.indexOf(a)>-1 ? 0 : 3;
+}
+function APPLIC_HTML(c){
+  let h='<p style="margin-bottom:14px">'+c.qual+'</p>';
+  if(!c.na){
+    h+='<p class="sublabel">Applications named — '+NAMED.length+'</p><div class="applist">'+
+       NAMED.map(a=>'<span class="app'+(isTool(a)?' tool':'')+'">'+a+'</span>').join('')+'</div>';
+  }
+  return h;
+}
+
+/* ---------- severity cards ---------- */
+const classgrid=document.getElementById('classgrid'), kpanel=document.getElementById('kpanel');
+let openK=-1;
+classgrid.innerHTML=KLASS.map((k,i)=>
+  '<button class="klass'+(k.emg?' emg':'')+'" data-i="'+i+'"><span class="kico">'+svg(k.icon)+'</span><b>'+k.k+'</b><p>'+k.short+'</p><span class="kfoot">'+k.tag+'</span></button>').join('');
+classgrid.querySelectorAll('.klass').forEach(el=>el.addEventListener('click',()=>{
+  const i=+el.dataset.i;
+  if(openK===i){openK=-1;kpanel.classList.remove('open');kpanel.innerHTML='';classgrid.querySelectorAll('.klass').forEach(x=>x.classList.remove('on'));return}
+  openK=i;
+  classgrid.querySelectorAll('.klass').forEach(x=>x.classList.toggle('on',+x.dataset.i===i));
+  const k=KLASS[i];
+  kpanel.innerHTML='<div class="krow">'+
+    '<div class="kcell"><h6>Coverage window</h6><p>'+k.init+'</p></div>'+
+    '<div class="kcell"><h6>Resolution target</h6><p>'+k.appr+'</p></div>'+
+    '<div class="kcell"><h6>Escalation route</h6><p>'+k.exec+'</p></div></div>'+
+    '<div class="kdetail">'+k.detail+'</div>';
+  kpanel.classList.add('open');
+}));
+
+/* ---------- escalation lanes ---------- */
+const jmlTabs=document.getElementById('jmlTabs'), lanesEl=document.getElementById('lanes');
+Object.keys(JOURNEYS).forEach((k,i)=>{
+  const b=document.createElement('button');
+  b.className='tab'+(i===0?' on':''); b.textContent=k;
+  b.addEventListener('click',()=>{jmlTabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));b.classList.add('on');renderLanes(k)});
+  jmlTabs.appendChild(b);
+});
+function renderLanes(k){
+  lanesEl.innerHTML=JOURNEYS[k].lanes.map(l=>
+    '<div class="lane"><div class="lane-h"><b>'+l.lane+'</b><small>'+l.sub+'</small></div>'+
+    '<div class="lane-steps">'+l.steps.map(s=>
+      '<div class="step"><b>'+s.t+'</b><p>'+s.d+'</p><div class="tools">'+
+      s.tools.map((t,ix)=>'<span class="tool'+(ix===0?' k':'')+'">'+t+'</span>').join('')+'</div></div>'
+    ).join('<span class="stepsep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></span>')+'</div></div>'
+  ).join('');
+}
+renderLanes(Object.keys(JOURNEYS)[0]);
+
+/* ---------- technology landscape ---------- */
+document.getElementById('tech').innerHTML=TECH.map(t=>
+  '<div class="scard"><h5>'+t.h+'</h5><p>'+t.p+'</p></div>').join('');
+
+/* ============================================================
+   HERO CHAIN
+   ============================================================ */
+document.getElementById('chain').innerHTML =
+  '<h6>'+CHAIN_TITLE+'</h6>'+
+  CHAIN.map(c=>'<div class="clink"><span class="cnode">'+svg(c[2])+'</span><span class="ctext"><b>'+c[0]+'</b><span>'+c[1]+'</span></span></div>').join('');
+
+/* ============================================================
+   LIFECYCLE SPINE
+   ============================================================ */
+const spine=document.getElementById('spine'), stagePanel=document.getElementById('stagePanel');
+let openStage=-1;
+STAGES.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='stage'; d.dataset.i=i;
+  d.innerHTML=
+    '<button class="stage-btn" aria-expanded="false">'+
+      '<span class="stage-idx"><span class="bead"></span>Stage '+(i+1)+'</span>'+
+      '<span class="stage-ico">'+svg(s.icon)+'</span>'+
+      '<span class="stage-name">'+s.name+'</span>'+
+      '<span class="stage-tool">'+s.tool+'</span>'+
+      '<span class="stage-chips">'+s.ctrls.map(c=>'<span class="cchip">'+c+'</span>').join('')+'</span>'+
+    '</button>'+
+    '<svg class="connector" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>';
+  d.querySelector('.stage-btn').addEventListener('click',()=>toggleStage(i));
+  spine.appendChild(d);
+});
+function toggleStage(i){
+  const stages=spine.querySelectorAll('.stage');
+  if(openStage===i){
+    openStage=-1; stagePanel.classList.remove('open'); stagePanel.innerHTML='';
+    stages.forEach(x=>{x.classList.remove('active');x.querySelector('.stage-btn').setAttribute('aria-expanded','false')});
+    return;
+  }
+  openStage=i;
+  stages.forEach(x=>{const on=+x.dataset.i===i;x.classList.toggle('active',on);x.querySelector('.stage-btn').setAttribute('aria-expanded',on?'true':'false')});
+  const s=STAGES[i];
+  stagePanel.innerHTML=
+    '<div class="sp-grid"><div class="sp-body"><div class="sp-h">'+s.name+'</div>'+
+      s.body.map(p=>'<p>'+p+'</p>').join('')+
+      '<div class="jump-row" style="margin-top:18px">'+s.ctrls.map(c=>'<button class="jump" data-jump="'+c+'">Open '+c+'</button>').join('')+'</div>'+
+    '</div><div class="sp-side"><h5>'+s.whoLabel+'</h5><ul>'+
+      s.who.map(w=>'<li><b style="color:#DCEFEF;font-weight:580;flex:0 0 auto;min-width:36%;max-width:44%;overflow-wrap:anywhere">'+w[0]+'</b><span>'+w[1]+'</span></li>').join('')+
+    '</ul></div></div>';
+  stagePanel.classList.add('open');
+  stagePanel.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>{
+    const idx=CONTROLS.findIndex(c=>c.id===b.dataset.jump);
+    if(idx>-1) openReader(idx);
+  }));
+}
+
+/* ============================================================
+   CONTROL GRID
+   ============================================================ */
+const cgrid=document.getElementById('cgrid'), filterbar=document.getElementById('filterbar');
+filterbar.innerHTML=FILTERS.map((f,i)=>'<button class="fchip'+(i===0?' on':'')+'" data-f="'+f.k+'">'+f.l+'</button>').join('')+'<span class="fcount" id="fcount"></span>';
+cgrid.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="ccard" data-i="'+i+'" data-theme="'+c.theme+'" data-key="'+(c.key?'key':'nonkey')+'">'+
+    '<span class="cc-glow"></span>'+
+    '<div class="cc-top"><span class="cc-id">'+c.id+'</span><span class="cc-ico">'+svg(c.icon)+'</span></div>'+
+    '<div class="cc-name">'+c.name+'</div>'+
+    '<div class="cc-obj">'+c.objective+'</div>'+
+    '<div class="cc-cov"><div class="covbar" data-ci="'+i+'"></div><div class="covlbl" data-cl="'+i+'"></div></div>'+
+    '<div class="cc-foot">'+
+      '<span class="badge '+(c.na?'na':(c.key?'key':'nonkey'))+'">'+(c.na?'Not applicable':(c.key?'Key':'Non-key'))+'</span>'+
+      '<span class="badge '+(c.na?'na':'freq')+'">'+(c.na?'Documented separately':c.freq)+'</span>'+
+      '<span class="cc-more">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></span>'+
+    '</div></button>').join('');
+cgrid.querySelectorAll('.ccard').forEach(el=>{
+  el.addEventListener('click',()=>openReader(+el.dataset.i));
+  el.addEventListener('pointermove',ev=>{
+    const r=el.getBoundingClientRect();
+    el.style.setProperty('--mx',(ev.clientX-r.left)+'px');
+    el.style.setProperty('--my',(ev.clientY-r.top)+'px');
+  });
+  el.addEventListener('pointerleave',()=>{el.style.setProperty('--mx','50%');el.style.setProperty('--my','50%')});
+});
+
+/* coverage meter on each card, driven by the live applicability grid */
+const COVLBL=['common process','standalone process','criteria-based','not applicable'];
+function paintCoverage(){
+  CONTROLS.forEach((c,i)=>{
+    const bar=cgrid.querySelector('.covbar[data-ci="'+i+'"]');
+    if(!bar||typeof grid==='undefined')return;
+    const n=[0,0,0,0]; grid[i].forEach(v=>n[v]++);
+    const t=APPS.length;
+    bar.innerHTML=n.map((v,k)=>v?'<span class="seg k'+k+'" style="--w:'+(v/t*100)+'%" title="'+v+' '+COVLBL[k]+'"></span>':'').join('');
+    const parts=[];
+    n.forEach((v,k)=>{ if(v) parts.push(v+' '+COVLBL[k]); });
+    cgrid.querySelector('.covlbl[data-cl="'+i+'"]').textContent=parts.join(' · ');
+  });
+}
+const covObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('lit');covObs.unobserve(e.target)}}),{threshold:.25});
+cgrid.querySelectorAll('.ccard').forEach(el=>covObs.observe(el));
+filterbar.querySelectorAll('.fchip').forEach(b=>b.addEventListener('click',()=>{
+  filterbar.querySelectorAll('.fchip').forEach(x=>x.classList.remove('on'));b.classList.add('on');applyFilter(b.dataset.f)}));
+function applyFilter(f){
+  let n=0;
+  cgrid.querySelectorAll('.ccard').forEach(el=>{
+    const show = f==='all'||(f==='key'&&el.dataset.key==='key')||f.split('|').indexOf(el.dataset.theme)>-1;
+    el.classList.toggle('hide',!show); if(show)n++;
+  });
+  document.getElementById('fcount').textContent=n+' of '+CONTROLS.length+' shown';
+}
+applyFilter('all');
+
+/* ============================================================
+   IN-PAGE CONTROL READER
+   ============================================================ */
+const rail=document.getElementById('rail'), rbody=document.getElementById('rbody');
+const rPrev=document.getElementById('rPrev'), rNext=document.getElementById('rNext');
+let cur=-1, revealObs=null;
+
+rail.innerHTML=CONTROLS.map((c,i)=>
+  '<button class="railitem" data-i="'+i+'"><span class="rid">'+c.id+'</span><span class="rnm">'+c.name+'</span></button>').join('');
+rail.querySelectorAll('.railitem').forEach(el=>el.addEventListener('click',()=>openReader(+el.dataset.i,true)));
+
+function chips(list,cls){return list.map(a=>'<span class="app'+(cls||'')+'">'+a+'</span>').join('')}
+
+function openReader(i, keepScroll){
+  cur=i; const c=CONTROLS[i];
+  document.body.classList.add('reading');
+  rail.querySelectorAll('.railitem').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+
+  let h='';
+  h+='<div class="rhead"><span class="rico">'+svg(c.icon)+'</span>'+
+     '<div class="rid-big">'+c.id+
+       '<span class="badge '+(c.na?'na':(c.key?'key':'nonkey'))+'">'+(c.na?'Not applicable to this narrative':(c.key?'Key control':'Non-key control'))+'</span>'+
+     '</div><h3>'+c.name+'</h3><div class="rprog"><i id="rprogbar"></i></div></div>';
+  h+='<div class="rsub" id="rsub">'+
+     ([['sObj','Attributes'],['sCur','Current state'],['sReq','Key requirements'],['sApp','Where it applies']].concat(c.na?[]:[['sEvi','Evidence']]).concat([['sVal',c.na?'Documented in':'Validation']]))
+       .map((t,k)=>'<button data-t="'+t[0]+'"'+(k===0?' class="on"':'')+'>'+t[1]+'</button>').join('')+
+     '</div>';
+  h+='<div class="rcontent">';
+
+  h+='<div class="attr rv" id="sObj">'+
+    '<div class="cell wide"><h6>Control objective</h6><p>'+c.objective+'</p></div>'+
+    '<div class="cell'+(c.gap?' alert':'')+'"><h6>Frequency</h6><p>'+c.freq+'</p>'+
+      (c.freqDetail?'<div style="margin-top:9px">'+c.freqDetail.map(f=>'<p style="font-size:13px;color:var(--text-2);padding:3px 0">'+f+'</p>').join('')+'</div>':'')+'</div>'+
+    '<div class="cell"><h6>Roles involved</h6><p>'+c.roles.join(' · ')+'</p></div>'+
+    '<div class="cell wide'+(c.gap?' alert':'')+'"><h6>Exception handling</h6><p>'+c.exception+'</p></div>'+
+  '</div>';
+
+  h+='<div class="blk rv" id="sCur"><h4>'+svg(ICO.gear)+'Current state</h4>'+c.how.map(p=>'<p>'+p+'</p>').join('')+'</div>';
+  h+='<div class="blk rv" id="sReq"><h4>'+svg(ICO.check)+'Key requirements</h4><ul class="plist">'+c.points.map(p=>'<li>'+p+'</li>').join('')+'</ul></div>';
+  h+='<div class="blk rv" id="sApp"><h4>'+svg(ICO.box)+'Where it applies</h4>'+APPLIC_HTML(c)+'</div>';
+  if(!c.na) h+='<div class="blk rv" id="sEvi"><h4>'+svg(ICO.doc)+'Evidence expected</h4>'+
+      (c.evNote?'<p style="margin-bottom:14px">'+c.evNote+'</p>':'')+
+      '<div class="evid"><div class="evbox pri"><h6>Primary evidence</h6><ul>'+c.evPri.map(e=>'<li>'+e+'</li>').join('')+'</ul></div>'+
+      '<div class="evbox"><h6>Secondary evidence</h6><ul>'+c.evSec.map(e=>'<li>'+e+'</li>').join('')+'</ul></div></div></div>';
+  h+='<div class="tod rv'+(c.na?' altnote':'')+'" id="sVal"><h6>'+(c.na?'Where this control is documented':'To be validated through SOX test of design')+'</h6><p>'+c.tod+'</p></div>';
+  h+='</div>';
+
+  rbody.innerHTML=h;
+  document.getElementById('rposLabel').textContent=c.id+' — '+(i+1)+' of '+CONTROLS.length;
+  rPrev.disabled=i===0; rNext.disabled=i===CONTROLS.length-1;
+
+  if(revealObs) revealObs.disconnect();
+  revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revealObs.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+  rbody.querySelectorAll('.rv').forEach((el,k)=>{el.style.transitionDelay=Math.min(k*55,260)+'ms';revealObs.observe(el)});
+
+  const active=rail.querySelector('.railitem.on');
+  if(active&&window.innerWidth<=940) setTimeout(()=>{
+    rail.scrollTo({left:Math.max(0,active.offsetLeft-rail.clientWidth/2+active.offsetWidth/2),behavior:'smooth'});
+  },120);
+  if(!keepScroll){
+    const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+    window.scrollTo({top:y,behavior:'smooth'});
+  } else {
+    const y=document.getElementById('reader').getBoundingClientRect().top+window.scrollY-60;
+    if(window.scrollY>y+300||window.scrollY<y-300) window.scrollTo({top:y,behavior:'smooth'});
+  }
+}
+document.getElementById('backAll').addEventListener('click',()=>{
+  document.body.classList.remove('reading'); cur=-1;
+  const y=document.getElementById('controls').getBoundingClientRect().top+window.scrollY-60;
+  window.scrollTo({top:y,behavior:'smooth'});
+});
+rPrev.addEventListener('click',()=>openReader(cur-1,true));
+rNext.addEventListener('click',()=>openReader(cur+1,true));
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('reading'))return;
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowLeft'&&cur>0)openReader(cur-1,true);
+  if(e.key==='ArrowRight'&&cur<CONTROLS.length-1)openReader(cur+1,true);
+  if(e.key==='Escape')document.getElementById('backAll').click();
+});
+
+/* ============================================================
+   APPLICABILITY MATRIX — editable and saved
+   ============================================================ */
+const STATES=[
+ {k:0,l:'Applicable — common process'},
+ {k:1,l:'Standalone process'},
+ {k:2,l:'Applies where stated criteria are met'},
+ {k:3,l:'Not applicable'}
+];
+const baseline = CONTROLS.map(c=>APPS.map(a=>BASELINE_FOR(c,a)));
+let grid = baseline.map(r=>r.slice());
+let editing=false, q='', view='applic', kind='all';
+
+function storeGet(){
+  try{ const v=localStorage.getItem(STORAGE_KEY); return v?JSON.parse(v):null; }catch(e){ return null; }
+}
+function storeSet(v){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); return true; }catch(e){ return false; }
+}
+(function load(){
+  const saved=storeGet();
+  if(saved&&Array.isArray(saved)&&saved.length===CONTROLS.length&&saved[0].length===APPS.length) grid=saved;
+})();
+
+function dirtyCount(){
+  let n=0;
+  for(let i=0;i<grid.length;i++) for(let j=0;j<grid[i].length;j++) if(grid[i][j]!==baseline[i][j]) n++;
+  return n;
+}
+function persist(){
+  const ok=storeSet(grid);
+  try{paintCoverage()}catch(e){}
+  const n=dirtyCount(), el=document.getElementById('savestat');
+  el.classList.toggle('dirty',n>0);
+  el.querySelector('span:last-child').textContent = !ok
+    ? (n?n+' change'+(n===1?'':'s')+' — use Export to keep them':'Session only — use Export to keep changes')
+    : (n?'Saved · '+n+' change'+(n===1?'':'s')+' from the documented position':'Saved · matches the documented position');
+}
+
+const tablewrap=document.getElementById('tablewrap');
+function renderMatrix(){
+  if(view==='conn'&&typeof CONNECTORS!=='undefined'){
+    document.getElementById('legend').style.display='none';
+    document.getElementById('editbar').style.display='none';
+    const rows=CONNECTORS.filter(r=>r[0].toLowerCase().includes(q));
+    tablewrap.innerHTML='<table><thead><tr><th>Application</th><th>SailPoint integration type</th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+r[0]+'</td><td><span class="conn'+(r[1].indexOf('To be updated')===0?' tbc':'')+'">'+r[1]+'</span></td></tr>').join('')+
+      '</tbody></table>';
+    if(!rows.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">No application of that name appears in the connector table.</div>';
+    return;
+  }
+  document.getElementById('legend').style.display='flex';
+  document.getElementById('editbar').style.display='flex';
+  const idx=APPS.map((a,j)=>[a,j]).filter(p=>p[0].toLowerCase().includes(q)
+      && (kind==='all' || (kind==='tool')===isTool(p[0])));
+  tablewrap.innerHTML='<table><thead><tr><th>Application or tool</th>'+
+    CONTROLS.map(c=>'<th class="ch" data-full="'+c.id+'" title="'+esc(c.name)+(c.applicNote?' — '+esc(c.applicNote):(c.qual?' — '+esc(c.qual):''))+'">'+c.id+'</th>').join('')+
+    '</tr></thead><tbody>'+
+    idx.map(([a,j])=>'<tr class="'+(isTool(a)?'r-tool':'r-app')+'"><td><span class="kdot"></span>'+a+'</td>'+CONTROLS.map((c,i)=>{
+      const st=grid[i][j], mod=st!==baseline[i][j];
+      return '<td class="c"><span class="cellbtn'+(mod?' mod':'')+'" data-i="'+i+'" data-j="'+j+'" role="button" tabindex="-1" '+
+        'title="'+c.id+' · '+esc(a)+' — '+STATES[st].l+(mod?' (changed)':'')+'"><span class="ring"></span><span class="cellmark d-'+st+'"></span></span></td>';
+    }).join('')+'</tr>').join('')+'</tbody></table>';
+  if(!idx.length) tablewrap.innerHTML='<div style="padding:34px;color:var(--text-3);font-size:14px">Nothing matches that name in the current view.</div>';
+  tablewrap.querySelectorAll('.cellbtn').forEach(el=>el.addEventListener('click',()=>{
+    if(!editing) return;
+    const i=+el.dataset.i, j=+el.dataset.j;
+    grid[i][j]=(grid[i][j]+1)%4;
+    const st=grid[i][j], mod=st!==baseline[i][j];
+    el.classList.toggle('mod',mod);
+    el.querySelector('.cellmark').className='cellmark d-'+st;
+    el.title=CONTROLS[i].id+' · '+APPS[j]+' — '+STATES[st].l+(mod?' (changed)':'');
+    persist();
+  }));
+}
+function esc(s){return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+
+document.getElementById('editToggle').addEventListener('click',function(){
+  editing=!editing;
+  document.body.classList.toggle('editing',editing);
+  this.classList.toggle('toggled',editing);
+  this.querySelector('span').textContent = editing?'Editing on — click a cell to change it':'Edit applicability';
+});
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const payload={file:STORAGE_KEY,savedAt:new Date().toISOString(),controls:CONTROLS.map(c=>c.id),applications:APPS,states:['Applicable','Standalone process','Criteria-based','Not applicable'],grid:grid};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=STORAGE_KEY+'.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+});
+document.getElementById('importFile').addEventListener('change',function(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const g=p.grid||p;
+      if(Array.isArray(g)&&g.length===CONTROLS.length&&g[0].length===APPS.length){ grid=g; persist(); renderMatrix(); }
+      else alert('That file does not match this matrix (expected '+CONTROLS.length+' controls by '+APPS.length+' applications).');
+    }catch(err){ alert('That file could not be read as saved applicability data.'); }
+  };
+  r.readAsText(f); e.target.value='';
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('Reset every cell back to the position stated in the control narrative?')) return;
+  grid=baseline.map(r=>r.slice()); persist(); renderMatrix();
+});
+document.getElementById('appSearch').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();renderMatrix()});
+const vA=document.getElementById('viewApplic'), vC=document.getElementById('viewConn');
+if(vA) vA.addEventListener('click',()=>{view='applic';vA.classList.add('on');if(vC)vC.classList.remove('on');renderMatrix()});
+if(vC) vC.addEventListener('click',()=>{view='conn';vC.classList.add('on');vA.classList.remove('on');renderMatrix()});
+
+document.getElementById('legend').innerHTML=STATES.map(s=>'<i><span class="key-dot d-'+s.k+'"></span>'+s.l+'</i>').join('')+
+  '<i style="margin-left:10px;padding-left:16px;border-left:1px solid var(--line)"><span class="key-dot kd-app"></span>Application</i>'+
+  '<i><span class="key-dot kd-tool"></span>Tool</i>';
+document.getElementById('kindseg').addEventListener('click',e=>{
+  const b=e.target.closest('.kbtn'); if(!b)return;
+  kind=b.dataset.k;
+  document.querySelectorAll('#kindseg .kbtn').forEach(x=>x.classList.toggle('on',x===b));
+  renderMatrix();
+});
+renderMatrix(); persist();
+
+/* ============================================================
+   ROLES / SCOPE / NAV
+   ============================================================ */
+document.getElementById('rolegrid').innerHTML=ROLES.map(r=>
+  '<div class="role"><b>'+r.r+'</b><p>'+r.d+'</p><div class="rc">'+r.c.map(x=>'<span>'+x+'</span>').join('')+'</div>'+
+  '<div class="ev"><b style="display:block">Typical evidence produced</b>'+r.e+'</div></div>').join('');
+document.getElementById('scope').innerHTML=SCOPE.map(s=>
+  '<div class="scard"><h5>'+s.h+'</h5><p>'+s.p+'</p></div>').join('');
+
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>topbar.classList.toggle('stuck',window.scrollY>10),{passive:true});
+const links=[...document.querySelectorAll('.navlinks a')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(l=>l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id))}})},
+  {rootMargin:'-20% 0px -70% 0px'});
+[...document.querySelectorAll('section[id]')].forEach(s=>io.observe(s));
+
+
+
+/* ============================================================
+   READER — scroll spy and reading progress
+   ============================================================ */
+const SECS=['sObj','sCur','sReq','sApp','sEvi','sVal'];
+function readerScroll(){
+  if(!document.body.classList.contains('reading'))return;
+  const bar=document.getElementById('rprogbar'), sub=document.getElementById('rsub');
+  if(!bar||!sub)return;
+  const r=rbody.getBoundingClientRect(), vh=window.innerHeight;
+  const total=r.height-vh;
+  const done=Math.min(1,Math.max(0,(-r.top)/(total>0?total:1)));
+  bar.style.width=(done*100).toFixed(1)+'%';
+  let active=SECS[0];
+  SECS.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<170)active=id});
+  sub.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===active));
+}
+window.addEventListener('scroll',readerScroll,{passive:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#rsub button'); if(!b)return;
+  const el=document.getElementById(b.dataset.t); if(!el)return;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-150,behavior:'smooth'});
+});
+
+/* ============================================================
+   MATRIX — crosshair highlight and click ripple
+   ============================================================ */
+tablewrapCrosshair();
+function tablewrapCrosshair(){
+  tablewrap.addEventListener('pointerover',e=>{
+    const cell=e.target.closest('.cellbtn'); if(!cell)return;
+    clearCross();
+    const ci=+cell.dataset.i;
+    cell.closest('tr').classList.add('xrow');
+    const th=tablewrap.querySelectorAll('thead th')[ci+1];
+    if(th) th.classList.add('xcol');
+    tablewrap.querySelectorAll('tbody tr').forEach(tr=>{
+      const td=tr.children[ci+1]; if(td) td.classList.add('xc');
+    });
+  });
+  tablewrap.addEventListener('pointerleave',clearCross);
+}
+function clearCross(){
+  tablewrap.querySelectorAll('.xrow').forEach(x=>x.classList.remove('xrow'));
+  tablewrap.querySelectorAll('.xcol').forEach(x=>x.classList.remove('xcol'));
+  tablewrap.querySelectorAll('.xc').forEach(x=>x.classList.remove('xc'));
+}
+const _origRender=renderMatrix;
+tablewrap.addEventListener('click',e=>{
+  const cell=e.target.closest('.cellbtn'); if(!cell||!editing)return;
+  cell.classList.remove('pop'); void cell.offsetWidth; cell.classList.add('pop');
+});
+
+/* ============================================================
+   HERO — count up
+   ============================================================ */
+(function(){
+  const ns=[...document.querySelectorAll('.ledger .n')];
+  if(!ns.length)return;
+  ns.forEach(el=>{
+    const target=parseInt(el.textContent,10); if(isNaN(target))return;
+    el.textContent='0'; let t0=null;
+    const step=ts=>{ if(!t0)t0=ts; const p=Math.min(1,(ts-t0)/900);
+      el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+      if(p<1)requestAnimationFrame(step); };
+    setTimeout(()=>requestAnimationFrame(step),260);
+  });
+})();
+
+paintCoverage();
+
+
+</script>
+</body>
+</html>
